@@ -6,6 +6,8 @@
     {
         private char[,] items;
 
+        public int CharWidth { get; private set; }
+
         public Point2D Pos { get; set; }
 
         public ConsoleColor[,] ForeColors { get; set; }
@@ -16,39 +18,43 @@
 
         public int Height => items.GetLength(0);
 
-        public Block(char[,] items)
+        public Block(char[,] items, int charWidth)
         {
+            this.items = items;
+            CharWidth = charWidth;
             Pos = Point2D.Zero;
-            this.items = items;
             ColorBlock fore = new ColorBlock(this.items.GetLength(1), this.items.GetLength(0), ConsoleColor.Gray);
             ColorBlock back = new ColorBlock(this.items.GetLength(1), this.items.GetLength(0), ConsoleColor.Black);
             ForeColors = fore.Colors;
             BackColors = back.Colors;
         }
 
-        public Block(char[,] items, Point2D point2D)
+        public Block(char[,] items, int charWidth, Point2D point2D)
         {
-            Pos = point2D;
             this.items = items;
+            CharWidth = charWidth;
+            Pos = point2D;
             ColorBlock fore = new ColorBlock(this.items.GetLength(1), this.items.GetLength(0), ConsoleColor.Gray);
             ColorBlock back = new ColorBlock(this.items.GetLength(1), this.items.GetLength(0), ConsoleColor.Black);
             ForeColors = fore.Colors;
             BackColors = back.Colors;
         }
 
-        public Block(char[,] items, Point2D point2D, ConsoleColor[,] foreColors)
+        public Block(char[,] items, int charWidth, Point2D point2D, ConsoleColor[,] foreColors)
         {
-            Pos = point2D;
             this.items = items;
+            CharWidth = charWidth;
+            Pos = point2D;
             ColorBlock back = new ColorBlock(this.items.GetLength(1), this.items.GetLength(0), ConsoleColor.Black);
             ForeColors = foreColors;
             BackColors = back.Colors;
         }
 
-        public Block(char[,] items, Point2D point2D, ConsoleColor[,] foreColors, ConsoleColor[,] backColors)
+        public Block(char[,] items, int charWidth, Point2D point2D, ConsoleColor[,] foreColors, ConsoleColor[,] backColors)
         {
-            Pos = point2D;
             this.items = items;
+            CharWidth = charWidth;
+            Pos = point2D;
             ForeColors = foreColors;
             BackColors = backColors;
         }

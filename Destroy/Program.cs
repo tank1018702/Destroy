@@ -15,15 +15,17 @@
                 {'7', '8', '9'}
             };
 
-            Screen screen = new Screen();
+            Screen screen = new Screen(2);
             screen.FullScreen();
 
-            Coordinate coordinate = new Coordinate(Coordinate.Mode.RightX__DownY, screen.Width, screen.Height);
+            Coordinate coordinate = new Coordinate(Coordinate.Mode.RightX__UpY, screen.Width, screen.Height);
 
-            Block block = new Block(items, Point2D.Zero);
+            Block block = new Block(items, 2, new Point2D(0, 2));
+
+            Block block2 = new Block(items, 2, new Point2D());
 
             RendererSystem.RenderBlock(block, coordinate);
-
+            //RendererSystem.RenderBlock(block2, coordinate);
 
 
             //while (true)

@@ -5,22 +5,24 @@
 
     public class Screen
     {
+        private int charWidth;
+
         public int Height { get; private set; }
 
         public int Width { get; private set; }
 
-        public Screen(int width = 10, int height = 10, bool hideCursor = true)
+        public Screen(int charWidth, int width = 20, int height = 20, bool hideCursor = true)
         {
             Console.CursorVisible = !hideCursor;
 
+            this.charWidth = charWidth;
             Height = height;
             Width = width;
 
-            Console.WindowHeight = Height + 1;
-            Console.BufferHeight = Height + 1;
-
-            Console.WindowWidth = (Width + 1) * 2;
-            Console.BufferWidth = (Width + 1) * 2;
+            Console.WindowHeight = height;
+            Console.BufferHeight = height;
+            Console.WindowWidth = width * charWidth;
+            Console.BufferWidth = width * charWidth;
         }
 
         public void FullScreen()
@@ -34,8 +36,8 @@
             Console.WindowWidth = width;
             Console.BufferWidth = width;
 
-            Height = height - 1;
-            Width = width / 2 - 2;
+            Height = height;
+            Width = width / charWidth;
         }
 
         public void IOEncoding(Encoding encoding)

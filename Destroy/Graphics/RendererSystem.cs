@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Destroy.Graphics
+﻿namespace Destroy.Graphics
 {
     public static class RendererSystem
     {
@@ -34,13 +28,13 @@ namespace Destroy.Graphics
                 {
                     if (coordinate.Type == Coordinate.Mode.RightX__UpY)
                     {
-                        int x = (block.Pos.X + j) * 2;
-                        int y = coordinate.Height - block.Pos.Y + i;
+                        int x = (block.Pos.X + j) * block.CharWidth;
+                        int y = coordinate.Height - 1 - block.Pos.Y + i;
                         Print.SetCursorPos(x, y);
                     }
                     else if (coordinate.Type == Coordinate.Mode.RightX__DownY)
                     {
-                        int x = (block.Pos.X + j) * 2;
+                        int x = (block.Pos.X + j) * block.CharWidth;
                         int y = block.Pos.Y + i;
                         Print.SetCursorPos(x, y);
                     }
