@@ -1,0 +1,14 @@
+C:\Users\Administrator\Desktop\GitSync\Destroy\Destroy\Destroy\bin\Debug\Destroy.exe.config
+C:\Users\Administrator\Desktop\GitSync\Destroy\Destroy\Destroy\bin\Debug\Destroy.exe
+C:\Users\Administrator\Desktop\GitSync\Destroy\Destroy\Destroy\bin\Debug\Destroy.pdb
+C:\Users\Administrator\Desktop\GitSync\Destroy\Destroy\Destroy\obj\Debug\Destroy.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\GitSync\Destroy\Destroy\Destroy\obj\Debug\Destroy.exe
+C:\Users\Administrator\Desktop\GitSync\Destroy\Destroy\Destroy\obj\Debug\Destroy.pdb
+C:\Users\Administrator\Desktop\GitSync\Destroy\Destroy\Destroy\obj\Debug\Destroy.csprojAssemblyReference.cache
+C:\Users\Charlie179\Desktop\GitSync\Destroy\Destroy\Destroy\bin\Debug\Destroy.exe.config
+C:\Users\Charlie179\Desktop\GitSync\Destroy\Destroy\Destroy\bin\Debug\Destroy.exe
+C:\Users\Charlie179\Desktop\GitSync\Destroy\Destroy\Destroy\bin\Debug\Destroy.pdb
+C:\Users\Charlie179\Desktop\GitSync\Destroy\Destroy\Destroy\obj\Debug\Destroy.csprojAssemblyReference.cache
+C:\Users\Charlie179\Desktop\GitSync\Destroy\Destroy\Destroy\obj\Debug\Destroy.csproj.CoreCompileInputs.cache
+C:\Users\Charlie179\Desktop\GitSync\Destroy\Destroy\Destroy\obj\Debug\Destroy.exe
+C:\Users\Charlie179\Desktop\GitSync\Destroy\Destroy\Destroy\obj\Debug\Destroy.pdb
