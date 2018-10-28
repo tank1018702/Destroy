@@ -2,68 +2,90 @@
 {
     using System;
 
+    public enum RotationAngle
+    {
+        RotRight90,
+        Rot180,
+        RotLeft90,
+    }
+
     public struct Block
     {
-        private char[,] items;
+        public char[,] Items;
+
+        public ConsoleColor[,] ForeColors;
+
+        public ConsoleColor[,] BackColors;
 
         public int CharWidth { get; private set; }
 
         public Point2D Pos { get; set; }
 
-        public ConsoleColor[,] ForeColors { get; set; }
+        public int Width => Items.GetLength(1);
 
-        public ConsoleColor[,] BackColors { get; set; }
+        public int Height => Items.GetLength(0);
 
-        public int Width => items.GetLength(1);
+        public Block(char c, int charWidth)
+        {
+            Items = new char[,] { { c } };
+            CharWidth = charWidth;
+            Pos = Point2D.Zero;
+            ColorBlock fore = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Gray);
+            ColorBlock back = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Black);
+            ForeColors = fore.Colors;
+            BackColors = back.Colors;
+        }
 
-        public int Height => items.GetLength(0);
+        public Block(char c, int charWidth, Point2D point2D)
+        {
+            Items = new char[,] { { c } };
+            CharWidth = charWidth;
+            Pos = point2D;
+            ColorBlock fore = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Gray);
+            ColorBlock back = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Black);
+            ForeColors = fore.Colors;
+            BackColors = back.Colors;
+        }
 
         public Block(char[,] items, int charWidth)
         {
-            this.items = items;
+            this.Items = items;
             CharWidth = charWidth;
             Pos = Point2D.Zero;
-            ColorBlock fore = new ColorBlock(this.items.GetLength(1), this.items.GetLength(0), ConsoleColor.Gray);
-            ColorBlock back = new ColorBlock(this.items.GetLength(1), this.items.GetLength(0), ConsoleColor.Black);
+            ColorBlock fore = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Gray);
+            ColorBlock back = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Black);
             ForeColors = fore.Colors;
             BackColors = back.Colors;
         }
 
         public Block(char[,] items, int charWidth, Point2D point2D)
         {
-            this.items = items;
+            this.Items = items;
             CharWidth = charWidth;
             Pos = point2D;
-            ColorBlock fore = new ColorBlock(this.items.GetLength(1), this.items.GetLength(0), ConsoleColor.Gray);
-            ColorBlock back = new ColorBlock(this.items.GetLength(1), this.items.GetLength(0), ConsoleColor.Black);
+            ColorBlock fore = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Gray);
+            ColorBlock back = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Black);
             ForeColors = fore.Colors;
             BackColors = back.Colors;
         }
 
         public Block(char[,] items, int charWidth, Point2D point2D, ConsoleColor[,] foreColors)
         {
-            this.items = items;
+            this.Items = items;
             CharWidth = charWidth;
             Pos = point2D;
-            ColorBlock back = new ColorBlock(this.items.GetLength(1), this.items.GetLength(0), ConsoleColor.Black);
-            ForeColors = foreColors;
+            ColorBlock back = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Black);
+            this.ForeColors = foreColors;
             BackColors = back.Colors;
         }
 
         public Block(char[,] items, int charWidth, Point2D point2D, ConsoleColor[,] foreColors, ConsoleColor[,] backColors)
         {
-            this.items = items;
+            this.Items = items;
             CharWidth = charWidth;
             Pos = point2D;
-            ForeColors = foreColors;
-            BackColors = backColors;
-        }
-
-        public enum RotationAngle
-        {
-            RotRight90,
-            Rot180,
-            RotLeft90,
+            this.ForeColors = foreColors;
+            this.BackColors = backColors;
         }
 
         public char[,] Rotate(RotationAngle angle)
@@ -80,7 +102,7 @@
                         items = new char[width, height];
                         for (int i = 0; i < width; i++)
                             for (int j = 0; j < height; j++)
-                                items[i, j] = this.items[height - 1 - j, i];
+                                items[i, j] = this.Items[height - 1 - j, i];
                     }
                     break;
                 case RotationAngle.Rot180:
@@ -88,7 +110,7 @@
                         items = new char[height, width];
                         for (int i = 0; i < height; i++)
                             for (int j = 0; j < width; j++)
-                                items[i, j] = this.items[height - 1 - i, width - 1 - j];
+                                items[i, j] = this.Items[height - 1 - i, width - 1 - j];
                     }
                     break;
                 case RotationAngle.RotLeft90:
@@ -96,7 +118,7 @@
                         items = new char[width, height];
                         for (int i = 0; i < width; i++)
                             for (int j = 0; j < height; j++)
-                                items[i, j] = this.items[j, width - 1 - i];
+                                items[i, j] = this.Items[j, width - 1 - i];
                     }
                     break;
             }
@@ -104,27 +126,9 @@
             return items;
         }
 
-        public char GetItem(int x, int y) => items[x, y];
-
-        public char GetItem2(int x, int y)
-        {
-            int _x = items.GetLength(0) - 1 - y;
-            int _y = x;
-            return items[_x, _y];
-        }
-
-        public char SetItem(char c, int x, int y) => items[x, y] = c;
-
-        public void SetItem2(char c, int x, int y)
-        {
-            int _x = items.GetLength(0) - 1 - y;
-            int _y = x;
-            items[_x, _y] = c;
-        }
-
         public Block Copy()
         {
-            Block block = new Block(items, CharWidth, Pos, ForeColors, BackColors);
+            Block block = new Block(Items, CharWidth, Pos, ForeColors, BackColors);
             return block;
         }
     }

@@ -5,24 +5,21 @@
 
     public class Window
     {
-        private int charWidth;
+        public int BufferHeight { get; private set; }
 
-        public int Height { get; private set; }
+        public int BufferWidth { get; private set; }
 
-        public int Width { get; private set; }
-
-        public Window(int charWidth, int width = 20, int height = 20, bool hideCursor = true)
+        public Window(int bufferWidth = 40, int bufferHeight = 20, bool hideCursor = true)
         {
             Console.CursorVisible = !hideCursor;
 
-            this.charWidth = charWidth;
-            Height = height;
-            Width = width;
+            BufferHeight = bufferHeight;
+            BufferWidth = bufferWidth;
 
-            Console.WindowHeight = height;
-            Console.BufferHeight = height;
-            Console.WindowWidth = width * charWidth;
-            Console.BufferWidth = width * charWidth;
+            Console.WindowHeight = bufferHeight;
+            Console.BufferHeight = bufferHeight;
+            Console.WindowWidth = bufferWidth;
+            Console.BufferWidth = bufferWidth;
         }
 
         public void FullScreen()
@@ -36,8 +33,8 @@
             Console.WindowWidth = width;
             Console.BufferWidth = width;
 
-            Height = height;
-            Width = width / charWidth;
+            BufferHeight = height;
+            BufferWidth = width;
         }
 
         public void IOEncoding(Encoding encoding)
@@ -45,7 +42,5 @@
             Console.InputEncoding = encoding;
             Console.OutputEncoding = encoding;
         }
-
-        public void SetTitle(string title) => Console.Title = title;
     }
 }

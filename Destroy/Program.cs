@@ -8,9 +8,9 @@
     {
         public override void Start()
         {
-            Window window = new Window(2);
+            Window window = new Window();
 
-            Coordinate coordinate = new Coordinate(Coordinate.Mode.RightX_DownY, window.Height);
+            Coordinate coordinate = new Coordinate(CoordinateType.RightX_DownY, window.BufferHeight);
 
             char[,] items =
             {
@@ -21,19 +21,23 @@
 
             char[,] maskArray =
             {
-                {' ', ' ', ' '},
-                {' ', '1', ' '},
-                {' ', ' ', ' '}
+                {'1', '1', '1'},
+                {'1', ' ', '1'},
+                {'1', '1', '1'}
             };
 
-            Block block = new Block(items, 2, new Point2D());
+            ColorBlock colorBlock = new ColorBlock(3, 3, ConsoleColor.Red);
 
-            CharBlock charBlock = new CharBlock(block.Width, block.Height, ' ');
-            Block buffer = new Block(charBlock.Chars, 2);
+            Block block = new Block(items, 2, new Point2D(), colorBlock.Colors);
 
-            Block b = RendererSystem.RenderMask(block, maskArray, ' ');
+            Block mask = RendererSystem.MaskCulling(block, maskArray, ' ');
 
-            RendererSystem.RenderBlockBuffer(b, ref buffer, coordinate);
+            Block occlusion = new Block(new char[,] { { '5' } }, 2);
+
+            Block render = RendererSystem.OcclusionCulling(mask, occlusion, new Point2D(1, 1),
+                CoordinateType.RightX_DownY);
+
+            RendererSystem.RenderBlock(render, coordinate);
         }
 
         public override void Update()
