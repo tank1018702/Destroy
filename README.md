@@ -20,6 +20,8 @@ It will be release soon.
 
 RendererSystem is ready.
 
+RendererSystem is already for production.(Updated to 2.0)
+
 # 秒天秒地
 DE·Charlie Presents
 
@@ -41,3 +43,5 @@ DE·Charlie Presents
 ## 开发版本
 
 渲染系统就绪。
+
+渲染系统可用于生产。（升级至2.0）
