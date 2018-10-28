@@ -16,24 +16,25 @@
             };
 
             Screen screen = new Screen(2);
-            screen.FullScreen();
+            //screen.FullScreen();
 
-            Coordinate coordinate = new Coordinate(Coordinate.Mode.RightX__UpY, screen.Width, screen.Height);
+            Coordinate coordinate = new Coordinate(Coordinate.Mode.RightX_DownY, screen.Height);
 
-            Block block = new Block(items, 2, new Point2D(0, 2));
+            Block block = new Block(items, 1, new Point2D());
 
-            Block block2 = new Block(items, 2, new Point2D());
+            Block block2 = new Block(items, 1, new Point2D(block.Width, 10 + block.Height));
 
-            RendererSystem.RenderBlock(block, coordinate);
             //RendererSystem.RenderBlock(block2, coordinate);
 
-
-            //while (true)
-            //{
-            //    Print.DrawBlock(block, screen);
-            //    Thread.Sleep(100);
-            //    Console.Clear();
-            //}
+            int i = 0;
+            RendererSystem system = new RendererSystem();
+            while (true)
+            {
+                i++;
+                system.RenderBlockBuffer(block, coordinate);
+                Thread.Sleep(1000);
+                block = new Block(items, 1, new Point2D(0, i));
+            }
 
             Console.ReadKey();
         }

@@ -1,23 +1,45 @@
 ﻿namespace Destroy.Graphics
 {
-    public static class RendererSystem
+    public class RendererSystem
     {
-        public static void RenderDot(Dot dot, Coordinate coordinate)
+        private Block buffer = default(Block);
+
+        public void RenderBlockBuffer(Block block, Coordinate coordinate)
         {
-            if (coordinate.Type == Coordinate.Mode.RightX__UpY)
+            if (buffer.Equals(default(Block)) && !block.Equals(default(Block)))
             {
-                int x = dot.Pos.X * 2;
-                int y = coordinate.Height - dot.Pos.Y;
-                Print.SetCursorPos(x, y);
-            }
-            else if (coordinate.Type == Coordinate.Mode.RightX__DownY)
-            {
-                int x = dot.Pos.X * 2;
-                int y = dot.Pos.Y;
-                Print.SetCursorPos(x, y);
+                CharBlock charBlock = new CharBlock(block.Width, block.Height, ' ');
+
+                buffer = new Block(charBlock.Chars, block.CharWidth);
             }
 
-            Print.Draw(dot.Char, dot.ForeColor, dot.BackColor);
+            for (int i = 0; i < block.Height; i++)
+            {
+                for (int j = 0; j < block.Width; j++)
+                {
+                    //Diff
+                    if (block.GetItem(i, j) != buffer.GetItem(i, j))
+                    {
+                        if (coordinate.Type == Coordinate.Mode.RightX_UpY)
+                        {
+                            int x = (block.Pos.X + j) * block.CharWidth;
+                            int y = coordinate.Height - 1 - block.Pos.Y + i;
+                            Print.SetCursorPos(x, y);
+                        }
+                        else if (coordinate.Type == Coordinate.Mode.RightX_DownY)
+                        {
+                            int x = (block.Pos.X + j) * block.CharWidth;
+                            int y = block.Pos.Y + i;
+                            Print.SetCursorPos(x, y);
+                        }
+
+                        char c = block.GetItem(i, j);
+                        Print.Draw(c, block.ForeColors[i, j], block.BackColors[i, j]);
+                    }
+                }
+            }
+            //Cache
+            buffer = block;
         }
 
         public static void RenderBlock(Block block, Coordinate coordinate)
@@ -26,13 +48,13 @@
             {
                 for (int j = 0; j < block.Width; j++)
                 {
-                    if (coordinate.Type == Coordinate.Mode.RightX__UpY)
+                    if (coordinate.Type == Coordinate.Mode.RightX_UpY)
                     {
                         int x = (block.Pos.X + j) * block.CharWidth;
                         int y = coordinate.Height - 1 - block.Pos.Y + i;
                         Print.SetCursorPos(x, y);
                     }
-                    else if (coordinate.Type == Coordinate.Mode.RightX__DownY)
+                    else if (coordinate.Type == Coordinate.Mode.RightX_DownY)
                     {
                         int x = (block.Pos.X + j) * block.CharWidth;
                         int y = block.Pos.Y + i;

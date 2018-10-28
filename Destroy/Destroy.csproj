@@ -50,7 +50,6 @@
     <Compile Include="Graphics\CharBlock.cs" />
     <Compile Include="Graphics\ColorBlock.cs" />
     <Compile Include="Graphics\Coordinate.cs" />
-    <Compile Include="Graphics\Dot.cs" />
     <Compile Include="Core\Input.cs" />
     <Compile Include="Core\Point2D.cs" />
     <Compile Include="Graphics\RendererSystem.cs" />
