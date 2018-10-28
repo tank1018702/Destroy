@@ -3,7 +3,7 @@
     using System;
     using System.Text;
 
-    public class Screen
+    public class Window
     {
         private int charWidth;
 
@@ -11,7 +11,7 @@
 
         public int Width { get; private set; }
 
-        public Screen(int charWidth, int width = 20, int height = 20, bool hideCursor = true)
+        public Window(int charWidth, int width = 20, int height = 20, bool hideCursor = true)
         {
             Console.CursorVisible = !hideCursor;
 

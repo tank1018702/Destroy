@@ -121,5 +121,11 @@
             int _y = x;
             items[_x, _y] = c;
         }
+
+        public Block Copy()
+        {
+            Block block = new Block(items, CharWidth, Pos, ForeColors, BackColors);
+            return block;
+        }
     }
 }

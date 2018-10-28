@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Beta\Audio.cs" />
+    <Compile Include="Core\Bootstrap.cs" />
+    <Compile Include="Core\Scriptable.cs" />
     <Compile Include="Graphics\Block.cs" />
     <Compile Include="Core\Collision.cs" />
     <Compile Include="Core\Debug.cs" />
@@ -53,7 +55,7 @@
     <Compile Include="Core\Input.cs" />
     <Compile Include="Core\Point2D.cs" />
     <Compile Include="Graphics\RendererSystem.cs" />
-    <Compile Include="Core\Screen.cs" />
+    <Compile Include="Core\Window.cs" />
     <Compile Include="Net\PBConverter.cs" />
     <Compile Include="Beta\ECS\Bootstrap.cs" />
     <Compile Include="Beta\ECS\System.cs" />
