@@ -120,5 +120,43 @@ namespace Destroy.Graphics
             }
             return block;
         }
+
+        public static void CutBlock(Block block, ref Block cutBlock, Point2D point, CoordinateType type)
+        {
+            if (type == CoordinateType.RightX_UpY)
+            {
+                for (int i = 0; i < cutBlock.Height; i++)
+                {
+                    for (int j = 0; j < cutBlock.Width; j++)
+                    {
+                        int x = point.X + j;
+                        int y = point.Y - i;
+                        char c = Coordinate.Get_RightX_UpY(block.Items, x, y);
+                        ConsoleColor foreColor = Coordinate.Get_RightX_UpY(block.ForeColors, x, y);
+                        ConsoleColor backColor = Coordinate.Get_RightX_UpY(block.BackColors, x, y);
+                        cutBlock.Items[i, j] = c;
+                        cutBlock.ForeColors[i, j] = foreColor;
+                        cutBlock.BackColors[i, j] = backColor;
+                    }
+                }
+            }
+            else if (type == CoordinateType.RightX_DownY)
+            {
+                for (int i = 0; i < cutBlock.Height; i++)
+                {
+                    for (int j = 0; j < cutBlock.Width; j++)
+                    {
+                        int x = point.X + j;
+                        int y = point.Y + i;
+                        char c = Coordinate.Get_RightX_DownY(block.Items, x, y);
+                        ConsoleColor foreColor = Coordinate.Get_RightX_DownY(block.ForeColors, x, y);
+                        ConsoleColor backColor = Coordinate.Get_RightX_DownY(block.BackColors, x, y);
+                        cutBlock.Items[i, j] = c;
+                        cutBlock.ForeColors[i, j] = foreColor;
+                        cutBlock.BackColors[i, j] = backColor;
+                    }
+                }
+            }
+        }
     }
 }

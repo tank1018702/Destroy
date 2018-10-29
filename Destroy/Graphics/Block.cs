@@ -2,20 +2,13 @@
 {
     using System;
 
-    public enum RotationAngle
-    {
-        RotRight90,
-        Rot180,
-        RotLeft90,
-    }
-
     public struct Block
     {
-        public char[,] Items;
+        public char[,] Items { get; set; }
 
-        public ConsoleColor[,] ForeColors;
+        public ConsoleColor[,] ForeColors { get; set; }
 
-        public ConsoleColor[,] BackColors;
+        public ConsoleColor[,] BackColors { get; set; }
 
         public int CharWidth { get; private set; }
 
@@ -86,44 +79,6 @@
             Pos = point2D;
             this.ForeColors = foreColors;
             this.BackColors = backColors;
-        }
-
-        public char[,] Rotate(RotationAngle angle)
-        {
-            char[,] items = null;
-
-            int width = Width;
-            int height = Height;
-
-            switch (angle)
-            {
-                case RotationAngle.RotRight90:
-                    {
-                        items = new char[width, height];
-                        for (int i = 0; i < width; i++)
-                            for (int j = 0; j < height; j++)
-                                items[i, j] = this.Items[height - 1 - j, i];
-                    }
-                    break;
-                case RotationAngle.Rot180:
-                    {
-                        items = new char[height, width];
-                        for (int i = 0; i < height; i++)
-                            for (int j = 0; j < width; j++)
-                                items[i, j] = this.Items[height - 1 - i, width - 1 - j];
-                    }
-                    break;
-                case RotationAngle.RotLeft90:
-                    {
-                        items = new char[width, height];
-                        for (int i = 0; i < width; i++)
-                            for (int j = 0; j < height; j++)
-                                items[i, j] = this.Items[j, width - 1 - i];
-                    }
-                    break;
-            }
-
-            return items;
         }
 
         public Block Copy()

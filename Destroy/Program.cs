@@ -37,7 +37,11 @@
             Block render = RendererSystem.OcclusionCulling(mask, occlusion, new Point2D(1, 1),
                 CoordinateType.RightX_DownY);
 
-            RendererSystem.RenderBlock(render, coordinate);
+            Block cut = new Block(' ', 2, new Point2D(0, 0));
+
+            RendererSystem.CutBlock(render, ref cut, new Point2D(0, 0), CoordinateType.RightX_DownY);
+
+            RendererSystem.RenderBlock(cut, coordinate);
         }
 
         public override void Update()

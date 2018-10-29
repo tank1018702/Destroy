@@ -24,17 +24,13 @@
 
         public void FullScreen()
         {
-            int height = Console.LargestWindowHeight;
-            int width = Console.LargestWindowWidth;
+            BufferHeight = Console.LargestWindowHeight;
+            BufferWidth = Console.LargestWindowWidth;
 
-            Console.WindowHeight = height;
-            Console.BufferHeight = height;
-
-            Console.WindowWidth = width;
-            Console.BufferWidth = width;
-
-            BufferHeight = height;
-            BufferWidth = width;
+            Console.WindowHeight = BufferHeight;
+            Console.BufferHeight = BufferHeight;
+            Console.WindowWidth = BufferWidth;
+            Console.BufferWidth = BufferWidth;
         }
 
         public void IOEncoding(Encoding encoding)
