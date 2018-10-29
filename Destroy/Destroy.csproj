@@ -45,11 +45,12 @@
   <ItemGroup>
     <Compile Include="Beta\Audio.cs" />
     <Compile Include="Core\Bootstrap.cs" />
-    <Compile Include="Core\Scriptable.cs" />
+    <Compile Include="Core\Script.cs" />
+    <Compile Include="ExampleGame\Game.cs" />
     <Compile Include="Graphics\Block.cs" />
     <Compile Include="Core\Collision.cs" />
     <Compile Include="Core\Debug.cs" />
-    <Compile Include="Graphics\CharBlock.cs" />
+    <Compile Include="Graphics\StrBlock.cs" />
     <Compile Include="Graphics\ColorBlock.cs" />
     <Compile Include="Graphics\Coordinate.cs" />
     <Compile Include="Core\Input.cs" />

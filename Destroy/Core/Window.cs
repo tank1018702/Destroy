@@ -22,7 +22,7 @@
             Console.BufferWidth = bufferWidth;
         }
 
-        public void FullScreen()
+        public void SetFullScreen()
         {
             BufferHeight = Console.LargestWindowHeight;
             BufferWidth = Console.LargestWindowWidth;
@@ -33,7 +33,7 @@
             Console.BufferWidth = BufferWidth;
         }
 
-        public void IOEncoding(Encoding encoding)
+        public void SetIOEncoding(Encoding encoding)
         {
             Console.InputEncoding = encoding;
             Console.OutputEncoding = encoding;

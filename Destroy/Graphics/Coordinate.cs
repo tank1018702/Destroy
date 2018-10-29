@@ -25,6 +25,7 @@
             Height = height;
         }
 
+
         public static T Get_RightX_UpY<T>(T[,] array, int x, int y)
         {
             int _x = array.GetLength(0) - 1 - y;

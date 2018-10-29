@@ -4,13 +4,13 @@
 
     public struct Block
     {
-        public char[,] Items { get; set; }
+        public string[,] Items { get; set; }
 
         public ConsoleColor[,] ForeColors { get; set; }
 
         public ConsoleColor[,] BackColors { get; set; }
 
-        public int CharWidth { get; private set; }
+        public int StrWidth { get; private set; }
 
         public Point2D Pos { get; set; }
 
@@ -18,10 +18,10 @@
 
         public int Height => Items.GetLength(0);
 
-        public Block(char c, int charWidth)
+        public Block(string str, int charWidth)
         {
-            Items = new char[,] { { c } };
-            CharWidth = charWidth;
+            Items = new string[,] { { str } };
+            StrWidth = charWidth;
             Pos = Point2D.Zero;
             ColorBlock fore = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Gray);
             ColorBlock back = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Black);
@@ -29,10 +29,10 @@
             BackColors = back.Colors;
         }
 
-        public Block(char c, int charWidth, Point2D point2D)
+        public Block(string str, int charWidth, Point2D point2D)
         {
-            Items = new char[,] { { c } };
-            CharWidth = charWidth;
+            Items = new string[,] { { str } };
+            StrWidth = charWidth;
             Pos = point2D;
             ColorBlock fore = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Gray);
             ColorBlock back = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Black);
@@ -40,10 +40,10 @@
             BackColors = back.Colors;
         }
 
-        public Block(char[,] items, int charWidth)
+        public Block(string[,] items, int charWidth)
         {
-            this.Items = items;
-            CharWidth = charWidth;
+            Items = items;
+            StrWidth = charWidth;
             Pos = Point2D.Zero;
             ColorBlock fore = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Gray);
             ColorBlock back = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Black);
@@ -51,10 +51,10 @@
             BackColors = back.Colors;
         }
 
-        public Block(char[,] items, int charWidth, Point2D point2D)
+        public Block(string[,] items, int charWidth, Point2D point2D)
         {
-            this.Items = items;
-            CharWidth = charWidth;
+            Items = items;
+            StrWidth = charWidth;
             Pos = point2D;
             ColorBlock fore = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Gray);
             ColorBlock back = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Black);
@@ -62,28 +62,28 @@
             BackColors = back.Colors;
         }
 
-        public Block(char[,] items, int charWidth, Point2D point2D, ConsoleColor[,] foreColors)
+        public Block(string[,] items, int charWidth, Point2D point2D, ConsoleColor[,] foreColors)
         {
-            this.Items = items;
-            CharWidth = charWidth;
+            Items = items;
+            StrWidth = charWidth;
             Pos = point2D;
             ColorBlock back = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Black);
-            this.ForeColors = foreColors;
+            ForeColors = foreColors;
             BackColors = back.Colors;
         }
 
-        public Block(char[,] items, int charWidth, Point2D point2D, ConsoleColor[,] foreColors, ConsoleColor[,] backColors)
+        public Block(string[,] items, int charWidth, Point2D point2D, ConsoleColor[,] foreColors, ConsoleColor[,] backColors)
         {
-            this.Items = items;
-            CharWidth = charWidth;
+            Items = items;
+            StrWidth = charWidth;
             Pos = point2D;
-            this.ForeColors = foreColors;
-            this.BackColors = backColors;
+            ForeColors = foreColors;
+            BackColors = backColors;
         }
 
         public Block Copy()
         {
-            Block block = new Block(Items, CharWidth, Pos, ForeColors, BackColors);
+            Block block = new Block(Items, StrWidth, Pos, ForeColors, BackColors);
             return block;
         }
     }

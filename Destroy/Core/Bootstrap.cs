@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
 
@@ -7,49 +6,63 @@ namespace Destroy
 {
     public class Bootstrap
     {
+        private int tickPerSecond;
+        private bool block;
         private Assembly assembly;
-        private List<Type> classes;
-        private Thread thread;
+        private List<object> instances;
 
-        public Bootstrap()
+        public Bootstrap(int tickPerSecond, bool block)
         {
+            this.tickPerSecond = tickPerSecond;
+            this.block = block;
             assembly = Assembly.GetExecutingAssembly();
-
-            classes = new List<Type>();
+            instances = new List<object>();
 
             foreach (var _class in assembly.GetTypes())
             {
-                if (_class.IsSubclassOf(typeof(Scriptable)))
-                    classes.Add(_class);
+                if (_class.IsSubclassOf(typeof(Script)))
+                {
+                    object instance = assembly.CreateInstance($"{_class.Namespace}.{_class.Name}");
+                    instances.Add(instance);
+                }
             }
         }
 
-        public void Start() => CallMethods("Start");
+        public void Start() => CallMethod("Start");
 
         public void Tick()
         {
-            thread = new Thread(_Tick) { IsBackground = true };
+            Thread thread = new Thread
+            (
+                () =>
+                {
+                    float deltaTime = 0;
+
+                    while (true)
+                    {
+                        int delayTime = 1000 / tickPerSecond;
+
+                        CallMethod("Update", deltaTime);
+                        Thread.Sleep(delayTime);
+
+                        deltaTime = (float)1 / tickPerSecond;
+                    }
+                }
+            )
+            {
+                IsBackground = !block
+            };
+
             thread.Start();
         }
 
-        private void _Tick()
+        private void CallMethod(string methodName, params object[] parameters)
         {
-            while (true)
+            foreach (var instance in instances)
             {
-                CallMethods("Update");
-                Thread.Sleep(16);
-            }
-        }
-
-        private void CallMethods(string methodName)
-        {
-            foreach (var _class in classes)
-            {
-                object instance = assembly.CreateInstance($"{_class.Namespace}.{_class.Name}");
-
                 MethodInfo method = instance.GetType().GetMethod(methodName);
 
-                method?.Invoke(instance, null);
+                method?.Invoke(instance, parameters);
             }
         }
     }

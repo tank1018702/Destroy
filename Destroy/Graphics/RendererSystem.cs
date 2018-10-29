@@ -12,20 +12,20 @@ namespace Destroy.Graphics
                 {
                     if (coordinate.Type == CoordinateType.RightX_UpY)
                     {
-                        int x = (block.Pos.X + j) * block.CharWidth;
+                        int x = (block.Pos.X + j) * block.StrWidth;
                         int y = coordinate.Height - 1 - block.Pos.Y + i;
                         Print.SetCursorPos(x, y);
                     }
                     else if (coordinate.Type == CoordinateType.RightX_DownY)
                     {
-                        int x = (block.Pos.X + j) * block.CharWidth;
+                        int x = (block.Pos.X + j) * block.StrWidth;
                         int y = block.Pos.Y + i;
                         Print.SetCursorPos(x, y);
                     }
-                    char c = block.Items[i, j];
+                    string str = block.Items[i, j];
                     ConsoleColor foreColor = block.ForeColors[i, j];
                     ConsoleColor backColor = block.BackColors[i, j];
-                    Print.Draw(c, foreColor, backColor);
+                    Print.Draw(str, foreColor, backColor);
                 }
             }
         }
@@ -41,20 +41,20 @@ namespace Destroy.Graphics
                     {
                         if (coordinate.Type == CoordinateType.RightX_UpY)
                         {
-                            int x = (block.Pos.X + j) * block.CharWidth;
+                            int x = (block.Pos.X + j) * block.StrWidth;
                             int y = coordinate.Height - 1 - block.Pos.Y + i;
                             Print.SetCursorPos(x, y);
                         }
                         else if (coordinate.Type == CoordinateType.RightX_DownY)
                         {
-                            int x = (block.Pos.X + j) * block.CharWidth;
+                            int x = (block.Pos.X + j) * block.StrWidth;
                             int y = block.Pos.Y + i;
                             Print.SetCursorPos(x, y);
                         }
-                        char c = block.Items[i, j];
+                        string str = block.Items[i, j];
                         ConsoleColor foreColor = block.ForeColors[i, j];
                         ConsoleColor backColor = block.BackColors[i, j];
-                        Print.Draw(c, foreColor, backColor);
+                        Print.Draw(str, foreColor, backColor);
                     }
                 }
             }
@@ -62,23 +62,23 @@ namespace Destroy.Graphics
             buffer = block;
         }
 
-        public static Block MaskCulling(Block block, Block mask, char maskChar)
+        public static Block MaskCulling(Block block, Block mask, string maskStr)
         {
             for (int i = 0; i < block.Height; i++)
             {
                 for (int j = 0; j < block.Width; j++)
                 {
-                    if (mask.Items[i, j] == maskChar)
-                        block.Items[i, j] = maskChar;
+                    if (mask.Items[i, j] == maskStr)
+                        block.Items[i, j] = maskStr;
                 }
             }
             return block;
         }
 
-        public static Block MaskCulling(Block block, char[,] maskArray, char maskChar)
+        public static Block MaskCulling(Block block, string[,] maskArray, string maskStr)
         {
-            Block mask = new Block(maskArray, block.CharWidth);
-            Block b = MaskCulling(block, mask, maskChar);
+            Block mask = new Block(maskArray, block.StrWidth);
+            Block b = MaskCulling(block, mask, maskStr);
             return b;
         }
 
@@ -92,10 +92,10 @@ namespace Destroy.Graphics
                     {
                         int x = point.X + j;
                         int y = point.Y - i;
-                        char c = occlusion.Items[i, j];
+                        string str = occlusion.Items[i, j];
                         ConsoleColor foreColor = occlusion.ForeColors[i, j];
                         ConsoleColor backColor = occlusion.BackColors[i, j];
-                        Coordinate.Set_RightX_UpY(block.Items, c, x, y);
+                        Coordinate.Set_RightX_UpY(block.Items, str, x, y);
                         Coordinate.Set_RightX_UpY(block.ForeColors, foreColor, x, y);
                         Coordinate.Set_RightX_UpY(block.BackColors, backColor, x, y);
                     }
@@ -109,10 +109,10 @@ namespace Destroy.Graphics
                     {
                         int x = point.X + j;
                         int y = point.Y + i;
-                        char c = occlusion.Items[i, j];
+                        string str = occlusion.Items[i, j];
                         ConsoleColor foreColor = occlusion.ForeColors[i, j];
                         ConsoleColor backColor = occlusion.BackColors[i, j];
-                        Coordinate.Set_RightX_DownY(block.Items, c, x, y);
+                        Coordinate.Set_RightX_DownY(block.Items, str, x, y);
                         Coordinate.Set_RightX_DownY(block.ForeColors, foreColor, x, y);
                         Coordinate.Set_RightX_DownY(block.BackColors, backColor, x, y);
                     }
@@ -121,7 +121,7 @@ namespace Destroy.Graphics
             return block;
         }
 
-        public static void CutBlock(Block block, ref Block cutBlock, Point2D point, CoordinateType type)
+        public static void BlockCutting(Block block, ref Block cutBlock, Point2D point, CoordinateType type)
         {
             if (type == CoordinateType.RightX_UpY)
             {
@@ -131,10 +131,10 @@ namespace Destroy.Graphics
                     {
                         int x = point.X + j;
                         int y = point.Y - i;
-                        char c = Coordinate.Get_RightX_UpY(block.Items, x, y);
+                        string str = Coordinate.Get_RightX_UpY(block.Items, x, y);
                         ConsoleColor foreColor = Coordinate.Get_RightX_UpY(block.ForeColors, x, y);
                         ConsoleColor backColor = Coordinate.Get_RightX_UpY(block.BackColors, x, y);
-                        cutBlock.Items[i, j] = c;
+                        cutBlock.Items[i, j] = str;
                         cutBlock.ForeColors[i, j] = foreColor;
                         cutBlock.BackColors[i, j] = backColor;
                     }
@@ -148,10 +148,10 @@ namespace Destroy.Graphics
                     {
                         int x = point.X + j;
                         int y = point.Y + i;
-                        char c = Coordinate.Get_RightX_DownY(block.Items, x, y);
+                        string str = Coordinate.Get_RightX_DownY(block.Items, x, y);
                         ConsoleColor foreColor = Coordinate.Get_RightX_DownY(block.ForeColors, x, y);
                         ConsoleColor backColor = Coordinate.Get_RightX_DownY(block.BackColors, x, y);
-                        cutBlock.Items[i, j] = c;
+                        cutBlock.Items[i, j] = str;
                         cutBlock.ForeColors[i, j] = foreColor;
                         cutBlock.BackColors[i, j] = backColor;
                     }
