@@ -18,28 +18,6 @@
 
         public int Height => Items.GetLength(0);
 
-        public Block(string str, int charWidth)
-        {
-            Items = new string[,] { { str } };
-            StrWidth = charWidth;
-            Pos = Point2D.Zero;
-            ColorBlock fore = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Gray);
-            ColorBlock back = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Black);
-            ForeColors = fore.Colors;
-            BackColors = back.Colors;
-        }
-
-        public Block(string str, int charWidth, Point2D point2D)
-        {
-            Items = new string[,] { { str } };
-            StrWidth = charWidth;
-            Pos = point2D;
-            ColorBlock fore = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Gray);
-            ColorBlock back = new ColorBlock(this.Items.GetLength(1), this.Items.GetLength(0), ConsoleColor.Black);
-            ForeColors = fore.Colors;
-            BackColors = back.Colors;
-        }
-
         public Block(string[,] items, int charWidth)
         {
             Items = items;

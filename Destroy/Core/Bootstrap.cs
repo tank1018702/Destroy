@@ -8,22 +8,22 @@ namespace Destroy
     {
         private int tickPerSecond;
         private bool block;
-        private Assembly assembly;
-        private List<object> instances;
+        private List<object> scriptInstances;
 
         public Bootstrap(int tickPerSecond, bool block)
         {
             this.tickPerSecond = tickPerSecond;
             this.block = block;
-            assembly = Assembly.GetExecutingAssembly();
-            instances = new List<object>();
+            scriptInstances = new List<object>();
+
+            Assembly assembly = Assembly.GetExecutingAssembly();
 
             foreach (var _class in assembly.GetTypes())
             {
-                if (_class.IsSubclassOf(typeof(Script)))
+                if (_class.IsSubclassOf(typeof(RuntimeScript)))
                 {
                     object instance = assembly.CreateInstance($"{_class.Namespace}.{_class.Name}");
-                    instances.Add(instance);
+                    scriptInstances.Add(instance);
                 }
             }
         }
@@ -32,7 +32,7 @@ namespace Destroy
 
         public void Tick()
         {
-            Thread thread = new Thread
+            Thread tick = new Thread
             (
                 () =>
                 {
@@ -53,12 +53,12 @@ namespace Destroy
                 IsBackground = !block
             };
 
-            thread.Start();
+            tick.Start();
         }
 
         private void CallMethod(string methodName, params object[] parameters)
         {
-            foreach (var instance in instances)
+            foreach (var instance in scriptInstances)
             {
                 MethodInfo method = instance.GetType().GetMethod(methodName);
 

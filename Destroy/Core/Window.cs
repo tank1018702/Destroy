@@ -9,24 +9,12 @@
 
         public int BufferWidth { get; private set; }
 
-        public Window(int bufferWidth = 40, int bufferHeight = 20, bool hideCursor = true)
+        public Window(int bufferWidth, int bufferHeight, bool hideCursor = true)
         {
-            Console.CursorVisible = !hideCursor;
-
             BufferHeight = bufferHeight;
             BufferWidth = bufferWidth;
 
-            Console.WindowHeight = bufferHeight;
-            Console.BufferHeight = bufferHeight;
-            Console.WindowWidth = bufferWidth;
-            Console.BufferWidth = bufferWidth;
-        }
-
-        public void SetFullScreen()
-        {
-            BufferHeight = Console.LargestWindowHeight;
-            BufferWidth = Console.LargestWindowWidth;
-
+            Console.CursorVisible = !hideCursor;
             Console.WindowHeight = BufferHeight;
             Console.BufferHeight = BufferHeight;
             Console.WindowWidth = BufferWidth;

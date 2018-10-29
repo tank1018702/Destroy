@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Destroy.ECS
@@ -15,7 +14,6 @@ namespace Destroy.ECS
         private int id;
 
         private Dictionary<int, EntityComponent> entities = new Dictionary<int, EntityComponent>();
-
 
         public int EntityCount => entities.Count;
 
@@ -41,7 +39,6 @@ namespace Destroy.ECS
         }
 
         public void DestroyEntity(Entity entity) => entities.Remove(entity.ID);
-
 
         public void AddComponent<T>(Entity entity) where T : struct, IComponent
         {

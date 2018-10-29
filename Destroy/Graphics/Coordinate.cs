@@ -1,4 +1,6 @@
-﻿namespace Destroy.Graphics
+﻿using System;
+
+namespace Destroy.Graphics
 {
     public enum CoordinateType
     {
@@ -19,12 +21,15 @@
 
         public CoordinateType Type { get; private set; }
 
-        public Coordinate(CoordinateType type, int height)
+        public Coordinate(CoordinateType type, int height = 0)
         {
             Type = type;
-            Height = height;
-        }
 
+            if (height == 0)
+                Height = Console.BufferHeight;
+            else
+                Height = height;
+        }
 
         public static T Get_RightX_UpY<T>(T[,] array, int x, int y)
         {

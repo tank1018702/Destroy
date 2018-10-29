@@ -1,6 +1,6 @@
 ﻿namespace Destroy.Graphics
 {
-    public class StrBlock
+    public class StringBlock
     {
         public string[,] Items { get; private set; }
 
@@ -8,7 +8,7 @@
 
         public int Length => Items.GetLength(0);
 
-        public StrBlock(int width, int height, string str)
+        public StringBlock(int width, int height, string str)
         {
             Items = new string[height, width];
 

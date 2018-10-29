@@ -1,6 +1,6 @@
 ﻿namespace Destroy
 {
-    public abstract class Script
+    public abstract class RuntimeScript
     {
         public abstract void Start();
 
