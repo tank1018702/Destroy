@@ -20,7 +20,7 @@ namespace Destroy
 
             foreach (var _class in assembly.GetTypes())
             {
-                if (_class.IsSubclassOf(typeof(RuntimeScript)))
+                if (_class.IsSubclassOf(typeof(Script)))
                 {
                     object instance = assembly.CreateInstance($"{_class.Namespace}.{_class.Name}");
                     scriptInstances.Add(instance);

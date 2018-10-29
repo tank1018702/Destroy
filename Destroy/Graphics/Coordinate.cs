@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Destroy.Graphics
+﻿namespace Destroy.Graphics
 {
     public enum CoordinateType
     {
@@ -15,39 +13,36 @@ namespace Destroy.Graphics
         RotLeft90,
     }
 
-    public class Coordinate
+    public static class Coordinate
     {
-        public int Height { get; private set; }
-
-        public CoordinateType Type { get; private set; }
-
-        public Coordinate(CoordinateType type, int height = 0)
+        public static T GetInArray<T>(T[,] array, int x, int y, CoordinateType coordinate)
         {
-            Type = type;
-
-            if (height == 0)
-                Height = Console.BufferHeight;
-            else
-                Height = height;
+            if (coordinate == CoordinateType.RightX_UpY)
+            {
+                int _x = array.GetLength(0) - 1 - y;
+                int _y = x;
+                return array[_x, _y];
+            }
+            else if (coordinate == CoordinateType.RightX_DownY)
+            {
+                return array[y, x];
+            }
+            return default(T);
         }
 
-        public static T Get_RightX_UpY<T>(T[,] array, int x, int y)
+        public static void SetInArray<T>(T[,] array, T item, int x, int y, CoordinateType coordinate)
         {
-            int _x = array.GetLength(0) - 1 - y;
-            int _y = x;
-            return array[_x, _y];
+            if (coordinate == CoordinateType.RightX_UpY)
+            {
+                int _x = array.GetLength(0) - 1 - y;
+                int _y = x;
+                array[_x, _y] = item;
+            }
+            else if (coordinate == CoordinateType.RightX_DownY)
+            {
+                array[y, x] = item;
+            }
         }
-
-        public static void Set_RightX_UpY<T>(T[,] array, T t, int x, int y)
-        {
-            int _x = array.GetLength(0) - 1 - y;
-            int _y = x;
-            array[_x, _y] = t;
-        }
-
-        public static T Get_RightX_DownY<T>(T[,] array, int x, int y) => array[y, x];
-
-        public static void Set_RightX_DownY<T>(T[,] array, T t, int x, int y) => array[y, x] = t;
 
         public static T[,] Rotate<T>(T[,] array, RotationAngle angle)
         {

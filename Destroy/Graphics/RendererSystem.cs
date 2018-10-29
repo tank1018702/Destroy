@@ -2,21 +2,29 @@
 
 namespace Destroy.Graphics
 {
+    /// <summary>
+    /// 渲染系统
+    /// </summary>
     public static class RendererSystem
     {
-        public static void RenderBlock(Block block, Coordinate coordinate)
+        /// <summary>
+        /// 在控制台缓冲区上渲染一个Block
+        /// </summary>
+        public static void RenderBlock(Block block)
         {
+            int height = Console.BufferHeight;
+
             for (int i = 0; i < block.Height; i++)
             {
                 for (int j = 0; j < block.Width; j++)
                 {
-                    if (coordinate.Type == CoordinateType.RightX_UpY)
+                    if (block.Coordinate == CoordinateType.RightX_UpY)
                     {
                         int x = (block.Pos.X + j) * block.StrWidth;
-                        int y = coordinate.Height - 1 - block.Pos.Y + i;
+                        int y = height - 1 - block.Pos.Y + i;
                         Print.SetCursorPos(x, y);
                     }
-                    else if (coordinate.Type == CoordinateType.RightX_DownY)
+                    else if (block.Coordinate == CoordinateType.RightX_DownY)
                     {
                         int x = (block.Pos.X + j) * block.StrWidth;
                         int y = block.Pos.Y + i;
@@ -30,8 +38,13 @@ namespace Destroy.Graphics
             }
         }
 
-        public static void RenderBlockBuffer(Block block, ref Block buffer, Coordinate coordinate)
+        /// <summary>
+        /// 在控制台缓冲区上利用双缓冲技术渲染一个Block
+        /// </summary>
+        public static void RenderBlockBuffer(Block block, ref Block buffer)
         {
+            int height = Console.BufferHeight;
+
             for (int i = 0; i < block.Height; i++)
             {
                 for (int j = 0; j < block.Width; j++)
@@ -39,13 +52,13 @@ namespace Destroy.Graphics
                     //Diff
                     if (block.Items[i, j] != buffer.Items[i, j])
                     {
-                        if (coordinate.Type == CoordinateType.RightX_UpY)
+                        if (block.Coordinate == CoordinateType.RightX_UpY)
                         {
                             int x = (block.Pos.X + j) * block.StrWidth;
-                            int y = coordinate.Height - 1 - block.Pos.Y + i;
+                            int y = height - 1 - block.Pos.Y + i;
                             Print.SetCursorPos(x, y);
                         }
-                        else if (coordinate.Type == CoordinateType.RightX_DownY)
+                        else if (block.Coordinate == CoordinateType.RightX_DownY)
                         {
                             int x = (block.Pos.X + j) * block.StrWidth;
                             int y = block.Pos.Y + i;
@@ -62,99 +75,79 @@ namespace Destroy.Graphics
             buffer = block;
         }
 
-        public static Block MaskCulling(Block block, Block mask, string maskStr)
+        /// <summary>
+        /// 在Block上叠加一层相同大小的Mask，根据maskStr指定Block中哪些item需要被替换为maskStr。
+        /// </summary>
+        public static Block MaskCulling(Block block, string[,] maskArray, string maskStr)
         {
             for (int i = 0; i < block.Height; i++)
             {
                 for (int j = 0; j < block.Width; j++)
                 {
-                    if (mask.Items[i, j] == maskStr)
+                    if (maskArray[i, j] == maskStr)
                         block.Items[i, j] = maskStr;
                 }
             }
             return block;
         }
 
-        public static Block MaskCulling(Block block, string[,] maskArray, string maskStr)
+        /// <summary>
+        /// 在一个Block上进行一个新的Block的渲染。
+        /// </summary>
+        public static Block OcclusionCulling(Block block, Block occlusion)
         {
-            Block mask = new Block(maskArray, block.StrWidth);
-            Block b = MaskCulling(block, mask, maskStr);
-            return b;
-        }
-
-        public static Block OcclusionCulling(Block block, Block occlusion, Point2D point, CoordinateType type)
-        {
-            if (type == CoordinateType.RightX_UpY)
+            for (int i = 0; i < occlusion.Height; i++)
             {
-                for (int i = 0; i < occlusion.Height; i++)
+                for (int j = 0; j < occlusion.Width; j++)
                 {
-                    for (int j = 0; j < occlusion.Width; j++)
+                    int x = -1, y = -1;
+                    if (occlusion.Coordinate == CoordinateType.RightX_UpY)
                     {
-                        int x = point.X + j;
-                        int y = point.Y - i;
-                        string str = occlusion.Items[i, j];
-                        ConsoleColor foreColor = occlusion.ForeColors[i, j];
-                        ConsoleColor backColor = occlusion.BackColors[i, j];
-                        Coordinate.Set_RightX_UpY(block.Items, str, x, y);
-                        Coordinate.Set_RightX_UpY(block.ForeColors, foreColor, x, y);
-                        Coordinate.Set_RightX_UpY(block.BackColors, backColor, x, y);
+                        x = occlusion.Pos.X + j;
+                        y = occlusion.Pos.Y - i;
                     }
-                }
-            }
-            else if (type == CoordinateType.RightX_DownY)
-            {
-                for (int i = 0; i < occlusion.Height; i++)
-                {
-                    for (int j = 0; j < occlusion.Width; j++)
+                    else if (occlusion.Coordinate == CoordinateType.RightX_DownY)
                     {
-                        int x = point.X + j;
-                        int y = point.Y + i;
-                        string str = occlusion.Items[i, j];
-                        ConsoleColor foreColor = occlusion.ForeColors[i, j];
-                        ConsoleColor backColor = occlusion.BackColors[i, j];
-                        Coordinate.Set_RightX_DownY(block.Items, str, x, y);
-                        Coordinate.Set_RightX_DownY(block.ForeColors, foreColor, x, y);
-                        Coordinate.Set_RightX_DownY(block.BackColors, backColor, x, y);
+                        x = occlusion.Pos.X + j;
+                        y = occlusion.Pos.Y + i;
                     }
+                    string str = occlusion.Items[i, j];
+                    ConsoleColor foreColor = occlusion.ForeColors[i, j];
+                    ConsoleColor backColor = occlusion.BackColors[i, j];
+                    Coordinate.SetInArray(block.Items, str, x, y, occlusion.Coordinate);
+                    Coordinate.SetInArray(block.ForeColors, foreColor, x, y, occlusion.Coordinate);
+                    Coordinate.SetInArray(block.BackColors, backColor, x, y, occlusion.Coordinate);
                 }
             }
             return block;
         }
 
-        public static void BlockCutting(Block block, ref Block cutBlock, Point2D point, CoordinateType type)
+        /// <summary>
+        /// 在一个Block上截取出指定cutBlock。
+        /// </summary>
+        public static void BlockCutting(Block block, ref Block cutBlock)
         {
-            if (type == CoordinateType.RightX_UpY)
+            for (int i = 0; i < cutBlock.Height; i++)
             {
-                for (int i = 0; i < cutBlock.Height; i++)
+                for (int j = 0; j < cutBlock.Width; j++)
                 {
-                    for (int j = 0; j < cutBlock.Width; j++)
+                    int x = -1, y = -1;
+                    if (cutBlock.Coordinate == CoordinateType.RightX_UpY)
                     {
-                        int x = point.X + j;
-                        int y = point.Y - i;
-                        string str = Coordinate.Get_RightX_UpY(block.Items, x, y);
-                        ConsoleColor foreColor = Coordinate.Get_RightX_UpY(block.ForeColors, x, y);
-                        ConsoleColor backColor = Coordinate.Get_RightX_UpY(block.BackColors, x, y);
-                        cutBlock.Items[i, j] = str;
-                        cutBlock.ForeColors[i, j] = foreColor;
-                        cutBlock.BackColors[i, j] = backColor;
+                        x = cutBlock.Pos.X + j;
+                        y = cutBlock.Pos.Y - i;
                     }
-                }
-            }
-            else if (type == CoordinateType.RightX_DownY)
-            {
-                for (int i = 0; i < cutBlock.Height; i++)
-                {
-                    for (int j = 0; j < cutBlock.Width; j++)
+                    else if (cutBlock.Coordinate == CoordinateType.RightX_DownY)
                     {
-                        int x = point.X + j;
-                        int y = point.Y + i;
-                        string str = Coordinate.Get_RightX_DownY(block.Items, x, y);
-                        ConsoleColor foreColor = Coordinate.Get_RightX_DownY(block.ForeColors, x, y);
-                        ConsoleColor backColor = Coordinate.Get_RightX_DownY(block.BackColors, x, y);
-                        cutBlock.Items[i, j] = str;
-                        cutBlock.ForeColors[i, j] = foreColor;
-                        cutBlock.BackColors[i, j] = backColor;
+                        x = cutBlock.Pos.X + j;
+                        y = cutBlock.Pos.Y + i;
                     }
+                    string str = Coordinate.GetInArray(block.Items, x, y, cutBlock.Coordinate);
+                    ConsoleColor foreColor = Coordinate.GetInArray(block.ForeColors, x, y, cutBlock.Coordinate);
+                    ConsoleColor backColor = Coordinate.GetInArray(block.BackColors, x, y, cutBlock.Coordinate);
+                    cutBlock.Items[i, j] = str;
+                    cutBlock.ForeColors[i, j] = foreColor;
+                    cutBlock.BackColors[i, j] = backColor;
                 }
             }
         }

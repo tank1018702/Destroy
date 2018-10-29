@@ -5,7 +5,7 @@
     using Destroy;
     using Destroy.Graphics;
 
-    public class Game : RuntimeScript
+    public class Game : Script
     {
         public override void Start()
         {
@@ -13,8 +13,6 @@
 
             Window window = new Window(40, 20);
             window.SetIOEncoding(Encoding.Unicode);
-
-            Coordinate coordinate = new Coordinate(CoordinateType.RightX_DownY);
 
             string[,] items =
             {
@@ -24,11 +22,9 @@
                 {"└", "─", "┘"}
             };
 
-            ColorBlock colorBlock = new ColorBlock(3, 4, ConsoleColor.Red);
-
-            Block block = new Block(items, 2, new Point2D(0, 0), colorBlock.Colors);
-
-            RendererSystem.RenderBlock(block, coordinate);
+            Block block = new Block(items, 2, CoordinateType.RightX_DownY);
+            
+            RendererSystem.RenderBlock(block);
 
             Console.WriteLine();
         }

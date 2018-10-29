@@ -1,6 +1,6 @@
 ﻿namespace Destroy.Graphics
 {
-    public class StringBlock
+    public struct StringBlock
     {
         public string[,] Items { get; private set; }
 
