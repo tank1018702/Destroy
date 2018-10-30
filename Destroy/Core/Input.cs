@@ -247,5 +247,15 @@
             }
             return inputKey;
         }
+
+        [Obsolete("Dont suggest using this.")]
+        public static char GetInputChar()
+        {
+            while (Console.KeyAvailable)
+            {
+                return Console.ReadKey().KeyChar;
+            }
+            return default(char);
+        }
     }
 }

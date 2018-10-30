@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Audio.cs" />
+    <Compile Include="Core\CreatGameObject.cs" />
     <Compile Include="Core\RuntimeEngine.cs" />
     <Compile Include="Core\Component.cs" />
     <Compile Include="Core\GameObject.cs" />

@@ -1,7 +1,5 @@
 ﻿namespace Destroy
 {
-    using System;
-
     public class Program
     {
         private static void Main()

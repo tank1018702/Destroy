@@ -11,10 +11,15 @@
 
         public Window(int bufferWidth, int bufferHeight, bool hideCursor = true)
         {
+            Console.CursorVisible = !hideCursor;
+            SetBufferSize(bufferWidth, bufferHeight);
+        }
+
+        public void SetBufferSize(int bufferWidth, int bufferHeight)
+        {
             BufferHeight = bufferHeight;
             BufferWidth = bufferWidth;
 
-            Console.CursorVisible = !hideCursor;
             Console.WindowHeight = BufferHeight;
             Console.BufferHeight = BufferHeight;
             Console.WindowWidth = BufferWidth;

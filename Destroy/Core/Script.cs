@@ -1,9 +1,7 @@
 ﻿namespace Destroy
 {
-    public abstract class Script
+    public abstract class Script : Component
     {
-        public GameObject GameObject;
-
         public abstract void Start();
 
         public abstract void Update(float deltaTime);

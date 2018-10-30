@@ -5,7 +5,7 @@
     using Destroy;
     using Destroy.Graphics;
 
-    [UpdateOrder(1)]
+    [CreatGameObject(typeof(Test))]
     public class Game : Script
     {
         public override void Start()
@@ -26,26 +26,28 @@
             Block block = new Block(items, 2, CoordinateType.RightX_DownY);
 
             RendererSystem.RenderBlock(block);
+
+            Console.WriteLine(GameObject.GetComponent<Test>());
         }
 
         float timer;
 
         public override void Update(float deltaTime)
         {
-            if (Input.GetKey(KeyCode.A))
-                timer += deltaTime * 5;
-            //else
-            //    timer = 0;
+            timer += deltaTime;
 
-            if (timer >= 1)
+            if (timer >= 3)
             {
                 timer = 0;
-                Console.Write(1);
+                //Window window = new Window(100, 50);
             }
+
+
         }
     }
 
-    public class FUC : Script
+    [CreatGameObject()]
+    public class Test : Script
     {
         public override void Start()
         {

@@ -22,6 +22,8 @@ RendererSystem is ready.
 
 RendererSystem is already for production.(Updated to 2.0)
 
+Gameplay framework is already finished.
+
 # 秒天秒地
 DE·Charlie Presents
 
@@ -45,3 +47,5 @@ DE·Charlie Presents
 渲染系统就绪。
 
 渲染系统可用于生产。（升级至2.0）
+
+Gameplay框架即将完成。

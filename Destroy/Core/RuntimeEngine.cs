@@ -9,42 +9,15 @@ namespace Destroy
     {
         private int tickPerSecond;
         private bool block;
-        private List<object> scriptInstances;
-
+        private List<GameObject> gameObjects;
 
         public RuntimeEngine(int tickPerSecond, bool block)
         {
             this.tickPerSecond = tickPerSecond;
             this.block = block;
-            scriptInstances = new List<object>();
+            gameObjects = new List<GameObject>();
 
-            Assembly assembly = Assembly.GetExecutingAssembly();
-
-            List<OrderClass> orderClasses = new List<OrderClass>();
-
-            foreach (var _class in assembly.GetTypes())
-            {
-                if (_class.IsSubclassOf(typeof(Script)))
-                {
-                    OrderClass orderClass = new OrderClass(uint.MaxValue, _class);
-                    UpdateOrder updateOrder = _class.GetCustomAttribute<UpdateOrder>();
-                    //指定了顺序
-                    if (updateOrder != null)
-                        orderClass.Order = updateOrder.Order;
-
-                    orderClasses.Add(orderClass);
-                }
-            }
-            //Sorting(order越小的越先执行)
-            foreach (var orderClass in InsertionSort(orderClasses))
-            {
-                //创建对象
-                object instance = assembly.CreateInstance($"{orderClass.Type.Namespace}.{orderClass.Type.Name}");
-                //设置GameObject
-                instance.GetType().GetField("GameObject").SetValue(instance, new GameObject());
-                //添加进队列
-                scriptInstances.Add(instance);
-            }
+            CreatGameObjects();
         }
 
         public void Start() => CallMethod("Start");
@@ -75,13 +48,67 @@ namespace Destroy
             tick.Start();
         }
 
+        private void CreatGameObjects()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+
+            List<OrderClass> orderClasses = new List<OrderClass>();
+
+            //获取游戏物体上的脚本
+            foreach (var _class in assembly.GetTypes())
+            {
+                //是否继承Script并且创建游戏物体
+                if (_class.IsSubclassOf(typeof(Script)) && _class.GetCustomAttribute<CreatGameObject>() != null)
+                {
+                    OrderClass orderClass = new OrderClass(uint.MaxValue, _class);
+
+                    //判断执行顺序
+                    UpdateOrder updateOrder = _class.GetCustomAttribute<UpdateOrder>();
+                    if (updateOrder != null)
+                        orderClass.Order = updateOrder.Order;
+
+                    orderClasses.Add(orderClass);
+                }
+            }
+            //Sorting(order越小的越先调用)
+            foreach (var orderClass in InsertionSort(orderClasses))
+            {
+                //创建脚本实例
+                object scriptInstance = assembly.CreateInstance($"{orderClass.Type.Namespace}.{orderClass.Type.Name}");
+
+                //设置GameObject与组件
+                GameObject gameObject = new GameObject();
+                //添加进有序游戏物体集合
+                gameObjects.Add(gameObject);
+
+                //添加脚本实例作为组件
+                gameObject.AddComponent((Component)scriptInstance);
+                //添加Required组件
+                CreatGameObject creatGameObject = orderClass.Type.GetCustomAttribute<CreatGameObject>();
+                foreach (var type in creatGameObject.RequiredComponents)
+                {
+                    //如果继承Component类型
+                    if (type.IsSubclassOf(typeof(Component)))
+                    {
+                        object component = assembly.CreateInstance($"{type.Namespace}.{type.Name}");
+                        gameObject.AddComponent((Component)component);
+                    }
+                }
+            }
+        }
+
         private void CallMethod(string methodName, params object[] parameters)
         {
-            foreach (var instance in scriptInstances)
+            //遍历游戏物体
+            foreach (var gameObject in gameObjects)
             {
-                MethodInfo method = instance.GetType().GetMethod(methodName);
-                //调用方法, 传递参数
-                method?.Invoke(instance, parameters);
+                List<Script> scripts = gameObject.GetComponents<Script>();
+                //调用每个脚本的指定方法
+                foreach (var script in scripts)
+                {
+                    MethodInfo method = script.GetType().GetMethod(methodName);
+                    method?.Invoke(script, parameters);
+                }
             }
         }
 

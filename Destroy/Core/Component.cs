@@ -1,7 +1,7 @@
 ﻿namespace Destroy
 {
-    public class Component
+    public abstract class Component
     {
-
+        public GameObject GameObject;
     }
 }

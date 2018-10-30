@@ -4,41 +4,82 @@
 
     public class GameObject
     {
-        private Dictionary<string, Component> components;
+        private List<Component> components;
 
         public GameObject()
         {
-            components = new Dictionary<string, Component>();
+            components = new List<Component>();
         }
 
+        /// <summary>
+        /// 添加指定组件
+        /// </summary>
         public T AddComponent<T>() where T : Component, new()
         {
-            string name = nameof(T);
-            if (components.ContainsKey(name))
-                return null;
-
-            T instance = new T();
-            components.Add(name, instance);
+            foreach (var component in components)
+                if (typeof(T) == component.GetType())
+                    return null;
+            T instance = new T { GameObject = this };
+            components.Add(instance);
 
             return instance;
         }
 
-        public T GetComponent<T>() where T : Component, new()
+        /// <summary>
+        /// 添加指定组件
+        /// </summary>
+        public void AddComponent<T>(T component) where T : Component
         {
-            string name = nameof(T);
-            if (!components.ContainsKey(name))
-                return null;
-
-            return components[name] as T;
+            foreach (var each in components)
+                if (each == component)
+                    return;
+            component.GameObject = this;
+            components.Add(component);
         }
 
-        public void RemoveComponent<T>() where T : Component, new()
+        /// <summary>
+        /// 获取指定的类型及其子类
+        /// </summary>
+        public T GetComponent<T>() where T : Component
         {
-            string name = nameof(T);
-            if (!components.ContainsKey(name))
-                return;
+            foreach (var component in components)
+            {
+                //返回同类型或子类
+                var type = typeof(T);
+                var comType = component.GetType();
+                if (type == comType || comType.IsSubclassOf(type))
+                    return component as T;
+            }
+            return null;
+        }
 
-            components.Remove(name);
+        /// <summary>
+        /// 获取所有指定的类型及其子类
+        /// </summary>
+        public List<T> GetComponents<T>() where T : Component
+        {
+            List<T> list = new List<T>();
+            foreach (var component in components)
+            {
+                var type = typeof(T);
+                var comType = component.GetType();
+                //返回同类型或子类
+                if (type == comType || comType.IsSubclassOf(type))
+                    list.Add(component as T);
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 移除指定组件
+        /// </summary>
+        public void RemoveComponent<T>() where T : Component
+        {
+            for (int i = 0; i < components.Count; i++)
+            {
+                if (components[i].GetType() == typeof(T))
+                    components.RemoveAt(i);
+            }
         }
     }
 }
