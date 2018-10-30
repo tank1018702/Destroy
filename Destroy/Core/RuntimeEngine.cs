@@ -7,9 +7,9 @@ namespace Destroy
 {
     public class RuntimeEngine
     {
-        private int tickPerSecond;
-        private bool block;
-        private List<GameObject> gameObjects;
+        private readonly int tickPerSecond;
+        private readonly bool block;
+        private readonly List<GameObject> gameObjects;
 
         public RuntimeEngine(int tickPerSecond, bool block)
         {
@@ -81,6 +81,10 @@ namespace Destroy
                 //添加进有序游戏物体集合
                 gameObjects.Add(gameObject);
 
+                //注入gameObjects的引用
+                FieldInfo gos = gameObject.GetType().GetField("gameObjects", BindingFlags.NonPublic | BindingFlags.Instance);
+                gos.SetValue(gameObject, gameObjects);
+
                 //创建脚本实例
                 object scriptInstance = assembly.CreateInstance($"{orderClass.Type.Namespace}.{orderClass.Type.Name}");
                 //添加脚本实例作为组件
@@ -102,14 +106,19 @@ namespace Destroy
         private void CallMethod(string methodName, params object[] parameters)
         {
             //遍历游戏物体
-            foreach (var gameObject in gameObjects)
+            for (int i = 0; i < gameObjects.Count; i++)
             {
+                GameObject gameObject = gameObjects[i];
+
                 List<Script> scripts = gameObject.GetComponents<Script>();
                 //调用每个脚本的指定方法
                 foreach (var script in scripts)
                 {
-                    if (gameObject == null) //加上判断, 避免在Invoke方法时直接Destroy掉该GameObject
+                    if (!gameObjects.Contains(gameObject)) //加上判断, 如果在调用方法时Destroy了该物体则跳出执行
                         break;
+                    if (!gameObject.HasComponent(script))  //加上判断, 如果在调用方法中移除其他脚本则跳出执行
+                        break;
+
                     MethodInfo method = script.GetType().GetMethod(methodName);
                     method?.Invoke(script, parameters);
                 }

@@ -5,7 +5,7 @@
     using Destroy;
     using Destroy.Graphics;
 
-    [CreatGameObject(typeof(Test))]
+    [CreatGameObject]
     public class Game : Script
     {
         public override void Start()
@@ -26,9 +26,6 @@
             Block block = new Block(items, 2, CoordinateType.RightX_DownY);
 
             RendererSystem.RenderBlock(block);
-
-            GameObject.RemoveComponent<Game>();
-            Console.WriteLine(GameObject.GetComponent<Test>());
         }
 
         public override void Update(float deltaTime)
@@ -36,11 +33,11 @@
         }
     }
 
+    [CreatGameObject]
     public class Test : Script
     {
         public override void Start()
         {
-            Console.WriteLine("1231233");
         }
 
         public override void Update(float deltaTime)

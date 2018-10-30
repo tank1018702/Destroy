@@ -2,8 +2,8 @@
 {
     public abstract class Script : Component
     {
-        public abstract void Start();
+        public virtual void Start() { }
 
-        public abstract void Update(float deltaTime);
+        public virtual void Update(float deltaTime) { }
     }
 }
