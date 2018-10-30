@@ -20,7 +20,10 @@ namespace Destroy
             CreatGameObjects();
         }
 
-        public void Start() => CallMethod("Start");
+        public void Start()
+        {
+            CallMethod("Start");
+        }
 
         public void Tick()
         {
@@ -73,17 +76,16 @@ namespace Destroy
             //Sorting(order越小的越先调用)
             foreach (var orderClass in InsertionSort(orderClasses))
             {
-                //创建脚本实例
-                object scriptInstance = assembly.CreateInstance($"{orderClass.Type.Namespace}.{orderClass.Type.Name}");
-
                 //设置GameObject与组件
                 GameObject gameObject = new GameObject();
                 //添加进有序游戏物体集合
                 gameObjects.Add(gameObject);
 
+                //创建脚本实例
+                object scriptInstance = assembly.CreateInstance($"{orderClass.Type.Namespace}.{orderClass.Type.Name}");
                 //添加脚本实例作为组件
                 gameObject.AddComponent((Component)scriptInstance);
-                //添加Required组件
+                //then add required components
                 CreatGameObject creatGameObject = orderClass.Type.GetCustomAttribute<CreatGameObject>();
                 foreach (var type in creatGameObject.RequiredComponents)
                 {
@@ -106,6 +108,8 @@ namespace Destroy
                 //调用每个脚本的指定方法
                 foreach (var script in scripts)
                 {
+                    if (gameObject == null) //加上判断, 避免在Invoke方法时直接Destroy掉该GameObject
+                        break;
                     MethodInfo method = script.GetType().GetMethod(methodName);
                     method?.Invoke(script, parameters);
                 }

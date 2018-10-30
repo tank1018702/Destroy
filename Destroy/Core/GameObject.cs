@@ -31,7 +31,7 @@
         public void AddComponent<T>(T component) where T : Component
         {
             foreach (var each in components)
-                if (each == component)
+                if (each.GetType() == component.GetType())
                     return;
             component.GameObject = this;
             components.Add(component);

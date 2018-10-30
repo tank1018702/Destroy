@@ -27,26 +27,15 @@
 
             RendererSystem.RenderBlock(block);
 
+            GameObject.RemoveComponent<Game>();
             Console.WriteLine(GameObject.GetComponent<Test>());
         }
 
-        float timer;
-
         public override void Update(float deltaTime)
         {
-            timer += deltaTime;
-
-            if (timer >= 3)
-            {
-                timer = 0;
-                //Window window = new Window(100, 50);
-            }
-
-
         }
     }
 
-    [CreatGameObject()]
     public class Test : Script
     {
         public override void Start()
