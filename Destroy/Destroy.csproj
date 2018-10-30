@@ -44,8 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Audio.cs" />
-    <Compile Include="Core\Bootstrap.cs" />
+    <Compile Include="Core\RuntimeEngine.cs" />
+    <Compile Include="Core\Component.cs" />
+    <Compile Include="Core\GameObject.cs" />
     <Compile Include="Core\Script.cs" />
+    <Compile Include="Core\UpdateOrder.cs" />
     <Compile Include="ExampleGame\Game.cs" />
     <Compile Include="Graphics\Block.cs" />
     <Compile Include="Physics\Collider.cs" />

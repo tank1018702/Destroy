@@ -6,7 +6,7 @@
     {
         private static void Main()
         {
-            Bootstrap bootstrap = new Bootstrap(50, true);
+            RuntimeEngine bootstrap = new RuntimeEngine(50, true);
             bootstrap.Start();
             bootstrap.Tick();
         }
