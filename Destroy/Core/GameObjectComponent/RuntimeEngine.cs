@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Threading;
-
-namespace Destroy
+﻿namespace Destroy
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Threading;
+
     public class RuntimeEngine
     {
         private readonly int tickPerSecond;
@@ -36,25 +36,22 @@ namespace Destroy
             (
                 () =>
                 {
-                    float deltaTime = 0;
+                    //I use the simple fixed deltaTime but not use the System.Diagnostics.
+                    float deltaTime = 0; 
+                    int delayTime = 1000 / tickPerSecond;
 
                     while (true)
                     {
-                        int delayTime = 1000 / tickPerSecond;
-
+                        //LifeCycle
                         InvokeScript(deltaTime);
-                        //TODO
-
+                        RenderBlock();
 
                         Thread.Sleep(delayTime);
-
                         deltaTime = (float)1 / tickPerSecond;
                     }
                 }
             )
-            {
-                IsBackground = !block
-            };
+            { IsBackground = !block };
 
             tick.Start();
         }
@@ -102,9 +99,6 @@ namespace Destroy
             }
         }
 
-        /// <summary>
-        /// It has Bugs!
-        /// </summary>
         private void InvokeScript(float deltaTime)
         {
             //统一调用Start
@@ -127,6 +121,7 @@ namespace Destroy
                     if (!component.GetType().IsSubclassOf(typeof(Script)))
                         continue;
                     Script script = (Script)component;
+
                     if (!script.Started)
                     {
                         script.Start();
@@ -140,21 +135,29 @@ namespace Destroy
             {
                 GameObject gameObject = gameObjects[i];
 
-                List<Script> scripts = gameObject.GetComponents<Script>();
+                //反射获取components引用
+                FieldInfo fieldInfo = gameObject.GetType().GetField("components", BindingFlags.NonPublic | BindingFlags.Instance);
+                List<Component> components = (List<Component>)fieldInfo.GetValue(gameObject);
 
-                foreach (var script in scripts)
+                for (int j = 0; j < components.Count; j++)
                 {
-                    //如果游戏物体被销毁则停止执行后续Start
+                    //如果游戏物体被销毁则停止执行后续Update
                     if (!gameObjects.Contains(gameObject))
                         break;
 
-                    //RemoveComponent加上判断, 如果在调用方法中移除其他脚本则跳出执行
-                    if (!gameObject.HasComponent(script))
-                        break;
-
-                    script.Update(deltaTime); //在Update中new的Go会在下次生命周期开始时调用
+                    Component component = components[j];
+                    //筛选继承Script的组件
+                    if (!component.GetType().IsSubclassOf(typeof(Script)))
+                        continue;
+                    Script script = (Script)component;
+                    script.Update(deltaTime);
                 }
             }
+        }
+
+        private void RenderBlock()
+        {
+
         }
 
         private class OrderClass

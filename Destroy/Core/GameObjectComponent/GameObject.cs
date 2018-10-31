@@ -43,7 +43,33 @@
         }
 
         /// <summary>
-        /// 添加指定组件
+        /// 移除指定组件
+        /// </summary>
+        public void RemoveComponent<T>() where T : Component
+        {
+            for (int i = 0; i < components.Count; i++)
+            {
+                if (components[i].GetType() == typeof(T))
+                    components.RemoveAt(i);
+            }
+        }
+
+        /// <summary>
+        /// 获取指定的类型
+        /// </summary>
+        public T GetComponent<T>() where T : Component
+        {
+            foreach (var component in components)
+            {
+                //返回同类型或子类
+                if (typeof(T) == component.GetType())
+                    return component as T;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 添加指定组件实例
         /// </summary>
         public void AddComponent<T>(T component) where T : Component
         {
@@ -52,22 +78,6 @@
                     return;
             component.gameObject = this;
             components.Add(component);
-        }
-
-        /// <summary>
-        /// 获取指定的类型及其子类
-        /// </summary>
-        public T GetComponent<T>() where T : Component
-        {
-            foreach (var component in components)
-            {
-                //返回同类型或子类
-                var type = typeof(T);
-                var comType = component.GetType();
-                if (type == comType || comType.IsSubclassOf(type))
-                    return component as T;
-            }
-            return null;
         }
 
         /// <summary>
@@ -85,29 +95,6 @@
                     list.Add(component as T);
             }
             return list;
-        }
-
-        /// <summary>
-        /// 是否拥有该组件
-        /// </summary>
-        public bool HasComponent<T>(T component) where T : Component
-        {
-            foreach (var each in components)
-                if (each.GetType() == component.GetType())
-                    return true;
-            return false;
-        }
-
-        /// <summary>
-        /// 移除指定组件
-        /// </summary>
-        public void RemoveComponent<T>() where T : Component
-        {
-            for (int i = 0; i < components.Count; i++)
-            {
-                if (components[i].GetType() == typeof(T))
-                    components.RemoveAt(i);
-            }
         }
 
         /// <summary>
