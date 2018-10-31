@@ -5,7 +5,7 @@
     using Destroy;
     using Destroy.Graphics;
 
-    [CreatGameObject]
+    [CreatGameObject(1)]
     public class Game : Script
     {
         public override void Start()
@@ -22,22 +22,24 @@
                 {"│", " ", "│"},
                 {"└", "─", "┘"}
             };
-
             Block block = new Block(items, 2, CoordinateType.RightX_DownY);
-
             RendererSystem.RenderBlock(block);
+
+            gameObject.AddComponent<Test>();
         }
 
         public override void Update(float deltaTime)
         {
+            Console.WriteLine(1);
         }
     }
 
-    [CreatGameObject]
+
     public class Test : Script
     {
         public override void Start()
         {
+            Console.WriteLine(10);
         }
 
         public override void Update(float deltaTime)

@@ -1,4 +1,4 @@
-﻿namespace Destroy.Graphics
+﻿namespace Destroy
 {
     using System;
 

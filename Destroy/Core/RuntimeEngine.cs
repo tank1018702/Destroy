@@ -11,21 +11,26 @@ namespace Destroy
         private readonly bool block;
         private readonly List<GameObject> gameObjects;
 
+        public static Action<GameObject> NewGameObject;
+
         public RuntimeEngine(int tickPerSecond, bool block)
         {
             this.tickPerSecond = tickPerSecond;
             this.block = block;
             gameObjects = new List<GameObject>();
 
+            NewGameObject += gameObject =>
+            {
+                gameObjects.Add(gameObject);
+                //注入gameObjects的引用
+                FieldInfo gos = gameObject.GetType().GetField("gameObjects", BindingFlags.NonPublic | BindingFlags.Instance);
+                gos.SetValue(gameObject, gameObjects);
+            };
+
             CreatGameObjects();
         }
 
-        public void Start()
-        {
-            CallMethod("Start");
-        }
-
-        public void Tick()
+        public void Run()
         {
             Thread tick = new Thread
             (
@@ -37,7 +42,10 @@ namespace Destroy
                     {
                         int delayTime = 1000 / tickPerSecond;
 
-                        CallMethod("Update", deltaTime);
+                        InvokeScript(deltaTime);
+                        //TODO
+
+
                         Thread.Sleep(delayTime);
 
                         deltaTime = (float)1 / tickPerSecond;
@@ -60,37 +68,28 @@ namespace Destroy
             //获取游戏物体上的脚本
             foreach (var _class in assembly.GetTypes())
             {
+                CreatGameObject creatGameObject = _class.GetCustomAttribute<CreatGameObject>();
                 //是否继承Script并且创建游戏物体
-                if (_class.IsSubclassOf(typeof(Script)) && _class.GetCustomAttribute<CreatGameObject>() != null)
+                if (_class.IsSubclassOf(typeof(Script)) && creatGameObject != null)
                 {
-                    OrderClass orderClass = new OrderClass(uint.MaxValue, _class);
-
-                    //判断执行顺序
-                    UpdateOrder updateOrder = _class.GetCustomAttribute<UpdateOrder>();
-                    if (updateOrder != null)
-                        orderClass.Order = updateOrder.Order;
+                    OrderClass orderClass = new OrderClass(creatGameObject.CreatOrder, _class);
 
                     orderClasses.Add(orderClass);
                 }
             }
+
             //Sorting(order越小的越先调用)
             foreach (var orderClass in InsertionSort(orderClasses))
             {
+                CreatGameObject creatGameObject = orderClass.Type.GetCustomAttribute<CreatGameObject>();
                 //设置GameObject与组件
-                GameObject gameObject = new GameObject();
-                //添加进有序游戏物体集合
-                gameObjects.Add(gameObject);
-
-                //注入gameObjects的引用
-                FieldInfo gos = gameObject.GetType().GetField("gameObjects", BindingFlags.NonPublic | BindingFlags.Instance);
-                gos.SetValue(gameObject, gameObjects);
+                GameObject gameObject = new GameObject(creatGameObject.Name);
 
                 //创建脚本实例
                 object scriptInstance = assembly.CreateInstance($"{orderClass.Type.Namespace}.{orderClass.Type.Name}");
                 //添加脚本实例作为组件
                 gameObject.AddComponent((Component)scriptInstance);
-                //then add required components
-                CreatGameObject creatGameObject = orderClass.Type.GetCustomAttribute<CreatGameObject>();
+                //add required components
                 foreach (var type in creatGameObject.RequiredComponents)
                 {
                     //如果继承Component类型
@@ -103,24 +102,57 @@ namespace Destroy
             }
         }
 
-        private void CallMethod(string methodName, params object[] parameters)
+        /// <summary>
+        /// It has Bugs!
+        /// </summary>
+        private void InvokeScript(float deltaTime)
         {
-            //遍历游戏物体
+            //统一调用Start
+            for (int i = 0; i < gameObjects.Count; i++)
+            {
+                GameObject gameObject = gameObjects[i];
+
+                //反射获取components引用
+                FieldInfo fieldInfo = gameObject.GetType().GetField("components", BindingFlags.NonPublic | BindingFlags.Instance);
+                List<Component> components = (List<Component>)fieldInfo.GetValue(gameObject);
+
+                for (int j = 0; j < components.Count; j++)
+                {
+                    //如果游戏物体被销毁则停止执行后续Start
+                    if (!gameObjects.Contains(gameObject))
+                        break;
+
+                    Component component = components[j];
+                    //筛选继承Script的组件
+                    if (!component.GetType().IsSubclassOf(typeof(Script)))
+                        continue;
+                    Script script = (Script)component;
+                    if (!script.Started)
+                    {
+                        script.Start();
+                        script.Started = true;
+                    }
+                }
+            }
+
+            //统一调用Update
             for (int i = 0; i < gameObjects.Count; i++)
             {
                 GameObject gameObject = gameObjects[i];
 
                 List<Script> scripts = gameObject.GetComponents<Script>();
-                //调用每个脚本的指定方法
+
                 foreach (var script in scripts)
                 {
-                    if (!gameObjects.Contains(gameObject)) //加上判断, 如果在调用方法时Destroy了该物体则跳出执行
-                        break;
-                    if (!gameObject.HasComponent(script))  //加上判断, 如果在调用方法中移除其他脚本则跳出执行
+                    //如果游戏物体被销毁则停止执行后续Start
+                    if (!gameObjects.Contains(gameObject))
                         break;
 
-                    MethodInfo method = script.GetType().GetMethod(methodName);
-                    method?.Invoke(script, parameters);
+                    //RemoveComponent加上判断, 如果在调用方法中移除其他脚本则跳出执行
+                    if (!gameObject.HasComponent(script))
+                        break;
+
+                    script.Update(deltaTime); //在Update中new的Go会在下次生命周期开始时调用
                 }
             }
         }

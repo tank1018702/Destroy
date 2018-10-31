@@ -5,20 +5,27 @@
     public class GameObject
     {
         public string Name;
-
         private List<GameObject> gameObjects;
         private List<Component> components;
 
+        /// <summary>
+        /// 创建一个被Engine托管的新游戏物体
+        /// </summary>
         public GameObject()
         {
             Name = "GameObject";
             components = new List<Component>();
+            RuntimeEngine.NewGameObject(this);
         }
 
+        /// <summary>
+        /// 创建一个被Engine托管的新游戏物体
+        /// </summary>
         public GameObject(string name)
         {
             Name = name;
             components = new List<Component>();
+            RuntimeEngine.NewGameObject(this);
         }
 
         /// <summary>
@@ -29,7 +36,7 @@
             foreach (var component in components)
                 if (typeof(T) == component.GetType())
                     return null;
-            T instance = new T { GameObject = this };
+            T instance = new T { gameObject = this };
             components.Add(instance);
 
             return instance;
@@ -43,7 +50,7 @@
             foreach (var each in components)
                 if (each.GetType() == component.GetType())
                     return;
-            component.GameObject = this;
+            component.gameObject = this;
             components.Add(component);
         }
 
@@ -102,7 +109,6 @@
                     components.RemoveAt(i);
             }
         }
-
 
         /// <summary>
         /// 根据名字寻找场景中一个游戏物体, 若有多个同名物体也只返回一个。
