@@ -124,7 +124,7 @@
 
                     if (!script.Started)
                     {
-                        script.Start();
+                        script.Start(); //Virtual Call is better than Reflection Call
                         script.Started = true;
                     }
                 }
@@ -150,7 +150,8 @@
                     if (!component.GetType().IsSubclassOf(typeof(Script)))
                         continue;
                     Script script = (Script)component;
-                    script.Update(deltaTime);
+
+                    script.Update(deltaTime); //Virtual Call is better than Reflection Call
                 }
             }
         }
