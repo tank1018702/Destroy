@@ -2,6 +2,7 @@
 {
     using System;
     using System.Text;
+    using System.Diagnostics;
 
     public class Window
     {
@@ -30,6 +31,14 @@
         {
             Console.InputEncoding = encoding;
             Console.OutputEncoding = encoding;
+        }
+
+        public void Close(bool safe)
+        {
+            if (safe)
+                Process.GetCurrentProcess().Kill();
+            else
+                Environment.Exit(0);
         }
     }
 }

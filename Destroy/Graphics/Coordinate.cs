@@ -2,8 +2,14 @@
 {
     public enum CoordinateType
     {
-        RightX_UpY,
-        RightX_DownY,
+        /// <summary>
+        /// right X, up Y
+        /// </summary>
+        Normal,
+        /// <summary>
+        /// right x, down Y
+        /// </summary>
+        Window,
     }
 
     public enum RotationAngle
@@ -17,13 +23,13 @@
     {
         public static T GetInArray<T>(T[,] array, int x, int y, CoordinateType coordinate)
         {
-            if (coordinate == CoordinateType.RightX_UpY)
+            if (coordinate == CoordinateType.Normal)
             {
                 int _x = array.GetLength(0) - 1 - y;
                 int _y = x;
                 return array[_x, _y];
             }
-            else if (coordinate == CoordinateType.RightX_DownY)
+            else if (coordinate == CoordinateType.Window)
             {
                 return array[y, x];
             }
@@ -32,13 +38,13 @@
 
         public static void SetInArray<T>(T[,] array, T item, int x, int y, CoordinateType coordinate)
         {
-            if (coordinate == CoordinateType.RightX_UpY)
+            if (coordinate == CoordinateType.Normal)
             {
                 int _x = array.GetLength(0) - 1 - y;
                 int _y = x;
                 array[_x, _y] = item;
             }
-            else if (coordinate == CoordinateType.RightX_DownY)
+            else if (coordinate == CoordinateType.Window)
             {
                 array[y, x] = item;
             }

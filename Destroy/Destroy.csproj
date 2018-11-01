@@ -44,13 +44,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Audio.cs" />
+    <Compile Include="Core\Engine\GameDebugger.cs" />
     <Compile Include="Core\GameObjectComponent\Components\BlockRenderer.cs" />
     <Compile Include="Core\GameObjectComponent\CreatGameObject.cs" />
-    <Compile Include="Core\GameObjectComponent\RuntimeEngine.cs" />
+    <Compile Include="Core\Engine\RuntimeEngine.cs" />
     <Compile Include="Core\GameObjectComponent\Component.cs" />
     <Compile Include="Core\GameObjectComponent\GameObject.cs" />
     <Compile Include="Core\GameObjectComponent\Script.cs" />
-    <Compile Include="ExampleGame\Game.cs" />
+    <Compile Include="ExampleGame\Client.cs" />
+    <Compile Include="ExampleGame\Message.cs" />
+    <Compile Include="ExampleGame\Server.cs" />
     <Compile Include="Graphics\Block.cs" />
     <Compile Include="Physics\Collider.cs" />
     <Compile Include="Physics\CollisionSystem.cs" />

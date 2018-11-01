@@ -1,6 +1,6 @@
 ﻿namespace Destroy.Net
 {
-#if UseProtobuf
+    #if UseProtobuf
     using System;
     using Google.Protobuf;
 
@@ -33,5 +33,5 @@
             }
         }
     }
-#endif
+    #endif
 }

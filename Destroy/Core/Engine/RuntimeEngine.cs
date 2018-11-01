@@ -2,23 +2,33 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
     using System.Threading;
 
     public class RuntimeEngine
     {
         private readonly int tickPerSecond;
-        private readonly bool block;
         private readonly List<GameObject> gameObjects;
 
         public static Action<GameObject> NewGameObject;
 
-        public RuntimeEngine(int tickPerSecond, bool block)
+        public RuntimeEngine(int tickPerSecond, bool allowMultiple = true)
         {
+            //Singleton Check
+            if (!allowMultiple)
+            {
+                Mutex mutex = new Mutex(true, Process.GetCurrentProcess().ProcessName, out bool nonexsitent);
+                if (!nonexsitent)
+                {
+                    Debug.Error("该游戏不允许多个实例同时运行!");
+                    Thread.Sleep(3000);
+                    Environment.Exit(0);
+                }
+            }
+            //Initial
             this.tickPerSecond = tickPerSecond;
-            this.block = block;
             gameObjects = new List<GameObject>();
-
             NewGameObject += gameObject =>
             {
                 gameObjects.Add(gameObject);
@@ -26,18 +36,18 @@
                 FieldInfo gos = gameObject.GetType().GetField("gameObjects", BindingFlags.NonPublic | BindingFlags.Instance);
                 gos.SetValue(gameObject, gameObjects);
             };
-
-            CreatGameObjects();
         }
 
-        public void Run()
+        public void Run(bool block = true)
         {
-            Thread tick = new Thread
+            CreatGameObjects();
+
+            Thread lifeCycle = new Thread
             (
                 () =>
                 {
                     //I use the simple fixed deltaTime but not use the System.Diagnostics.
-                    float deltaTime = 0; 
+                    float deltaTime = 0;
                     int delayTime = 1000 / tickPerSecond;
 
                     while (true)
@@ -53,7 +63,7 @@
             )
             { IsBackground = !block };
 
-            tick.Start();
+            lifeCycle.Start();
         }
 
         private void CreatGameObjects()

@@ -18,13 +18,13 @@ namespace Destroy.Graphics
             {
                 for (int j = 0; j < block.Width; j++)
                 {
-                    if (block.Coordinate == CoordinateType.RightX_UpY)
+                    if (block.Coordinate == CoordinateType.Normal)
                     {
                         int x = (block.Pos.X + j) * block.StrWidth;
                         int y = height - 1 - block.Pos.Y + i;
                         Print.SetCursorPos(x, y);
                     }
-                    else if (block.Coordinate == CoordinateType.RightX_DownY)
+                    else if (block.Coordinate == CoordinateType.Window)
                     {
                         int x = (block.Pos.X + j) * block.StrWidth;
                         int y = block.Pos.Y + i;
@@ -52,13 +52,13 @@ namespace Destroy.Graphics
                     //Diff
                     if (block.Items[i, j] != buffer.Items[i, j])
                     {
-                        if (block.Coordinate == CoordinateType.RightX_UpY)
+                        if (block.Coordinate == CoordinateType.Normal)
                         {
                             int x = (block.Pos.X + j) * block.StrWidth;
                             int y = height - 1 - block.Pos.Y + i;
                             Print.SetCursorPos(x, y);
                         }
-                        else if (block.Coordinate == CoordinateType.RightX_DownY)
+                        else if (block.Coordinate == CoordinateType.Window)
                         {
                             int x = (block.Pos.X + j) * block.StrWidth;
                             int y = block.Pos.Y + i;
@@ -101,12 +101,12 @@ namespace Destroy.Graphics
                 for (int j = 0; j < occlusion.Width; j++)
                 {
                     int x = -1, y = -1;
-                    if (occlusion.Coordinate == CoordinateType.RightX_UpY)
+                    if (occlusion.Coordinate == CoordinateType.Normal)
                     {
                         x = occlusion.Pos.X + j;
                         y = occlusion.Pos.Y - i;
                     }
-                    else if (occlusion.Coordinate == CoordinateType.RightX_DownY)
+                    else if (occlusion.Coordinate == CoordinateType.Window)
                     {
                         x = occlusion.Pos.X + j;
                         y = occlusion.Pos.Y + i;
@@ -132,12 +132,12 @@ namespace Destroy.Graphics
                 for (int j = 0; j < cutBlock.Width; j++)
                 {
                     int x = -1, y = -1;
-                    if (cutBlock.Coordinate == CoordinateType.RightX_UpY)
+                    if (cutBlock.Coordinate == CoordinateType.Normal)
                     {
                         x = cutBlock.Pos.X + j;
                         y = cutBlock.Pos.Y - i;
                     }
-                    else if (cutBlock.Coordinate == CoordinateType.RightX_DownY)
+                    else if (cutBlock.Coordinate == CoordinateType.Window)
                     {
                         x = cutBlock.Pos.X + j;
                         y = cutBlock.Pos.Y + i;

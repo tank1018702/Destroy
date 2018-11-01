@@ -19,10 +19,10 @@ C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csprojAssem
 C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csproj.CoreCompileInputs.cache
 C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.exe
 C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csprojAssemblyReference.cache
+C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csproj.CoreCompileInputs.cache
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.exe.config
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.exe
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.pdb
-C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csprojAssemblyReference.cache
-C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csproj.CoreCompileInputs.cache
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.exe
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.pdb

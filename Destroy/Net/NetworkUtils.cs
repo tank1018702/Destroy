@@ -40,15 +40,15 @@
             }
         }
 
-        public static T Deserialize<T>(byte[] data) where T : class
+        public static T Deserialize<T>(byte[] data)
         {
             if (data == null || !typeof(T).IsSerializable)
-                return null;
+                return default(T);
             BinaryFormatter formatter = new BinaryFormatter();
             using (MemoryStream stream = new MemoryStream(data))
             {
                 object obj = formatter.Deserialize(stream);
-                return obj as T;
+                return (T)obj;
             }
         }
 

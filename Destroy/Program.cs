@@ -1,11 +1,17 @@
-﻿namespace Destroy
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using System.Threading;
+
+namespace Destroy
 {
     public class Program
     {
-        private static void Main()
+        private static void Main(string[] args)
         {
-            RuntimeEngine bootstrap = new RuntimeEngine(50, true);
-            bootstrap.Run();
+            RuntimeEngine runtimeEngine = new RuntimeEngine(50, false);
+            runtimeEngine.Run();
         }
     }
 }
