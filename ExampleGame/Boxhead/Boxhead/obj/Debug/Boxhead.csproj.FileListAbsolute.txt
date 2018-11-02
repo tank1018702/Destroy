@@ -1,0 +1,12 @@
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Boxhead\Boxhead\obj\Debug\Boxhead.csprojAssemblyReference.cache
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Boxhead\Boxhead\obj\Debug\Boxhead.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Boxhead\Boxhead\bin\Debug\Boxhead.exe.config
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Boxhead\Boxhead\bin\Debug\Boxhead.exe
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Boxhead\Boxhead\bin\Debug\Boxhead.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Boxhead\Boxhead\bin\Debug\Destroy.xml
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Boxhead\Boxhead\obj\Debug\Boxhead.csproj.CopyComplete
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Boxhead\Boxhead\obj\Debug\Boxhead.exe
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Boxhead\Boxhead\obj\Debug\Boxhead.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Boxhead\Boxhead\bin\Debug\Destroy.dll
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Boxhead\Boxhead\bin\Debug\Destroy.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Boxhead\Boxhead\bin\Debug\Destroy.dll.config
