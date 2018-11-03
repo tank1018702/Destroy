@@ -1,0 +1,15 @@
+c:\users\charlie179\Desktop\Protobuf Tools\Protobuf Tools\bin\Debug\Protobuf Tools.exe.config
+c:\users\charlie179\Desktop\Protobuf Tools\Protobuf Tools\bin\Debug\Protobuf Tools.exe
+c:\users\charlie179\Desktop\Protobuf Tools\Protobuf Tools\bin\Debug\Protobuf Tools.pdb
+c:\users\charlie179\Desktop\Protobuf Tools\Protobuf Tools\obj\Debug\Protobuf Tools.csprojAssemblyReference.cache
+c:\users\charlie179\Desktop\Protobuf Tools\Protobuf Tools\obj\Debug\Protobuf Tools.csproj.CoreCompileInputs.cache
+c:\users\charlie179\Desktop\Protobuf Tools\Protobuf Tools\obj\Debug\Protobuf Tools.exe
+c:\users\charlie179\Desktop\Protobuf Tools\Protobuf Tools\obj\Debug\Protobuf Tools.pdb
+D:\Users Files\Desktop\Protobuf Tools\Protobuf Tools\Protobuf Tools\bin\Debug\Protobuf Tools.exe.config
+D:\Users Files\Desktop\Protobuf Tools\Protobuf Tools\Protobuf Tools\bin\Debug\Protobuf Tools.exe
+D:\Users Files\Desktop\Protobuf Tools\Protobuf Tools\Protobuf Tools\bin\Debug\Protobuf Tools.pdb
+D:\Users Files\Desktop\Protobuf Tools\Protobuf Tools\Protobuf Tools\obj\Debug\Protobuf Tools.csprojResolveAssemblyReference.cache
+D:\Users Files\Desktop\Protobuf Tools\Protobuf Tools\Protobuf Tools\obj\Debug\Protobuf Tools.csproj.CoreCompileInputs.cache
+D:\Users Files\Desktop\Protobuf Tools\Protobuf Tools\Protobuf Tools\obj\Debug\Protobuf Tools.exe
+D:\Users Files\Desktop\Protobuf Tools\Protobuf Tools\Protobuf Tools\obj\Debug\Protobuf Tools.pdb
+D:\Users Files\Desktop\Protobuf Tools\Protobuf Tools\Protobuf Tools\obj\Debug\Protobuf Tools.csproj.CopyComplete

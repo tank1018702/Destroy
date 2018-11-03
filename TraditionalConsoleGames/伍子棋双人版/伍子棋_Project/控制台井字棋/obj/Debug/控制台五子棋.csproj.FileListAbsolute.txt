@@ -1,0 +1,13 @@
+F:\MyCode\练习\控制台井字棋\bin\Debug\控制台五子棋.exe.config
+F:\MyCode\练习\控制台井字棋\bin\Debug\控制台五子棋.exe
+F:\MyCode\练习\控制台井字棋\bin\Debug\控制台五子棋.pdb
+F:\MyCode\练习\控制台井字棋\obj\Debug\控制台五子棋.csprojResolveAssemblyReference.cache
+F:\MyCode\练习\控制台井字棋\obj\Debug\控制台五子棋.exe
+F:\MyCode\练习\控制台井字棋\obj\Debug\控制台五子棋.pdb
+E:\在皮皮关学习游戏开发\Develop Games at LevelPlay\MyCode\练习\控制台井字棋\bin\Debug\控制台五子棋.exe.config
+E:\在皮皮关学习游戏开发\Develop Games at LevelPlay\MyCode\练习\控制台井字棋\bin\Debug\控制台五子棋.exe
+E:\在皮皮关学习游戏开发\Develop Games at LevelPlay\MyCode\练习\控制台井字棋\bin\Debug\控制台五子棋.pdb
+E:\在皮皮关学习游戏开发\Develop Games at LevelPlay\MyCode\练习\控制台井字棋\obj\Debug\控制台五子棋.csprojResolveAssemblyReference.cache
+E:\在皮皮关学习游戏开发\Develop Games at LevelPlay\MyCode\练习\控制台井字棋\obj\Debug\控制台五子棋.csproj.CoreCompileInputs.cache
+E:\在皮皮关学习游戏开发\Develop Games at LevelPlay\MyCode\练习\控制台井字棋\obj\Debug\控制台五子棋.exe
+E:\在皮皮关学习游戏开发\Develop Games at LevelPlay\MyCode\练习\控制台井字棋\obj\Debug\控制台五子棋.pdb

@@ -1,0 +1,14 @@
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Message\Message\obj\Debug\Message.csprojAssemblyReference.cache
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Message\Message\obj\Debug\Message.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Message\Message\bin\Debug\Boxhead.Message.dll.config
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Message\Message\bin\Debug\Boxhead.Message.dll
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Message\Message\bin\Debug\Boxhead.Message.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Message\Message\obj\Debug\Boxhead.Message.dll
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Message\Message\obj\Debug\Boxhead.Message.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\bin\Debug\Boxhead.Message.dll.config
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\bin\Debug\Boxhead.Message.dll
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\bin\Debug\Boxhead.Message.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\obj\Debug\Message.csprojAssemblyReference.cache
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\obj\Debug\Message.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\obj\Debug\Boxhead.Message.dll
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\obj\Debug\Boxhead.Message.pdb

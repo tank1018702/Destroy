@@ -1,0 +1,9 @@
+﻿Example.proto:
+为示例项目,可以删除或修改
+
+依赖工具:
+Protobuf一键转换工具.exe(按照程序内的提示使用即可)
+protoc.exe
+
+ProtobufDLL:
+包含protobuf提供的面向不同.Net框架版本的API
