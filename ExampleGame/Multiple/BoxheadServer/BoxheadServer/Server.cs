@@ -31,13 +31,15 @@ public class CallBack
 [CreatGameObject]
 public class Server : Script
 {
-    private int frameIndex;                                                      //游戏帧
-    private int playerId;                                                        //玩家自增id
+    private int frameIndex;                   //游戏帧
+    private int playerId;                     //玩家自增id
+    private ConcurrentBag<Player> players;    //玩家集合
 
-    private ConcurrentBag<Player> players;
-    //玩家与他某一帧的操作的操作的集合
-    private ConcurrentDictionary<Player, ConcurrentDictionary<int, C2S_Input>> playerFrameInputs;
+    //所有玩家在某一帧的操作集合
+    private ConcurrentDictionary<Player, ConcurrentDictionary<int, PlayerInput>> playerFrameInputs;
+    //回调方法
     private ConcurrentQueue<CallBack> callBacks;
+    //服务器套接字
     private Socket serverSocket;
 
     public override void Start()
@@ -45,7 +47,7 @@ public class Server : Script
         frameIndex = 0;
         playerId = 0;
         players = new ConcurrentBag<Player>();
-        playerFrameInputs = new ConcurrentDictionary<Player, ConcurrentDictionary<int, C2S_Input>>();
+        playerFrameInputs = new ConcurrentDictionary<Player, ConcurrentDictionary<int, PlayerInput>>();
         callBacks = new ConcurrentQueue<CallBack>();
 
         serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);

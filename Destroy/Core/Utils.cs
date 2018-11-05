@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics;
 
-    public class Utils
+    public static class Utils
     {
         public static void OpenNewProcess(string path)
         {
@@ -14,15 +14,18 @@
             }
         }
 
-        public static string GetCurrentPath()
+        public static string ProgramPath
         {
-            using (Process process = Process.GetCurrentProcess())
+            get
             {
-                string path = $@"{Environment.CurrentDirectory}\{process.ProcessName}.exe";
-                return path;
+                using (Process process = Process.GetCurrentProcess())
+                {
+                    string path = $@"{Environment.CurrentDirectory}\{process.ProcessName}.exe";
+                    return path;
+                }
             }
         }
 
-
+        public static string ProgramDirectory => Environment.CurrentDirectory + "\\";
     }
 }

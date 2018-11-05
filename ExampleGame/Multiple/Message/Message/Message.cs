@@ -31,8 +31,8 @@
     [Serializable]
     public class FrameSync
     {
-        public int frameIndex;               // 4bytes server current frame
-        public List<PlayerInput> playerInputs; // nbytes all playerInputs
+        public int frameIndex;                  // 4bytes server current frame
+        public List<PlayerInput> playerInputs;  // nbytes all playerInputs
     }
 
     [Serializable]
