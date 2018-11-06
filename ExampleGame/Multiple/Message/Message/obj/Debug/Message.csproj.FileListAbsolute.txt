@@ -12,3 +12,15 @@ C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Messa
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\obj\Debug\Message.csproj.CoreCompileInputs.cache
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\obj\Debug\Boxhead.Message.dll
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\obj\Debug\Boxhead.Message.pdb
+C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\bin\Debug\Boxhead.Message.dll.config
+C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\bin\Debug\Boxhead.Message.dll
+C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\bin\Debug\Boxhead.Message.pdb
+C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\bin\Debug\Destroy.dll
+C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\bin\Debug\LitJSON.dll
+C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\bin\Debug\Destroy.pdb
+C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\bin\Debug\Destroy.dll.config
+C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\obj\Debug\Message.csprojAssemblyReference.cache
+C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\obj\Debug\Message.csproj.CoreCompileInputs.cache
+C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\obj\Debug\Message.csproj.CopyComplete
+C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\obj\Debug\Boxhead.Message.dll
+C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\Message\Message\obj\Debug\Boxhead.Message.pdb

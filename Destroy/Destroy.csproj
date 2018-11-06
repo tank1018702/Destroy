@@ -61,6 +61,7 @@
     <Compile Include="Core\GameObjectComponent\GameObject.cs" />
     <Compile Include="Core\GameObjectComponent\Script.cs" />
     <Compile Include="Graphics\Block.cs" />
+    <Compile Include="Net\IMessage.cs" />
     <Compile Include="Physics\Collider.cs" />
     <Compile Include="Physics\CollisionSystem.cs" />
     <Compile Include="Core\Debug.cs" />

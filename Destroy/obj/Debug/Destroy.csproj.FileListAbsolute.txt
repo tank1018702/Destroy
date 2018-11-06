@@ -12,12 +12,9 @@ C:\Users\Charlie179\Desktop\GitSync\Destroy\Destroy\Destroy\obj\Debug\Destroy.cs
 C:\Users\Charlie179\Desktop\GitSync\Destroy\Destroy\Destroy\obj\Debug\Destroy.csproj.CoreCompileInputs.cache
 C:\Users\Charlie179\Desktop\GitSync\Destroy\Destroy\Destroy\obj\Debug\Destroy.exe
 C:\Users\Charlie179\Desktop\GitSync\Destroy\Destroy\Destroy\obj\Debug\Destroy.pdb
-C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.exe.config
-C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.exe
 C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.pdb
 C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csprojAssemblyReference.cache
 C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csproj.CoreCompileInputs.cache
-C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.exe
 C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.pdb
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csprojAssemblyReference.cache
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csproj.CoreCompileInputs.cache
@@ -28,3 +25,8 @@ C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csproj.C
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll.config
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.dll
+C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll.config
+C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll
+C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\LitJSON.dll
+C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csproj.CopyComplete
+C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.dll

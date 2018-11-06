@@ -34,7 +34,7 @@ public class Server : Script
 
     private Queue<Callback> callbacks;           //注册回调事件
     private ConcurrentQueue<Message> messages;   //待发送消息队列
-    private ConcurrentQueue<Event> callBacks;    //待处理事件队列
+    private ConcurrentQueue<Event> events;       //待处理事件队列
     private Socket serverSocket;                 //服务器套接字
 
     public override void Start()
@@ -43,7 +43,9 @@ public class Server : Script
         playerId = 0;
         players = new ConcurrentBag<Player>();
         playerFrameInputs = new ConcurrentDictionary<Player, ConcurrentDictionary<int, PlayerInput>>();
-        callBacks = new ConcurrentQueue<Event>();
+        callbacks = new Queue<Callback>();
+        messages = new ConcurrentQueue<Message>();
+        events = new ConcurrentQueue<Event>();
 
         serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         EndPoint serverEndPoint = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 6666);
@@ -77,8 +79,14 @@ public class Server : Script
 
             Console.WriteLine($"{clientEndPoint}连接成功!");
 
-            Thread receive = new Thread(Receive) { IsBackground = true };
-            receive.Start(player);
+            StartGame startGame = new StartGame();
+            startGame.id = player.Id;
+
+            byte[] data = MessageSerializer.SerializeMsg(ActionType.Server, MessageType.StartGame, startGame);
+            player.Socket.Send(data);
+
+            //Thread receive = new Thread(Receive) { IsBackground = true };
+            //receive.Start(player);
         }
     }
 
@@ -95,9 +103,9 @@ public class Server : Script
     {
         while (true)
         {
-            if (callBacks.Count > 0)
+            if (events.Count > 0)
             {
-                if (callBacks.TryDequeue(out Event callBack))
+                if (events.TryDequeue(out Event callBack))
                 {
                     callBack.Excute();
                 }

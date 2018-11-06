@@ -33,8 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Destroy">
-      <HintPath>..\..\..\Destroy\bin\Debug\Destroy.dll</HintPath>
+    <Reference Include="Boxhead.Message">
+      <HintPath>..\..\Message\Message\bin\Debug\Boxhead.Message.dll</HintPath>
+    </Reference>
+    <Reference Include="Destroy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Destroy\bin\Debug\Destroy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

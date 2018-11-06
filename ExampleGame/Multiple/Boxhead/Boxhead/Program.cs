@@ -7,9 +7,9 @@ using Destroy;
 
 class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
-        RuntimeEngine runtimeEngine = new RuntimeEngine(50);
-        runtimeEngine.Run();
+        RuntimeEngine runtimeEngine = new RuntimeEngine();
+        runtimeEngine.Run(50);
     }
 }
