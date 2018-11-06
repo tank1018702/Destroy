@@ -26,6 +26,14 @@ Gameplay framework is finished.
 
 Add some example games.
 
+## TODO
+
+1. make the gameplay framework work well.
+
+2. utf8 => unicode(utf16), string => char.
+
+3. make a new networking module.
+
 # 秒天秒地
 DE·Charlie Presents
 
@@ -53,3 +61,11 @@ DE·Charlie Presents
 Gameplay框架已经完成。
 
 增加几个示例项目
+
+## 目标
+
+1. 保证现有的gameplay框架运行正常。
+
+2. utf8 => Unicode(utf16), string => char。
+
+3. 制作全新的网络模块。
