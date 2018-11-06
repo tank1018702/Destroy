@@ -20,10 +20,11 @@ C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\bin\Debug\Boxhead.Message.pdb
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\bin\Debug\Boxhead.Message.dll.config
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\bin\Debug\Destroy.pdb
-C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\bin\Debug\Destroy.xml
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\bin\Debug\Destroy.dll.config
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\obj\Debug\BoxheadServer.csprojAssemblyReference.cache
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\obj\Debug\BoxheadServer.csproj.CoreCompileInputs.cache
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\obj\Debug\BoxheadServer.csproj.CopyComplete
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\obj\Debug\BoxheadServer.exe
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\obj\Debug\BoxheadServer.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\bin\Debug\Destroy.dll
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\bin\Debug\LitJSON.dll

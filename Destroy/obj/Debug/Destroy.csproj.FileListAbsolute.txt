@@ -25,6 +25,6 @@ C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.pdb
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.pdb
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\LitJSON.dll
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csproj.CopyComplete
-C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.exe.config
-C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.exe
-C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.exe
+C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll.config
+C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll
+C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.dll

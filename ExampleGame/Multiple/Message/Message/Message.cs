@@ -5,12 +5,13 @@
 
     public enum ActionType
     {
-        C2SRequest,
-        S2CResponse,
+        Client,
+        Server,
     }
 
     public enum MessageType
     {
+        None,
         //Server
         FrameSync,
         StartGame,

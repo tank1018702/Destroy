@@ -37,7 +37,7 @@
       <HintPath>..\..\Message\Message\bin\Debug\Boxhead.Message.dll</HintPath>
     </Reference>
     <Reference Include="Destroy">
-      <HintPath>..\..\..\Destroy\bin\Debug\Destroy.dll</HintPath>
+      <HintPath>..\..\..\..\Destroy\bin\Debug\Destroy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Player.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -8,12 +8,11 @@
 
     public class RuntimeEngine
     {
-        private readonly int tickPerSecond;
         private readonly List<GameObject> gameObjects;
 
         public static Action<GameObject> NewGameObject;
 
-        public RuntimeEngine(int tickPerSecond, bool allowMultiple = true)
+        public RuntimeEngine(bool allowMultiple = true)
         {
             //Singleton Check
             if (!allowMultiple)
@@ -26,8 +25,8 @@
                     Environment.Exit(0);
                 }
             }
+
             //Initial
-            this.tickPerSecond = tickPerSecond;
             gameObjects = new List<GameObject>();
             NewGameObject += gameObject =>
             {
@@ -38,7 +37,7 @@
             };
         }
 
-        public void Run(bool block = true)
+        public void Run(int tickPerSecond, bool block = true)
         {
             CreatGameObjects();
 
@@ -68,7 +67,7 @@
 
         private void CreatGameObjects()
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
+            Assembly assembly = Assembly.GetEntryAssembly(); //获取调用该方法的程序集而不是引擎所在的程序集
 
             List<OrderClass> orderClasses = new List<OrderClass>();
 
@@ -92,14 +91,14 @@
                 //设置GameObject与组件
                 GameObject gameObject = new GameObject(creatGameObject.Name);
 
-                //创建脚本实例
+                //创建脚本实例(必须为public无参构造方法)
                 object scriptInstance = assembly.CreateInstance($"{orderClass.Type.Namespace}.{orderClass.Type.Name}");
                 //添加脚本实例作为组件
                 gameObject.AddComponent((Component)scriptInstance);
                 //add required components
                 foreach (var type in creatGameObject.RequiredComponents)
                 {
-                    //如果继承Component类型
+                    //如果继承Component类型(必须为public无参构造方法)
                     if (type.IsSubclassOf(typeof(Component)))
                     {
                         object component = assembly.CreateInstance($"{type.Namespace}.{type.Name}");
