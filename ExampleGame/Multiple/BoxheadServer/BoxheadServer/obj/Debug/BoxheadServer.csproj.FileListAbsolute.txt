@@ -43,3 +43,5 @@ C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\Bo
 C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\obj\Debug\BoxheadServer.csproj.CopyComplete
 C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\obj\Debug\BoxheadServer.exe
 C:\Users\Charlie179\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\obj\Debug\BoxheadServer.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\bin\Debug\protobuf-net.dll
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\Multiple\BoxheadServer\BoxheadServer\bin\Debug\protobuf-net.xml

@@ -1,10 +1,13 @@
 ﻿namespace Boxhead.Message
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.IO;
     using System.Net.Sockets;
+    using Destroy;
     using Destroy.Net;
+    using ProtoBuf;
 
     public enum ActionType : ushort
     {
@@ -22,27 +25,37 @@
         PlayerInput = 3,
     }
 
-    [Serializable]
+    [ProtoContract]
     public class PlayerInput : IMessage
     {
+        [ProtoMember(1)]
         public int frameIndex;          // 4bytes
+        [ProtoMember(2)]
         public bool up;                 // 1byte
+        [ProtoMember(3)]
         public bool down;               // 1byte
+        [ProtoMember(4)]
         public bool left;               // 1byte
+        [ProtoMember(5)]
         public bool right;              // 1byte
     }
 
-    [Serializable]
+    [ProtoContract]
     public class FrameSync : IMessage
     {
+        [ProtoMember(1)]
         public int frameIndex;                  // 4bytes server current frame
-        public List<PlayerInput> playerInputs;  // nbytes all playerInputs
+        [ProtoMember(2)]
+        public ConcurrentDictionary<int, ConcurrentDictionary<int, PlayerInput>> playerInputs;
     }
 
-    [Serializable]
+    [ProtoContract]
     public class StartGame : IMessage
     {
-        public int id;                  // 4bytes
+        [ProtoMember(1)]
+        public int playerId;                   // 4bytes
+        [ProtoMember(2)]
+        public List<int> players;
     }
 
     public delegate void MessageEvent(object obj, byte[] data);
@@ -56,17 +69,12 @@
             return key;
         }
 
-        //public static void Int2Enum(out )
-        //{
-
-        //}
-
         public static byte[] SerializeMsg(ActionType action, MessageType type, IMessage message)
         {
             List<byte> list = new List<byte>();
             byte[] actionData = BitConverter.GetBytes((ushort)action);
             byte[] typeData = BitConverter.GetBytes((ushort)type);
-            byte[] data = NetworkUtils.Serialize(message);
+            byte[] data = NetworkUtils.NetSerialize(message);
             byte[] bodyLen = BitConverter.GetBytes
                 ((ushort)(actionData.Length + typeData.Length + data.Length));
             //packet head

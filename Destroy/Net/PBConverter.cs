@@ -1,6 +1,6 @@
 ﻿namespace Destroy.Net
 {
-    #if UseProtobuf
+#if UseProtobuf
     using System;
     using Google.Protobuf;
 
@@ -8,30 +8,16 @@
     {
         public static byte[] Serializer<T>(T obj) where T : IMessage
         {
-            try
-            {
-                byte[] data = obj.ToByteArray();
-                return data;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            byte[] data = obj.ToByteArray();
+            return data;
         }
 
         public static T Deserializer<T>(byte[] data) where T : IMessage, new()
         {
             IMessage message = new T();
-            try
-            {
-                T msg = (T)message.Descriptor.Parser.ParseFrom(data);
-                return msg;
-            }
-            catch (Exception)
-            {
-                return default(T);
-            }
+            T msg = (T)message.Descriptor.Parser.ParseFrom(data);
+            return msg;
         }
     }
-    #endif
+#endif
 }

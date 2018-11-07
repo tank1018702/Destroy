@@ -41,6 +41,9 @@
     <Reference Include="LitJSON">
       <HintPath>..\Plugins\LitJSON.dll</HintPath>
     </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\Plugins\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
