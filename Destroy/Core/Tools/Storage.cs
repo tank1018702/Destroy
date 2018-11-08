@@ -15,7 +15,7 @@
             {
                 byte[] data = Encoding.UTF8.GetBytes(json); //UTF8
                 //清空之前文件
-                stream.SetLength(0);
+                stream.SetLength(0); //???
                 stream.Write(data, 0, data.Length);
             }
         }
@@ -33,29 +33,6 @@
             }
         }
 
-        public static byte[] NativeSerialize(object obj)
-        {
-            if (obj == null || !obj.GetType().IsSerializable)
-                return null;
-            BinaryFormatter formatter = new BinaryFormatter();
-            using (MemoryStream stream = new MemoryStream())
-            {
-                formatter.Serialize(stream, obj);
-                byte[] data = stream.ToArray();
-                return data;
-            }
-        }
 
-        public static T NativeDeserialize<T>(byte[] data)
-        {
-            if (data == null || !typeof(T).IsSerializable)
-                return default(T);
-            BinaryFormatter formatter = new BinaryFormatter();
-            using (MemoryStream stream = new MemoryStream(data))
-            {
-                object obj = formatter.Deserialize(stream);
-                return (T)obj;
-            }
-        }
     }
 }

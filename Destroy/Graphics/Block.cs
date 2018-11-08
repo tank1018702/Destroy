@@ -4,63 +4,63 @@
 
     public struct Block
     {
-        public int StrWidth { get; private set; }
+        public int CharWidth { get; private set; }
 
         public CoordinateType Coordinate { get; set; }
 
-        public Point2D Pos { get; set; }
+        public Vector2Int Position { get; set; }
 
-        public string[,] Items { get; set; }
+        public char[,] Chars { get; set; }
 
         public ConsoleColor[,] ForeColors { get; set; }
 
         public ConsoleColor[,] BackColors { get; set; }
 
-        public int Width => Items.GetLength(1);
+        public int Width => Chars.GetLength(1);
 
-        public int Height => Items.GetLength(0);
+        public int Height => Chars.GetLength(0);
 
-        public Block(string[,] items, int charWidth, CoordinateType coordinate)
+        public Block(char[,] chars, int charWidth, CoordinateType coordinate)
         {
-            StrWidth = charWidth;
+            CharWidth = charWidth;
             Coordinate = coordinate;
-            Pos = Point2D.Zero;
-            Items = items;
-            ColorBlock fore = new ColorBlock(Items.GetLength(1), Items.GetLength(0), ConsoleColor.Gray);
-            ColorBlock back = new ColorBlock(Items.GetLength(1), Items.GetLength(0), ConsoleColor.Black);
+            Position = Vector2Int.Zero;
+            Chars = chars;
+            ColorBlock fore = new ColorBlock(Chars.GetLength(1), Chars.GetLength(0), ConsoleColor.Gray);
+            ColorBlock back = new ColorBlock(Chars.GetLength(1), Chars.GetLength(0), ConsoleColor.Black);
             ForeColors = fore.Colors;
             BackColors = back.Colors;
         }
 
-        public Block(string[,] items, int charWidth, CoordinateType coordinate, Point2D point2D)
+        public Block(char[,] chars, int charWidth, CoordinateType coordinate, Vector2Int point2D)
         {
-            StrWidth = charWidth;
+            CharWidth = charWidth;
             Coordinate = coordinate;
-            Pos = point2D;
-            Items = items;
-            ColorBlock fore = new ColorBlock(Items.GetLength(1), Items.GetLength(0), ConsoleColor.Gray);
-            ColorBlock back = new ColorBlock(Items.GetLength(1), Items.GetLength(0), ConsoleColor.Black);
+            Position = point2D;
+            Chars = chars;
+            ColorBlock fore = new ColorBlock(Chars.GetLength(1), Chars.GetLength(0), ConsoleColor.Gray);
+            ColorBlock back = new ColorBlock(Chars.GetLength(1), Chars.GetLength(0), ConsoleColor.Black);
             ForeColors = fore.Colors;
             BackColors = back.Colors;
         }
 
-        public Block(string[,] items, int charWidth, CoordinateType coordinate, Point2D point2D, ConsoleColor[,] foreColors)
+        public Block(char[,] chars, int charWidth, CoordinateType coordinate, Vector2Int point2D, ConsoleColor[,] foreColors)
         {
-            StrWidth = charWidth;
+            CharWidth = charWidth;
             Coordinate = coordinate;
-            Pos = point2D;
-            Items = items;
-            ColorBlock back = new ColorBlock(Items.GetLength(1), Items.GetLength(0), ConsoleColor.Black);
+            Position = point2D;
+            Chars = chars;
+            ColorBlock back = new ColorBlock(Chars.GetLength(1), Chars.GetLength(0), ConsoleColor.Black);
             ForeColors = foreColors;
             BackColors = back.Colors;
         }
 
-        public Block(string[,] items, int charWidth, CoordinateType coordinate, Point2D point2D, ConsoleColor[,] foreColors, ConsoleColor[,] backColors)
+        public Block(char[,] chars, int charWidth, CoordinateType coordinate, Vector2Int point2D, ConsoleColor[,] foreColors, ConsoleColor[,] backColors)
         {
-            StrWidth = charWidth;
+            CharWidth = charWidth;
             Coordinate = coordinate;
-            Pos = point2D;
-            Items = items;
+            Position = point2D;
+            Chars = chars;
             ForeColors = foreColors;
             BackColors = backColors;
         }

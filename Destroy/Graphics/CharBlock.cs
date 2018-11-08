@@ -2,19 +2,19 @@
 {
     public struct CharBlock
     {
-        public string[,] Items { get; private set; }
+        public char[,] Chars { get; private set; }
 
-        public int Width => Items.GetLength(1);
+        public int Width => Chars.GetLength(1);
 
-        public int Length => Items.GetLength(0);
+        public int Length => Chars.GetLength(0);
 
-        public CharBlock(int width, int height, string str)
+        public CharBlock(int width, int height, char c)
         {
-            Items = new string[height, width];
+            Chars = new char[height, width];
 
             for (int i = 0; i < height; i++)
                 for (int j = 0; j < width; j++)
-                    Items[i, j] = str;
+                    Chars[i, j] = c;
         }
     }
 }

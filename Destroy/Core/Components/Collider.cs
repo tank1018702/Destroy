@@ -1,4 +1,4 @@
-﻿namespace Destroy.Physics
+﻿namespace Destroy
 {
     public class Collider
     {

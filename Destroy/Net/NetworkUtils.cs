@@ -38,33 +38,5 @@
             }
             return null;
         }
-
-        public static byte[] NetSerialize<T>(T t)
-        {
-            byte[] data = null;
-
-            //protobuf-net傻逼API设计, 第一次使用Serialize无法填充数组只能获取到长度
-            //只能使用两次Serializer.Serialize才能读取出byte
-            using (Stream stream = new MemoryStream())
-            {
-                Serializer.Serialize(stream, t);
-                data = new byte[stream.Length];
-
-                MemoryStream memoryStream = new MemoryStream(data);
-                Serializer.Serialize(memoryStream, t);
-                BinaryReader reader = new BinaryReader(memoryStream);
-                reader.Read(data, 0, data.Length);
-            }
-            return data;
-        }
-
-        public static T NetDeserialize<T>(byte[] data)
-        {
-            using (Stream stream = new MemoryStream(data))
-            {
-                T t = Serializer.Deserialize<T>(stream);
-                return t;
-            }
-        }
     }
 }

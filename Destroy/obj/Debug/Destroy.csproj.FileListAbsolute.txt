@@ -25,10 +25,12 @@ C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csproj.C
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll.config
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.dll
-C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll.config
-C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll
 C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\LitJSON.dll
 C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csproj.CopyComplete
-C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.dll
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\protobuf-net.dll
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\protobuf-net.xml
+C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\protobuf-net.dll
+C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\protobuf-net.xml
+C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll.config
+C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll
+C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.dll

@@ -41,22 +41,35 @@
         {
             CreatGameObjects();
 
+            Type time = typeof(Time);
+            Time timeInstance = new Time();
+            float tickTime = (float)1 / tickPerSecond;
+            int delayTime = 1000 / tickPerSecond;
+
+            //设置Time类属性
+            PropertyInfo propertyTickTime = time.GetProperty("TickTime");
+            propertyTickTime.SetValue(timeInstance, tickTime);
+
             Thread lifeCycle = new Thread
             (
                 () =>
                 {
                     //I use the simple fixed deltaTime but not use the System.Diagnostics.
                     float deltaTime = 0;
-                    int delayTime = 1000 / tickPerSecond;
+                    Stopwatch stopwatch = new Stopwatch();
 
                     while (true)
                     {
+                        //开始计时
+                        stopwatch.Restart();
+                        //设置Time类属性
+                        PropertyInfo propertyDeltaTime = time.GetProperty("DeltaTime");
+                        propertyDeltaTime.SetValue(timeInstance, deltaTime);
                         //LifeCycle
-                        InvokeScript(deltaTime);
-                        RenderBlock();
-
+                        InvokeScript();
                         Thread.Sleep(delayTime);
-                        deltaTime = (float)1 / tickPerSecond;
+                        //计算时间
+                        deltaTime = stopwatch.ElapsedMilliseconds / (float)1000;
                     }
                 }
             )
@@ -91,12 +104,12 @@
                 //设置GameObject与组件
                 GameObject gameObject = new GameObject(creatGameObject.Name);
 
-                //创建脚本实例(必须为public无参构造方法)
+                //创建脚本实例(必须包含public无参构造方法, 并且这里会调用一次构造)
                 object scriptInstance = assembly.CreateInstance($"{orderClass.Type.Namespace}.{orderClass.Type.Name}");
                 //添加脚本实例作为组件
                 gameObject.AddComponent((Component)scriptInstance);
                 //add required components
-                foreach (var type in creatGameObject.RequiredComponents)
+                foreach (Type type in creatGameObject.RequiredComponents)
                 {
                     //如果继承Component类型(必须为public无参构造方法)
                     if (type.IsSubclassOf(typeof(Component)))
@@ -108,14 +121,14 @@
             }
         }
 
-        private void InvokeScript(float deltaTime)
+        private void InvokeScript()
         {
             //统一调用Start
             for (int i = 0; i < gameObjects.Count; i++)
             {
                 GameObject gameObject = gameObjects[i];
 
-                //反射获取components引用
+                //反射获取components引用实现动态遍历components
                 FieldInfo fieldInfo = gameObject.GetType().GetField("components", BindingFlags.NonPublic | BindingFlags.Instance);
                 List<Component> components = (List<Component>)fieldInfo.GetValue(gameObject);
 
@@ -133,6 +146,7 @@
 
                     if (!script.Started)
                     {
+                        //在Start中创建的Script会在随后调用其Start
                         script.Start(); //Virtual Call is better than Reflection Call
                         script.Started = true;
                     }
@@ -144,7 +158,7 @@
             {
                 GameObject gameObject = gameObjects[i];
 
-                //反射获取components引用
+                //反射获取components引用实现动态遍历components
                 FieldInfo fieldInfo = gameObject.GetType().GetField("components", BindingFlags.NonPublic | BindingFlags.Instance);
                 List<Component> components = (List<Component>)fieldInfo.GetValue(gameObject);
 
@@ -160,14 +174,10 @@
                         continue;
                     Script script = (Script)component;
 
-                    script.Update(deltaTime); //Virtual Call is better than Reflection Call
+                    //在Update中创建的Script会在下一次调用Start时调用其Start方法
+                    script.Update(); //Virtual Call is better than Reflection Call
                 }
             }
-        }
-
-        private void RenderBlock()
-        {
-
         }
 
         private class OrderClass
