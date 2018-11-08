@@ -30,8 +30,8 @@ public class Server : Script
     private int frameIndex;                   //游戏帧
     private int playerId;                     //玩家自增id
     private ConcurrentBag<Player> players;    //玩家集合
-    //所有玩家在某一帧的操作集合
-    private ConcurrentDictionary<int, ConcurrentDictionary<int, PlayerInput>> playerFrameInputs;
+    //某一帧所有玩家的操作集合
+    private Dictionary<int, Dictionary<int, PlayerInput>> playerFrameInputs;
 
     private Dictionary<int, MessageEvent> messageEvents; //注册回调事件
     private ConcurrentQueue<Callback> callbacks;         //待处理事件队列
@@ -42,7 +42,7 @@ public class Server : Script
         frameIndex = 0;
         playerId = 0;
         players = new ConcurrentBag<Player>();
-        playerFrameInputs = new ConcurrentDictionary<int, ConcurrentDictionary<int, PlayerInput>>();
+        playerFrameInputs = new Dictionary<int, Dictionary<int, PlayerInput>>();
 
         messageEvents = new Dictionary<int, MessageEvent>();
         callbacks = new ConcurrentQueue<Callback>();
@@ -137,21 +137,26 @@ public class Server : Script
     {
         while (true)
         {
+            //玩家与输入
+            Dictionary<int, PlayerInput> dict = new Dictionary<int, PlayerInput>();
+
             foreach (var player in players)
             {
-                ConcurrentDictionary<int, PlayerInput> dict = new ConcurrentDictionary<int, PlayerInput>();
+                //如果该玩家有输入
                 if (player.Inputs.Count > 0)
                 {
                     player.Inputs.TryDequeue(out PlayerInput playerInput);
-                    dict.TryAdd(playerInput.frameIndex, playerInput); //加上了提前了的输入
-                    Console.WriteLine("123");
+                    dict.Add(player.Id, playerInput); //加上了提前量了的输入
+
+                    Console.WriteLine(playerInput.frameIndex);
                 }
                 else
                 {
-                    dict.TryAdd(frameIndex, null); //这帧没有输入
+                    dict.Add(player.Id, null);
                 }
-                playerFrameInputs.TryAdd(player.Id, dict);
             }
+
+            playerFrameInputs.Add(frameIndex, dict); //一定会有帧数与玩家两个Key
 
             FrameSync frameSync = new FrameSync();
             frameSync.frameIndex = frameIndex;
@@ -163,7 +168,7 @@ public class Server : Script
 
             frameIndex++;
 
-            Thread.Sleep(50); // 20 times per second
+            Thread.Sleep(500); // 20 times per second
         }
     }
 

@@ -46,7 +46,7 @@
         [ProtoMember(1)]
         public int frameIndex;                  // 4bytes server current frame
         [ProtoMember(2)]
-        public ConcurrentDictionary<int, ConcurrentDictionary<int, PlayerInput>> playerInputs;
+        public Dictionary<int, Dictionary<int, PlayerInput>> playerInputs;
     }
 
     [ProtoContract]
