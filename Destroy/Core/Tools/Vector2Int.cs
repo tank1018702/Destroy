@@ -14,13 +14,13 @@
             Y = y;
         }
 
-        public Vector2Int Negative => this * -1;
-
         public override int GetHashCode() => base.GetHashCode();
 
         public override bool Equals(object obj) => this == (Vector2Int)obj;
 
         public override string ToString() => $"[X:{X},Y:{Y}]";
+
+        public Vector2Int Negative => this * -1;
 
         public static Vector2Int Zero => new Vector2Int();
 
@@ -63,6 +63,14 @@
             left.X /= right;
             left.Y /= right;
             return left;
+        }
+
+        public static explicit operator Vector2Int(Vector2 vector)
+        {
+            Vector2Int vector2Int = new Vector2Int();
+            vector2Int.X = (int)vector.X;
+            vector2Int.Y = (int)vector.Y;
+            return vector2Int;
         }
     }
 }

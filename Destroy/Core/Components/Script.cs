@@ -2,7 +2,7 @@
 {
     public abstract class Script : Component
     {
-        public bool Started;
+        public bool Started { get; set; }
 
         public virtual void Start() { }
 

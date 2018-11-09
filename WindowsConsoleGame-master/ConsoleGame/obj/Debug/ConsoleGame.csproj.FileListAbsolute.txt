@@ -1,0 +1,8 @@
+C:\Users\Charlie179\Desktop\Github\Destroy\Copy\WindowsConsoleGame-master\ConsoleGame\bin\Debug\image.bmp
+C:\Users\Charlie179\Desktop\Github\Destroy\Copy\WindowsConsoleGame-master\ConsoleGame\bin\Debug\ConsoleGame.exe.config
+C:\Users\Charlie179\Desktop\Github\Destroy\Copy\WindowsConsoleGame-master\ConsoleGame\bin\Debug\ConsoleGame.exe
+C:\Users\Charlie179\Desktop\Github\Destroy\Copy\WindowsConsoleGame-master\ConsoleGame\bin\Debug\ConsoleGame.pdb
+C:\Users\Charlie179\Desktop\Github\Destroy\Copy\WindowsConsoleGame-master\ConsoleGame\obj\Debug\ConsoleGame.csprojAssemblyReference.cache
+C:\Users\Charlie179\Desktop\Github\Destroy\Copy\WindowsConsoleGame-master\ConsoleGame\obj\Debug\ConsoleGame.csproj.CoreCompileInputs.cache
+C:\Users\Charlie179\Desktop\Github\Destroy\Copy\WindowsConsoleGame-master\ConsoleGame\obj\Debug\ConsoleGame.exe
+C:\Users\Charlie179\Desktop\Github\Destroy\Copy\WindowsConsoleGame-master\ConsoleGame\obj\Debug\ConsoleGame.pdb

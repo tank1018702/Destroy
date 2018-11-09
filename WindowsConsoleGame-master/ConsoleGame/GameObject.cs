@@ -1,25 +1,31 @@
-﻿namespace ConsoleGame {
-    internal class GameObject {
+﻿namespace ConsoleGame
+{
+    internal class GameObject
+    {
         private Vector2 _position;
 
-        public Vector2 position
+        public Vector2 Position
         {
-            get {
+            get
+            {
                 return _position;
             }
-            set {
+            set
+            {
                 old_position = _position;
                 _position = value;
             }
         }
+
         public Vector2 old_position;
+
         public Material material;
 
-        public GameObject(Vector2 pos = null) {
-            old_position = position = pos ?? new Vector2();
+        public GameObject(Vector2 pos = null)
+        {
+            old_position = Position = pos ?? new Vector2();
             material = new Material(@"image.bmp");
             ConsoleGame.gameObjectList.Add(this);
         }
-
     }
 }

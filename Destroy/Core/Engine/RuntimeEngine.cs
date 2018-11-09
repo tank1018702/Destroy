@@ -63,7 +63,7 @@
                         Reflector.SetStaticPrivateProperty(time, "DeltaTime", deltaTime);
                         //LifeCycle
                         ScriptSystem.InvokeScript(gameObjects); //运行脚本
-                        RSystem.RenderGameObject(gameObjects);  //渲染
+                        RendererSystem.RenderGameObject(gameObjects);  //渲染
                         //etc.
                         Thread.Sleep(delayTime);
                         //计算时间

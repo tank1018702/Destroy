@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Core\Components\Transform.cs" />
     <Compile Include="Core\Engine\Reflactor.cs" />
+    <Compile Include="Core\Systems\RendererSystem.cs" />
     <Compile Include="Core\Systems\ScriptSystem.cs" />
     <Compile Include="Core\Tools\Audio.cs" />
     <Compile Include="Core\Tools\Storage.cs" />
@@ -68,18 +69,20 @@
     <Compile Include="Core\GameObjectComponent\Component.cs" />
     <Compile Include="Core\GameObjectComponent\GameObject.cs" />
     <Compile Include="Core\Components\Script.cs" />
+    <Compile Include="Core\Tools\Vector2.cs" />
     <Compile Include="Test\BehaviorQueue.cs" />
     <Compile Include="Graphics\Block.cs" />
+    <Compile Include="Core\Tools\Mathematics.cs" />
     <Compile Include="Test\Net\Message.cs" />
     <Compile Include="Core\Components\Collider.cs" />
     <Compile Include="Core\Systems\CollisionSystem.cs" />
     <Compile Include="Core\Tools\Debug.cs" />
     <Compile Include="Graphics\CharBlock.cs" />
     <Compile Include="Graphics\ColorBlock.cs" />
-    <Compile Include="Graphics\Coordinate.cs" />
+    <Compile Include="Core\Tools\Coordinate.cs" />
     <Compile Include="Core\Tools\Input.cs" />
     <Compile Include="Core\Tools\Vector2Int.cs" />
-    <Compile Include="Core\Systems\RendererSystem.cs" />
+    <Compile Include="Graphics\RendererSystem.cs" />
     <Compile Include="Core\Tools\Window.cs" />
     <Compile Include="Test\Net\Http.cs" />
     <Compile Include="Test\ECS\System.cs" />

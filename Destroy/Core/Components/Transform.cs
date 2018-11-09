@@ -1,11 +1,9 @@
 ﻿namespace Destroy
 {
-    using Destroy.Graphics;
-
     public class Transform : Component
     {
-        public Vector2Int Position;
+        public Vector2Int Position { get; set; }
 
-        public CoordinateType Coordinate;
+        public CoordinateType Coordinate { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Destroy.Graphics
+﻿namespace Destroy
 {
     public enum CoordinateType
     {
@@ -50,7 +50,7 @@
             }
         }
 
-        public static T[,] Rotate<T>(T[,] array, RotationAngle angle)
+        public static T[,] RotateArray<T>(T[,] array, RotationAngle angle)
         {
             T[,] rotArray = null;
 
