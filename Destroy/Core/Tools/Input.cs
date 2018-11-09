@@ -172,17 +172,30 @@
         /// </summary>
         private static KeyCode LastDropKey { get; set; }
 
+        /// <summary>
+        /// 是否在窗口未激活情况下获取输入
+        /// </summary>
+        public static bool RunInBackground { set; get; }
 
         /// <summary>
         /// 获取持续的按键输入
         /// </summary>
-        public static bool GetKey(KeyCode keyCode) => (GetAsyncKeyState((int)keyCode) & 0x8000) != 0;
+        public static bool GetKey(KeyCode keyCode)
+        {
+            if (!RunInBackground && Utils.IsBackground)
+                return false;
+
+            return (GetAsyncKeyState((int)keyCode) & 0x8000) != 0;
+        }
 
         /// <summary>
         /// 获取按下指定按键
         /// </summary>
         public static bool GetKeyDown(KeyCode keyCode)
         {
+            if (!RunInBackground && Utils.IsBackground)
+                return false;
+
             //如果没有按当前键就获取当前按的键
             if (!GetKey(keyCode))
                 LastInputKey = GetCurrentKey();
@@ -201,6 +214,9 @@
         /// </summary>
         public static bool GetKeyUp(KeyCode keyCode)
         {
+            if (!RunInBackground && Utils.IsBackground)
+                return false;
+
             KeyCode inputKeyCode = GetCurrentKey();
             //按下了指定键
             if (inputKeyCode == keyCode)
@@ -222,6 +238,9 @@
         /// </summary>
         public static int GetDirectInput(KeyCode negative, KeyCode positive)
         {
+            if (!RunInBackground && Utils.IsBackground)
+                return 0;
+
             int result = 0;
             if (GetKey(negative))
                 result -= 1;
@@ -236,7 +255,11 @@
         /// </summary>
         public static KeyCode GetCurrentKey()
         {
+            if (!RunInBackground && Utils.IsBackground)
+                return KeyCode.None;
+
             KeyCode inputKey = KeyCode.None;
+
             foreach (int key in Enum.GetValues(typeof(KeyCode)))
             {
                 if (GetKey((KeyCode)key))
@@ -251,10 +274,11 @@
         [Obsolete("Dont suggest using this.")]
         public static char GetInputChar()
         {
+            if (!RunInBackground && Utils.IsBackground)
+                return default(char);
+
             while (Console.KeyAvailable)
-            {
                 return Console.ReadKey().KeyChar;
-            }
             return default(char);
         }
     }
