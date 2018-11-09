@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{29678C39-7511-4CE8-925F-08E663872CDA}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>Destroy</RootNamespace>
     <AssemblyName>Destroy</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -17,14 +17,14 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -55,18 +55,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Components\Transform.cs" />
+    <Compile Include="Core\Engine\Reflactor.cs" />
     <Compile Include="Core\Systems\ScriptSystem.cs" />
     <Compile Include="Core\Tools\Audio.cs" />
     <Compile Include="Core\Tools\Storage.cs" />
     <Compile Include="Core\Tools\Time.cs" />
     <Compile Include="Core\Tools\Utils.cs" />
-    <Compile Include="Core\Components\BlockRenderer.cs" />
+    <Compile Include="Core\Components\Renderer.cs" />
     <Compile Include="Core\GameObjectComponent\CreatGameObject.cs" />
     <Compile Include="Core\Engine\RuntimeEngine.cs" />
     <Compile Include="Core\GameObjectComponent\Component.cs" />
     <Compile Include="Core\GameObjectComponent\GameObject.cs" />
-    <Compile Include="Core\GameObjectComponent\Script.cs" />
-    <Compile Include="Test\DialogChain.cs" />
+    <Compile Include="Core\Components\Script.cs" />
+    <Compile Include="Test\BehaviorQueue.cs" />
     <Compile Include="Graphics\Block.cs" />
     <Compile Include="Test\Net\Message.cs" />
     <Compile Include="Core\Components\Collider.cs" />

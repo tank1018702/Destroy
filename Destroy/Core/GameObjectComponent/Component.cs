@@ -2,6 +2,6 @@
 {
     public abstract class Component
     {
-        public GameObject gameObject;
+        public GameObject ThisGameObject;
     }
 }

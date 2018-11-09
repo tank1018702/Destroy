@@ -32,8 +32,7 @@
             {
                 gameObjects.Add(gameObject);
                 //注入gameObjects的引用
-                FieldInfo gos = gameObject.GetType().GetField("gameObjects", BindingFlags.NonPublic | BindingFlags.Instance);
-                gos.SetValue(gameObject, gameObjects);
+                Reflector.SetPrivateField(gameObject, "gameObjects", gameObjects);
             };
         }
 
@@ -41,14 +40,12 @@
         {
             CreatGameObjects();
 
-            Type time = typeof(Time);
-            Time timeInstance = new Time();
+            Time time = new Time();
             float tickTime = (float)1 / tickPerSecond;
             int delayTime = 1000 / tickPerSecond;
 
             //设置Time类属性
-            PropertyInfo propertyTickTime = time.GetProperty("TickTime");
-            propertyTickTime.SetValue(timeInstance, tickTime);
+            Reflector.SetStaticPrivateProperty(time, "TickTime", tickTime);
 
             Thread lifeCycle = new Thread
             (
@@ -63,10 +60,11 @@
                         //开始计时
                         stopwatch.Restart();
                         //设置Time类属性
-                        PropertyInfo propertyDeltaTime = time.GetProperty("DeltaTime");
-                        propertyDeltaTime.SetValue(timeInstance, deltaTime);
+                        Reflector.SetStaticPrivateProperty(time, "DeltaTime", deltaTime);
                         //LifeCycle
-                        InvokeScript();
+                        ScriptSystem.InvokeScript(gameObjects); //运行脚本
+                        RSystem.RenderGameObject(gameObjects);  //渲染
+                        //etc.
                         Thread.Sleep(delayTime);
                         //计算时间
                         deltaTime = stopwatch.ElapsedMilliseconds / (float)1000;
@@ -92,7 +90,6 @@
                 if (_class.IsSubclassOf(typeof(Script)) && creatGameObject != null)
                 {
                     OrderClass orderClass = new OrderClass(creatGameObject.CreatOrder, _class);
-
                     orderClasses.Add(orderClass);
                 }
             }
@@ -117,65 +114,6 @@
                         object component = assembly.CreateInstance($"{type.Namespace}.{type.Name}");
                         gameObject.AddComponent((Component)component);
                     }
-                }
-            }
-        }
-
-        private void InvokeScript()
-        {
-            //统一调用Start
-            for (int i = 0; i < gameObjects.Count; i++)
-            {
-                GameObject gameObject = gameObjects[i];
-
-                //反射获取components引用实现动态遍历components
-                FieldInfo fieldInfo = gameObject.GetType().GetField("components", BindingFlags.NonPublic | BindingFlags.Instance);
-                List<Component> components = (List<Component>)fieldInfo.GetValue(gameObject);
-
-                for (int j = 0; j < components.Count; j++)
-                {
-                    //如果游戏物体被销毁则停止执行后续Start
-                    if (!gameObjects.Contains(gameObject))
-                        break;
-
-                    Component component = components[j];
-                    //筛选继承Script的组件
-                    if (!component.GetType().IsSubclassOf(typeof(Script)))
-                        continue;
-                    Script script = (Script)component;
-
-                    if (!script.Started)
-                    {
-                        //在Start中创建的Script会在随后调用其Start
-                        script.Start(); //Virtual Call is better than Reflection Call
-                        script.Started = true;
-                    }
-                }
-            }
-
-            //统一调用Update
-            for (int i = 0; i < gameObjects.Count; i++)
-            {
-                GameObject gameObject = gameObjects[i];
-
-                //反射获取components引用实现动态遍历components
-                FieldInfo fieldInfo = gameObject.GetType().GetField("components", BindingFlags.NonPublic | BindingFlags.Instance);
-                List<Component> components = (List<Component>)fieldInfo.GetValue(gameObject);
-
-                for (int j = 0; j < components.Count; j++)
-                {
-                    //如果游戏物体被销毁则停止执行后续Update
-                    if (!gameObjects.Contains(gameObject))
-                        break;
-
-                    Component component = components[j];
-                    //筛选继承Script的组件
-                    if (!component.GetType().IsSubclassOf(typeof(Script)))
-                        continue;
-                    Script script = (Script)component;
-
-                    //在Update中创建的Script会在下一次调用Start时调用其Start方法
-                    script.Update(); //Virtual Call is better than Reflection Call
                 }
             }
         }

@@ -27,7 +27,6 @@
             client = new UdpClient(iPEndPoint);
         }
 
-
         public void BroadCast(byte[] data, int targetPort)
         {
             IPEndPoint target = new IPEndPoint(IPAddress.Broadcast, targetPort);
@@ -45,7 +44,6 @@
             byte[] data = client.Receive(ref remoteEP);
             return data;
         }
-
 
         public long Ping(IPEndPoint target, long overTime)
         {

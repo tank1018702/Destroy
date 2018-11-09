@@ -1,6 +1,6 @@
 ﻿namespace Destroy
 {
-    public class Collider
+    public class Collider : Component
     {
 
 

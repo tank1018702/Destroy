@@ -2,7 +2,7 @@
 {
     using Destroy.Graphics;
 
-    public class BlockRenderer : Component
+    public class Renderer : Component
     {
         public Block Block;
     }

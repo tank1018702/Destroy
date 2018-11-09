@@ -2,6 +2,7 @@
 {
     using Destroy.Graphics;
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// 渲染系统
@@ -140,6 +141,21 @@
                     cutBlock.ForeColors[i, j] = foreColor;
                     cutBlock.BackColors[i, j] = backColor;
                 }
+            }
+        }
+    }
+
+    public static class RSystem
+    {
+        public static void RenderGameObject(List<GameObject> gameObjects)
+        {
+            foreach (var gameObject in gameObjects)
+            {
+                if (gameObject.GetComponent<Renderer>() == null ||
+                    gameObject.GetComponent<Transform>() == null)
+                    continue;
+
+                Console.WriteLine("renderer");
             }
         }
     }

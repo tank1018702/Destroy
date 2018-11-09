@@ -3,23 +3,22 @@
     using System;
     using System.Diagnostics;
     using System.IO;
-    using System.Reflection;
     using System.Threading;
 
+    [CreatGameObject]
+    public class A : Script
+    {
+        public override void Start()
+        {
+            ThisGameObject.AddComponent<Renderer>();
+            ThisGameObject.AddComponent<Transform>();
+            Console.WriteLine(ThisGameObject.ComponentCount);
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        public override void Update()
+        {
+        }
+    }
 
     public class Program
     {

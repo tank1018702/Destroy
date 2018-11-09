@@ -28,9 +28,9 @@ C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\protobuf-net.dll
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\protobuf-net.xml
 C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\protobuf-net.dll
 C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\protobuf-net.xml
-C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll.config
-C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll
-C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.dll
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll.config
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.dll
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.dll
+C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.exe.config
+C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.exe
+C:\Users\Charlie179\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.exe
