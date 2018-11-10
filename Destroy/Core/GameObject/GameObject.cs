@@ -7,6 +7,7 @@
         public string Name;
 
         private List<GameObject> gameObjects;
+
         private List<Component> components;
 
         /// <summary>
@@ -37,7 +38,7 @@
             foreach (var component in components)
                 if (typeof(T) == component.GetType())
                     return null;
-            T instance = new T { ThisGameObject = this };
+            T instance = new T { GO = this };
             components.Add(instance);
 
             return instance;
@@ -77,7 +78,7 @@
             foreach (var each in components)
                 if (each.GetType() == component.GetType())
                     return;
-            component.ThisGameObject = this;
+            component.GO = this;
             components.Add(component);
         }
 
@@ -121,6 +122,9 @@
         /// </summary>
         public int GameObjectCount => gameObjects.Count;
 
+        /// <summary>
+        /// 获取组件个数
+        /// </summary>
         public int ComponentCount => components.Count;
     }
 }

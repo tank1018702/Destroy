@@ -65,10 +65,10 @@
     <Compile Include="Core\Tools\Time.cs" />
     <Compile Include="Core\Tools\Utils.cs" />
     <Compile Include="Core\Components\Renderer.cs" />
-    <Compile Include="Core\GameObjectComponent\CreatGameObject.cs" />
+    <Compile Include="Core\GameObject\CreatGameObject.cs" />
     <Compile Include="Core\Engine\RuntimeEngine.cs" />
-    <Compile Include="Core\GameObjectComponent\Component.cs" />
-    <Compile Include="Core\GameObjectComponent\GameObject.cs" />
+    <Compile Include="Core\GameObject\Component.cs" />
+    <Compile Include="Core\GameObject\GameObject.cs" />
     <Compile Include="Core\Components\Script.cs" />
     <Compile Include="Core\Tools\Vector2.cs" />
     <Compile Include="Test\BehaviorQueue.cs" />

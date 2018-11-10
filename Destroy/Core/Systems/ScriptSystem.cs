@@ -2,10 +2,16 @@
 {
     using System.Collections.Generic;
 
-    public class ScriptSystem
+    public static class ScriptSystem
     {
+        public static int GameObjectCount => gameObjects.Count;
+
+        private static List<GameObject> gameObjects;
+
         public static void InvokeScript(List<GameObject> gameObjects)
         {
+            ScriptSystem.gameObjects = gameObjects;
+
             //统一调用Start
             for (int i = 0; i < gameObjects.Count; i++)
             {
@@ -28,8 +34,8 @@
                     if (!script.Started)
                     {
                         //在Start中创建的Script会在随后调用其Start
-                        script.Start();
                         script.Started = true;
+                        script.Start(); //如果在Start中改了Started就意味着可以调用多次Start方法。
                     }
                 }
             }

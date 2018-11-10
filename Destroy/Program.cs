@@ -11,6 +11,7 @@
     {
         public override void Start()
         {
+            Console.WriteLine(GO.GameObjectCount);
         }
 
         public override void Update()

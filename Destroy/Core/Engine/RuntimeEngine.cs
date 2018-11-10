@@ -25,7 +25,6 @@
                     Environment.Exit(0);
                 }
             }
-
             //Initial
             gameObjects = new List<GameObject>();
             NewGameObject += gameObject =>
@@ -38,11 +37,12 @@
 
         public void Run(int tickPerSecond, bool block = true)
         {
-            CreatGameObjects();
+            CreatScriptableGameObjects();
 
             Time time = new Time();
             float tickTime = (float)1 / tickPerSecond;
             int delayTime = 1000 / tickPerSecond;
+            float deltaTime = 0;
 
             //设置Time类属性
             RuntimeReflector.SetStaticPrivateProperty(time, "TickTime", tickTime);
@@ -51,8 +51,6 @@
             (
                 () =>
                 {
-                    //I use the simple fixed deltaTime but not use the System.Diagnostics.
-                    float deltaTime = 0;
                     Stopwatch stopwatch = new Stopwatch();
 
                     while (true)
@@ -62,9 +60,14 @@
                         //设置Time类属性
                         RuntimeReflector.SetStaticPrivateProperty(time, "DeltaTime", deltaTime);
                         //LifeCycle
-                        ScriptSystem.InvokeScript(gameObjects); //运行脚本
-                        RendererSystem.RenderGameObject(gameObjects);  //渲染
-                        //etc.
+
+
+                        ScriptSystem.InvokeScript(gameObjects);         //运行脚本
+
+                        RendererSystem.Update(gameObjects);   //渲染
+
+
+
                         Thread.Sleep(delayTime);
                         //计算时间
                         deltaTime = stopwatch.ElapsedMilliseconds / (float)1000;
@@ -76,7 +79,7 @@
             lifeCycle.Start();
         }
 
-        private void CreatGameObjects()
+        private void CreatScriptableGameObjects()
         {
             Assembly assembly = Assembly.GetEntryAssembly(); //获取调用该方法的程序集而不是引擎所在的程序集
 
@@ -100,7 +103,6 @@
                 CreatGameObject creatGameObject = orderClass.Type.GetCustomAttribute<CreatGameObject>();
                 //设置GameObject与组件
                 GameObject gameObject = new GameObject(creatGameObject.Name);
-
                 //创建脚本实例(必须包含public无参构造方法, 并且这里会调用一次构造)
                 object scriptInstance = assembly.CreateInstance($"{orderClass.Type.Namespace}.{orderClass.Type.Name}");
                 //添加脚本实例作为组件
