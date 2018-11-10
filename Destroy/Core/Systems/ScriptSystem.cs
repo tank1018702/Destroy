@@ -11,7 +11,7 @@
             {
                 GameObject gameObject = gameObjects[i];
                 //反射获取components引用实现动态遍历components
-                List<Component> components = (List<Component>)Reflector.GetPrivateField(gameObject, "components");
+                List<Component> components = (List<Component>)RuntimeReflector.GetPrivateField(gameObject, "components");
 
                 for (int j = 0; j < components.Count; j++)
                 {
@@ -39,7 +39,7 @@
             {
                 GameObject gameObject = gameObjects[i];
                 //反射获取components引用实现动态遍历components
-                List<Component> components = (List<Component>)Reflector.GetPrivateField(gameObject, "components");
+                List<Component> components = (List<Component>)RuntimeReflector.GetPrivateField(gameObject, "components");
 
                 for (int j = 0; j < components.Count; j++)
                 {

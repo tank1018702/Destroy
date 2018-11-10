@@ -32,7 +32,7 @@
             {
                 gameObjects.Add(gameObject);
                 //注入gameObjects的引用
-                Reflector.SetPrivateField(gameObject, "gameObjects", gameObjects);
+                RuntimeReflector.SetPrivateField(gameObject, "gameObjects", gameObjects);
             };
         }
 
@@ -45,7 +45,7 @@
             int delayTime = 1000 / tickPerSecond;
 
             //设置Time类属性
-            Reflector.SetStaticPrivateProperty(time, "TickTime", tickTime);
+            RuntimeReflector.SetStaticPrivateProperty(time, "TickTime", tickTime);
 
             Thread lifeCycle = new Thread
             (
@@ -60,7 +60,7 @@
                         //开始计时
                         stopwatch.Restart();
                         //设置Time类属性
-                        Reflector.SetStaticPrivateProperty(time, "DeltaTime", deltaTime);
+                        RuntimeReflector.SetStaticPrivateProperty(time, "DeltaTime", deltaTime);
                         //LifeCycle
                         ScriptSystem.InvokeScript(gameObjects); //运行脚本
                         RendererSystem.RenderGameObject(gameObjects);  //渲染

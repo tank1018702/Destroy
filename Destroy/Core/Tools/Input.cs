@@ -1,7 +1,6 @@
 ﻿namespace Destroy
 {
     using System;
-    using System.Runtime.InteropServices;
 
     /// <summary>
     /// 键盘按键(104键)
@@ -15,7 +14,7 @@
         Enter = 0x0d,               // Enter
         Delete = 0x2e,              // Delete
 
-#if Use_DoubleKey
+#if DoubleKey
         //Shift = 0x10,               // Shift
         //Ctrl = 0x11,                // Control
         //Alt = 0x12,                 // Alt
@@ -159,9 +158,6 @@
     /// </summary>
     public static class Input
     {
-        [DllImport("User32.dll")]
-        private static extern short GetAsyncKeyState(int key);
-
         /// <summary>
         /// 上一次按下的键
         /// </summary>
@@ -185,7 +181,7 @@
             if (!RunInBackground && Utils.IsBackground)
                 return false;
 
-            return (GetAsyncKeyState((int)keyCode) & 0x8000) != 0;
+            return (LowLevelAPI.GetAsyncKeyState((int)keyCode) & 0x8000) != 0;
         }
 
         /// <summary>

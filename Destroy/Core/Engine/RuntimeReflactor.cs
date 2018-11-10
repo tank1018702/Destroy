@@ -2,7 +2,7 @@
 {
     using System.Reflection;
 
-    public class Reflector
+    public class RuntimeReflector
     {
         public static void SetStaticPrivateProperty(object instance, string propertyName, object value)
         {
