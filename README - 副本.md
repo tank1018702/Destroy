@@ -1,46 +1,13 @@
-# Destroy
-DE·Charlie Presents
+# Destroy Beta 1.0
 
-## Welcome
-Welcome to the Destroy(Console Game Engine) repository!
-
-Destroy Provides as few as possible useful tools to help you to make Windows Console Games much easier.
-
-Here are some features:
-
-1. Graphic Canvas and Renderer Systems
-
-2. State & Frame Synchonization Network Framework
-
-3. Entity Component System Framework (beta)
-
-It will be release soon.
-
-## Dev Edition
-
-RendererSystem is ready.
-
-RendererSystem is already for production.(Updated to 2.0)
-
-Gameplay framework is finished.
-
-Add some example games.
-
-## TODO
-
-1. make the gameplay framework work well.
-
-2. utf8 => unicode(utf16), string => char.
-
-3. make a new networking module.
-
-# 秒天秒地
-DE·Charlie Presents
+#### DE · Charlie Presents
 
 ## 欢迎
-欢迎来到秒天秒地(控制台游戏引擎)仓库!
+欢迎来到Destroy(Windows控制台游戏引擎)仓库!
 
-秒天秒地提供尽可能少的有用工具来帮助您制作Windows控制台游戏变得更容易。
+Destroy的目标是 : 尽可能提供简单实用的工具来帮助你更轻松方便地制作Windows控制台游戏。
+
+Destroy已经从DE(原型开发)与DEV(初期开发)阶段升级到了现在的Beta(测试开发)阶段, API与架构都已经经过了严密的考量, 如果不发生意外, 不会出现大幅更新API的情况。
 
 以下是一些特性:
 
