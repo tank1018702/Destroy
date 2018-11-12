@@ -16,6 +16,7 @@
 
         public override void Update()
         {
+            Console.WriteLine(Time.TickTime);
         }
     }
 

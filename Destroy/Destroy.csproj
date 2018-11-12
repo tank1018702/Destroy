@@ -47,6 +47,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,6 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Components\ArrayCollider.cs" />
+    <Compile Include="Core\Components\Camera.cs" />
+    <Compile Include="Core\Components\RectCollider.cs" />
     <Compile Include="Core\Components\Transform.cs" />
     <Compile Include="Core\Engine\LowLevelAPI.cs" />
     <Compile Include="Core\Engine\RuntimeReflactor.cs" />
@@ -74,6 +78,7 @@
     <Compile Include="Test\BehaviorQueue.cs" />
     <Compile Include="Graphics\Block.cs" />
     <Compile Include="Core\Tools\Mathematics.cs" />
+    <Compile Include="Test\BitmapConverter.cs" />
     <Compile Include="Test\Net\Message.cs" />
     <Compile Include="Core\Components\Collider.cs" />
     <Compile Include="Core\Systems\CollisionSystem.cs" />

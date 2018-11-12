@@ -12,21 +12,11 @@
 
         public static Action<GameObject> NewGameObject;
 
-        public RuntimeEngine(bool allowMultiple = true)
+        public RuntimeEngine()
         {
-            //Singleton Check
-            if (!allowMultiple)
-            {
-                Mutex mutex = new Mutex(true, Process.GetCurrentProcess().ProcessName, out bool nonexsitent);
-                if (!nonexsitent)
-                {
-                    Debug.Error("该游戏不允许多个实例同时运行!");
-                    Thread.Sleep(3000);
-                    Environment.Exit(0);
-                }
-            }
             //Initial
             gameObjects = new List<GameObject>();
+            //Register Method
             NewGameObject += gameObject =>
             {
                 gameObjects.Add(gameObject);
@@ -35,8 +25,20 @@
             };
         }
 
-        public void Run(int tickPerSecond, bool block = true)
+        public void Run(int tickPerSecond, bool allowMultiple = true)
         {
+            //Singleton Check
+            if (!allowMultiple)
+            {
+                Mutex mutex = new Mutex(true, Process.GetCurrentProcess().ProcessName, out bool nonexsitent);
+                if (!nonexsitent)
+                {
+                    Debug.Error("该游戏不允许多个实例同时运行!");
+                    Thread.Sleep(2500);
+                    Environment.Exit(0);
+                }
+            }
+
             CreatScriptableGameObjects();
 
             Time time = new Time();
@@ -47,36 +49,24 @@
             //设置Time类属性
             RuntimeReflector.SetStaticPrivateProperty(time, "TickTime", tickTime);
 
-            Thread lifeCycle = new Thread
-            (
-                () =>
-                {
-                    Stopwatch stopwatch = new Stopwatch();
+            Stopwatch stopwatch = new Stopwatch();
 
-                    while (true)
-                    {
-                        //开始计时
-                        stopwatch.Restart();
-                        //设置Time类属性
-                        RuntimeReflector.SetStaticPrivateProperty(time, "DeltaTime", deltaTime);
-                        //LifeCycle
-
-
-                        ScriptSystem.InvokeScript(gameObjects);         //运行脚本
-
-                        RendererSystem.Update(gameObjects);   //渲染
+            while (true)
+            {
+                //开始计时
+                stopwatch.Restart();
+                //设置Time类属性
+                RuntimeReflector.SetStaticPrivateProperty(time, "DeltaTime", deltaTime);
+                //LifeCycle
+                ScriptSystem.InvokeScript(gameObjects);         //运行脚本
+                RendererSystem.Update(gameObjects);             //渲染
+                CollisionSystem.Update(gameObjects);            //碰撞系统
 
 
-
-                        Thread.Sleep(delayTime);
-                        //计算时间
-                        deltaTime = stopwatch.ElapsedMilliseconds / (float)1000;
-                    }
-                }
-            )
-            { IsBackground = !block };
-
-            lifeCycle.Start();
+                Thread.Sleep(delayTime);
+                //计算时间
+                deltaTime = stopwatch.ElapsedMilliseconds / (float)1000;
+            }
         }
 
         private void CreatScriptableGameObjects()

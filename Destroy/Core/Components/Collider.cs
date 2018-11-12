@@ -1,6 +1,8 @@
 ﻿namespace Destroy
 {
-    public class Collider : Component
+    using System.Collections.Generic;
+
+    public abstract class Collider : Component
     {
         public Vector2Int Pos;
         public Vector2Int Size;

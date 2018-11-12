@@ -3,13 +3,13 @@
     public enum CoordinateType
     {
         /// <summary>
-        /// right X, up Y
-        /// </summary>
-        Normal,
-        /// <summary>
         /// right x, down Y
         /// </summary>
-        Window,
+        Window = 0,
+        /// <summary>
+        /// right X, up Y
+        /// </summary>
+        Normal = 1,
     }
 
     public enum RotationAngle

@@ -6,10 +6,6 @@
 
         public CoordinateType Coordinate { get; set; }
 
-        public Transform()
-        {
-            Position = Vector2Int.Zero;
-            Coordinate = CoordinateType.Window;
-        }
+        public Transform Parent { get; set; }
     }
 }
