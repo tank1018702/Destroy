@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Destroy
 {
-    public class Camera
+    public class Camera : Component
     {
-
-
+        public Renderer Map;
+        public Renderer FOV;
+        public Vector2Int Position;
     }
 }

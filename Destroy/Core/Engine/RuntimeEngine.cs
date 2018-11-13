@@ -58,11 +58,14 @@
                 //设置Time类属性
                 RuntimeReflector.SetStaticPrivateProperty(time, "DeltaTime", deltaTime);
                 //LifeCycle
-                ScriptSystem.InvokeScript(gameObjects);         //运行脚本
-                RendererSystem.Update(gameObjects);             //渲染
-                CollisionSystem.Update(gameObjects);            //碰撞系统
-
-
+                //调用Start
+                CallScriptMethod(gameObjects, "Start", true);
+                //碰撞检测
+                CollisionSystem.Update(gameObjects);
+                //调用Update
+                CallScriptMethod(gameObjects, "Update", false);
+                //渲染物体
+                RendererSystem.Update(gameObjects);
                 Thread.Sleep(delayTime);
                 //计算时间
                 deltaTime = stopwatch.ElapsedMilliseconds / (float)1000;
@@ -100,7 +103,7 @@
                 //add required components
                 foreach (Type type in creatGameObject.RequiredComponents)
                 {
-                    //如果继承Component类型(必须为public无参构造方法)
+                    //如果继承Component类型(必须包含public无参构造方法)
                     if (type.IsSubclassOf(typeof(Component)))
                     {
                         object component = assembly.CreateInstance($"{type.Namespace}.{type.Name}");
@@ -141,6 +144,42 @@
                 orderClasses[preIndex + 1] = current;
             }
             return orderClasses;
+        }
+
+        public static void CallScriptMethod(List<GameObject> gameObjects, string methodName,
+            bool start = false, params object[] parameters)
+        {
+            for (int i = 0; i < gameObjects.Count; i++)
+            {
+                GameObject gameObject = gameObjects[i];
+                //反射获取components引用实现动态遍历components
+                List<Component> components = (List<Component>)RuntimeReflector.GetPrivateField(gameObject, "components");
+
+                for (int j = 0; j < components.Count; j++)
+                {
+                    Component component = components[j];
+                    //筛选继承Script的组件
+                    if (!component.GetType().IsSubclassOf(typeof(Script)))
+                        continue;
+                    //如果游戏物体被销毁则停止执行后续Script
+                    if (!gameObjects.Contains(gameObject))
+                        break;
+                    Script script = (Script)component;
+                    //Call Once
+                    if (start && script.Started)
+                        return;
+                    if (start)
+                        script.Started = true;
+                    RuntimeReflector.InvokePublicMethod(script, methodName, parameters);
+                }
+            }
+        }
+
+        public static void CallScriptMethod(GameObject gameObject, string methodName,
+            bool start = false, params object[] parameters)
+        {
+            List<GameObject> gameObjects = new List<GameObject> { gameObject };
+            CallScriptMethod(gameObjects, methodName, start, parameters);
         }
     }
 }

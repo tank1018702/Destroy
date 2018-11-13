@@ -2,7 +2,7 @@
 {
     using System.Reflection;
 
-    public class RuntimeReflector
+    public static class RuntimeReflector
     {
         public static void SetStaticPrivateProperty(object instance, string propertyName, object value)
         {
@@ -20,6 +20,11 @@
         {
             FieldInfo field = instance.GetType().GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
             return field.GetValue(instance);
+        }
+
+        public static void InvokePublicMethod(object instance, string methodName, params object[] parameters)
+        {
+            instance.GetType().GetMethod(methodName).Invoke(instance, parameters);
         }
     }
 }

@@ -5,18 +5,27 @@
     using System.IO;
     using System.Runtime.InteropServices;
     using System.Threading;
+    using Destroy.Graphics;
 
     [CreatGameObject]
     public class A : Script
     {
         public override void Start()
         {
-            Console.WriteLine(GO.GameObjectCount);
+            GO.AddComponent<Transform>();
+            GO.AddComponent<Collider>();
+            GameObject gameObject = new GameObject();
+            gameObject.AddComponent<Transform>();
+            gameObject.AddComponent<Collider>();
         }
 
         public override void Update()
         {
-            Console.WriteLine(Time.TickTime);
+        }
+
+        public override void OnCollision(Collider collision)
+        {
+            Console.WriteLine(333);
         }
     }
 

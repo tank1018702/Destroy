@@ -8,6 +8,6 @@
 
         public virtual void Update() { }
 
-        public virtual void OnCollision() { }
+        public virtual void OnCollision(Collider collision) { }
     }
 }

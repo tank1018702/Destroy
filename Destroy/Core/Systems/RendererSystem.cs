@@ -4,18 +4,13 @@
 
     public static class RendererSystem
     {
-        public static int GameObjectCount => gameObjects.Count;
-
-        private static List<GameObject> gameObjects;
-
         public static void Update(List<GameObject> gameObjects)
         {
-            RendererSystem.gameObjects = gameObjects;
-
-            foreach (var gameObject in gameObjects)
+            foreach (GameObject gameObject in gameObjects)
             {
-                if (gameObject.GetComponent<Renderer>() == null ||
-                    gameObject.GetComponent<Transform>() == null)
+                Transform transform = gameObject.GetComponent<Transform>();
+                Renderer renderer = gameObject.GetComponent<Renderer>();
+                if (renderer == null || transform == null)
                     continue;
 
             }
