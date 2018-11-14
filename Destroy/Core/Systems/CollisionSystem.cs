@@ -8,9 +8,8 @@
         {
             foreach (GameObject gameObject in gameObjects)
             {
-                Transform transform = gameObject.GetComponent<Transform>();
                 Collider collider = gameObject.GetComponent<Collider>();
-                if (transform == null || collider == null)
+                if (collider == null || !collider.Initialized)
                     continue;
                 //遍历其他所有游戏物体进行检测
                 foreach (GameObject other in gameObjects)
@@ -18,10 +17,13 @@
                     //不与自己发生碰撞
                     if (gameObject == other)
                         continue;
-                    Transform otherTransform = other.GetComponent<Transform>();
                     Collider otherCollider = other.GetComponent<Collider>();
-                    if (otherTransform == null || otherCollider == null)
+                    if (otherCollider == null || !otherCollider.Initialized)
                         continue;
+
+                    Transform transform = gameObject.GetComponent<Transform>();
+                    Transform otherTransform = other.GetComponent<Transform>();
+
                     //碰撞检测
                     if (Intersects(transform.Position, otherTransform.Position, collider, otherCollider))
                     {

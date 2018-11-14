@@ -9,11 +9,11 @@
         public Transform Parent;
         private List<Transform> childs;
 
-        public Transform()
+        public void Init(Vector2Int position, CoordinateType coordinate, Transform parent)
         {
-            Position = Vector2Int.Zero;
-            Coordinate = CoordinateType.Window;
-            Parent = null;
+            Position = position;
+            Coordinate = coordinate;
+            Parent = parent;
             childs = new List<Transform>();
         }
 

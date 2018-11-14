@@ -4,19 +4,13 @@
     using System.Text;
     using System.Diagnostics;
 
-    public class Window
+    public static class Window
     {
-        public int BufferHeight { get; private set; }
+        public static int BufferHeight { get; private set; }
 
-        public int BufferWidth { get; private set; }
+        public static int BufferWidth { get; private set; }
 
-        public Window(int bufferWidth, int bufferHeight, bool hideCursor = true)
-        {
-            Console.CursorVisible = !hideCursor;
-            SetBufferSize(bufferWidth, bufferHeight);
-        }
-
-        public void SetBufferSize(int bufferWidth, int bufferHeight)
+        public static void SetBufferSize(int bufferWidth, int bufferHeight)
         {
             BufferHeight = bufferHeight;
             BufferWidth = bufferWidth;
@@ -27,13 +21,13 @@
             Console.BufferWidth = BufferWidth;
         }
 
-        public void SetIOEncoding(Encoding encoding)
+        public static void SetIOEncoding(Encoding encoding)
         {
             Console.InputEncoding = encoding;
             Console.OutputEncoding = encoding;
         }
 
-        public void Close(bool safe)
+        public static void Close(bool safe = true)
         {
             if (safe)
                 Process.GetCurrentProcess().Kill();

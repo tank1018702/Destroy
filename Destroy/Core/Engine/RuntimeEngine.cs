@@ -100,8 +100,6 @@
 
                 //添加脚本组件(脚本必须包含public无参构造方法, 并且这里会调用一次构造)
                 gameObject.AddComponent(orderClass.Type);
-                //添加Transform组件
-                Transform transform = gameObject.AddComponent<Transform>();
                 //添加required组件
                 foreach (Type type in creatGameObject.RequiredComponents)
                 {

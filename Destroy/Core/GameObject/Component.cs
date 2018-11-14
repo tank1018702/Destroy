@@ -5,7 +5,19 @@
 
     public abstract class Component
     {
+        /// <summary>
+        /// 是否进行了初始化
+        /// </summary>
+        public bool Initialized;
+
+        /// <summary>
+        /// 游戏物体
+        /// </summary>
         public GameObject gameObject;
+
+        /// <summary>
+        /// Transform组件
+        /// </summary>
         public Transform transform;
 
         /// <summary>
@@ -42,5 +54,15 @@
         /// 销毁一个游戏物体, 不会立马销毁, 会等到调用该方法的方法执行结束后进行销毁处理
         /// </summary>
         public void Destroy(GameObject gameObject) => this.gameObject.Destroy(gameObject);
+
+        /// <summary>
+        /// 获取游戏物体个数
+        /// </summary>
+        public int GameObjectCount => gameObject.GameObjectCount;
+
+        /// <summary>
+        /// 获取组件个数
+        /// </summary>
+        public int ComponentCount => gameObject.ComponentCount;
     }
 }

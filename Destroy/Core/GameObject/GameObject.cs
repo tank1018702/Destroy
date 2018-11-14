@@ -7,20 +7,11 @@
     public class GameObject
     {
         public string Name;
+        public GameObject gameObject;
+        public Transform transform;
 
         private List<GameObject> gameObjects;
-
         private List<Component> components;
-
-        /// <summary>
-        /// 获取游戏物体个数
-        /// </summary>
-        public int GameObjectCount => gameObjects.Count;
-
-        /// <summary>
-        /// 获取组件个数
-        /// </summary>
-        public int ComponentCount => components.Count;
 
         /// <summary>
         /// 创建一个被Engine托管的新游戏物体
@@ -30,6 +21,9 @@
             Name = "GameObject";
             components = new List<Component>();
             RuntimeEngine.NewGameObject(this);
+            //添加默认组件
+            gameObject = this;
+            transform = AddComponent<Transform>();
         }
 
         /// <summary>
@@ -40,6 +34,9 @@
             Name = name;
             components = new List<Component>();
             RuntimeEngine.NewGameObject(this);
+            //添加默认组件
+            gameObject = this;
+            transform = AddComponent<Transform>();
         }
 
         /// <summary>
@@ -50,7 +47,10 @@
             foreach (var component in components)
                 if (typeof(T) == component.GetType())
                     return null;
-            T instance = new T { gameObject = this };
+
+            T instance = new T();
+            instance.gameObject = this;
+            instance.transform = transform;
             components.Add(instance);
 
             return instance;
@@ -68,7 +68,9 @@
 
             Component component = (Component)assembly.CreateInstance($"{type.Namespace}.{type.Name}");
             component.gameObject = this;
+            component.transform = transform;
             components.Add(component);
+
             return component;
         }
 
@@ -108,6 +110,9 @@
         /// </summary>
         public void RemoveComponent<T>() where T : Component
         {
+            //不能移除默认组件Transform
+            if (typeof(T) == typeof(Transform))
+                return;
             for (int i = 0; i < components.Count; i++)
             {
                 if (components[i].GetType() == typeof(T))
@@ -132,5 +137,15 @@
         /// 销毁一个游戏物体, 不会立马销毁, 会等到调用该方法的方法执行结束后进行销毁处理
         /// </summary>
         public void Destroy(GameObject gameObject) => gameObjects.Remove(gameObject);
+
+        /// <summary>
+        /// 获取游戏物体个数
+        /// </summary>
+        public int GameObjectCount => gameObjects.Count;
+
+        /// <summary>
+        /// 获取组件个数
+        /// </summary>
+        public int ComponentCount => components.Count;
     }
 }

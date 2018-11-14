@@ -4,6 +4,10 @@
     {
         public Vector2Int Size;
 
-        public Collider() => Size = new Vector2Int(1, 1);
+        public void Init(Vector2Int size)
+        {
+            Size = size;
+            Initialized = true;
+        }
     }
 }

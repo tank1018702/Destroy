@@ -4,6 +4,13 @@
 
     public static class RendererSystem
     {
+        private static RendererData canvas;
+
+        public static void Init(RendererData canvas)
+        {
+            RendererSystem.canvas = canvas;
+        }
+
         public static void Update(List<GameObject> gameObjects)
         {
             foreach (GameObject gameObject in gameObjects)
@@ -12,17 +19,9 @@
                 Transform transform = gameObject.GetComponent<Transform>();
                 if (renderer == null || transform == null)
                     continue;
-
-                Graphics.Block block = new Graphics.Block
-                (
-                    renderer.Chars,
-                    renderer.CharWidth,
-                    transform.Coordinate,
-                    transform.Position,
-                    renderer.ForeColors,
-                    renderer.BackColors
-                );
-                Graphics.RendererSystem.RenderBlock(block);
+                if (!renderer.Initialized)
+                    continue;
+                
             }
         }
     }
