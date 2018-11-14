@@ -8,11 +8,21 @@
         {
             foreach (GameObject gameObject in gameObjects)
             {
-                Transform transform = gameObject.GetComponent<Transform>();
                 Renderer renderer = gameObject.GetComponent<Renderer>();
+                Transform transform = gameObject.GetComponent<Transform>();
                 if (renderer == null || transform == null)
                     continue;
 
+                Graphics.Block block = new Graphics.Block
+                (
+                    renderer.Chars,
+                    renderer.CharWidth,
+                    transform.Coordinate,
+                    transform.Position,
+                    renderer.ForeColors,
+                    renderer.BackColors
+                );
+                Graphics.RendererSystem.RenderBlock(block);
             }
         }
     }

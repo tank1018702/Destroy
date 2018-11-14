@@ -7,14 +7,21 @@
         public Vector2Int Position;
         public CoordinateType Coordinate;
         public Transform Parent;
-
         private List<Transform> childs;
+
+        public Transform()
+        {
+            Position = Vector2Int.Zero;
+            Coordinate = CoordinateType.Window;
+            Parent = null;
+            childs = new List<Transform>();
+        }
 
         public Transform GetChild(string name)
         {
             foreach (var item in childs)
             {
-                if (item.GO.Name == name)
+                if (item.gameObject.Name == name)
                     return item;
             }
             return null;

@@ -8,7 +8,7 @@
 
         public int Width => Colors.GetLength(1);
 
-        public int Length => Colors.GetLength(0);
+        public int Height => Colors.GetLength(0);
 
         public ColorBlock(int width, int height, ConsoleColor color)
         {

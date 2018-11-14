@@ -57,15 +57,16 @@
                 stopwatch.Restart();
                 //设置Time类属性
                 RuntimeReflector.SetStaticPrivateProperty(time, "DeltaTime", deltaTime);
-                //LifeCycle
-                //调用Start
-                CallScriptMethod(gameObjects, "Start", true);
-                //碰撞检测
-                CollisionSystem.Update(gameObjects);
-                //调用Update
-                CallScriptMethod(gameObjects, "Update", false);
-                //渲染物体
-                RendererSystem.Update(gameObjects);
+
+                #region LifeCycle
+
+                CallScriptMethod(gameObjects, "Start", true);   //调用Start
+                CollisionSystem.Update(gameObjects);            //碰撞检测
+                CallScriptMethod(gameObjects, "Update", false); //调用Update
+                RendererSystem.Update(gameObjects);             //渲染物体
+
+                #endregion
+
                 Thread.Sleep(delayTime);
                 //计算时间
                 deltaTime = stopwatch.ElapsedMilliseconds / (float)1000;
@@ -91,24 +92,22 @@
             }
 
             //Sorting(order越小的越先调用)
-            foreach (var orderClass in InsertionSort(orderClasses))
+            foreach (OrderClass orderClass in InsertionSort(orderClasses))
             {
                 CreatGameObject creatGameObject = orderClass.Type.GetCustomAttribute<CreatGameObject>();
-                //设置GameObject与组件
+                //创建游戏物体
                 GameObject gameObject = new GameObject(creatGameObject.Name);
-                //创建脚本实例(必须包含public无参构造方法, 并且这里会调用一次构造)
-                object scriptInstance = assembly.CreateInstance($"{orderClass.Type.Namespace}.{orderClass.Type.Name}");
-                //添加脚本实例作为组件
-                gameObject.AddComponent((Component)scriptInstance);
-                //add required components
+
+                //添加脚本组件(脚本必须包含public无参构造方法, 并且这里会调用一次构造)
+                gameObject.AddComponent(orderClass.Type);
+                //添加Transform组件
+                Transform transform = gameObject.AddComponent<Transform>();
+                //添加required组件
                 foreach (Type type in creatGameObject.RequiredComponents)
                 {
                     //如果继承Component类型(必须包含public无参构造方法)
                     if (type.IsSubclassOf(typeof(Component)))
-                    {
-                        object component = assembly.CreateInstance($"{type.Namespace}.{type.Name}");
-                        gameObject.AddComponent((Component)component);
-                    }
+                        gameObject.AddComponent(type);
                 }
             }
         }
@@ -146,8 +145,7 @@
             return orderClasses;
         }
 
-        public static void CallScriptMethod(List<GameObject> gameObjects, string methodName,
-            bool start = false, params object[] parameters)
+        public static void CallScriptMethod(List<GameObject> gameObjects, string methodName, bool start = false, params object[] parameters)
         {
             for (int i = 0; i < gameObjects.Count; i++)
             {
@@ -175,8 +173,7 @@
             }
         }
 
-        public static void CallScriptMethod(GameObject gameObject, string methodName,
-            bool start = false, params object[] parameters)
+        public static void CallScriptMethod(GameObject gameObject, string methodName, bool start = false, params object[] parameters)
         {
             List<GameObject> gameObjects = new List<GameObject> { gameObject };
             CallScriptMethod(gameObjects, methodName, start, parameters);

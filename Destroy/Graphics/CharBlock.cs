@@ -6,7 +6,7 @@
 
         public int Width => Chars.GetLength(1);
 
-        public int Length => Chars.GetLength(0);
+        public int Height => Chars.GetLength(0);
 
         public CharBlock(int width, int height, char c)
         {

@@ -1,15 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Destroy
+﻿namespace Destroy
 {
     public class Camera : Component
     {
-        public Renderer Map;
+        public Renderer Canvas;
         public Renderer FOV;
-        public Vector2Int Position;
+        public Transform CanvasPos;
+        public Transform WindowPos;
+
+        public Camera()
+        {
+            Canvas = new Renderer();
+            FOV = new Renderer();
+            CanvasPos = new Transform();
+            WindowPos = new Transform();
+        }
     }
 }

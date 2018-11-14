@@ -23,8 +23,7 @@
                     if (otherTransform == null || otherCollider == null)
                         continue;
                     //碰撞检测
-                    bool intersect = Intersects(transform.Position, otherTransform.Position, collider, otherCollider);
-                    if (intersect)
+                    if (Intersects(transform.Position, otherTransform.Position, collider, otherCollider))
                     {
                         //调用该碰撞体的OnCollision方法
                         RuntimeEngine.CallScriptMethod(gameObject, "OnCollision", false, otherCollider);
@@ -33,7 +32,7 @@
             }
         }
 
-        public static bool Intersects(Vector2Int selfPos, Vector2Int otherPos, Collider self, Collider other)
+        private static bool Intersects(Vector2Int selfPos, Vector2Int otherPos, Collider self, Collider other)
         {
             if (selfPos.X >= otherPos.X + other.Size.X || otherPos.X >= selfPos.X + self.Size.X)
                 return false;

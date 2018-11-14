@@ -1,6 +1,8 @@
 ﻿namespace Destroy
 {
+    using System;
     using System.Collections.Generic;
+    using System.Reflection;
 
     public class GameObject
     {
@@ -9,6 +11,16 @@
         private List<GameObject> gameObjects;
 
         private List<Component> components;
+
+        /// <summary>
+        /// 获取游戏物体个数
+        /// </summary>
+        public int GameObjectCount => gameObjects.Count;
+
+        /// <summary>
+        /// 获取组件个数
+        /// </summary>
+        public int ComponentCount => components.Count;
 
         /// <summary>
         /// 创建一个被Engine托管的新游戏物体
@@ -38,22 +50,26 @@
             foreach (var component in components)
                 if (typeof(T) == component.GetType())
                     return null;
-            T instance = new T { GO = this };
+            T instance = new T { gameObject = this };
             components.Add(instance);
 
             return instance;
         }
 
         /// <summary>
-        /// 移除指定组件
+        /// 添加指定组件
         /// </summary>
-        public void RemoveComponent<T>() where T : Component
+        public Component AddComponent(Type type)
         {
-            for (int i = 0; i < components.Count; i++)
-            {
-                if (components[i].GetType() == typeof(T))
-                    components.RemoveAt(i);
-            }
+            foreach (var each in components)
+                if (each.GetType() == type)
+                    return null;
+            Assembly assembly = Assembly.GetEntryAssembly();
+
+            Component component = (Component)assembly.CreateInstance($"{type.Namespace}.{type.Name}");
+            component.gameObject = this;
+            components.Add(component);
+            return component;
         }
 
         /// <summary>
@@ -68,18 +84,6 @@
                     return component as T;
             }
             return null;
-        }
-
-        /// <summary>
-        /// 添加指定组件实例
-        /// </summary>
-        public void AddComponent<T>(T component) where T : Component
-        {
-            foreach (var each in components)
-                if (each.GetType() == component.GetType())
-                    return;
-            component.GO = this;
-            components.Add(component);
         }
 
         /// <summary>
@@ -100,6 +104,18 @@
         }
 
         /// <summary>
+        /// 移除指定组件
+        /// </summary>
+        public void RemoveComponent<T>() where T : Component
+        {
+            for (int i = 0; i < components.Count; i++)
+            {
+                if (components[i].GetType() == typeof(T))
+                    components.RemoveAt(i);
+            }
+        }
+
+        /// <summary>
         /// 根据名字寻找场景中一个游戏物体, 若有多个同名物体也只返回一个。
         /// </summary>
         public GameObject Find(string name)
@@ -116,15 +132,5 @@
         /// 销毁一个游戏物体, 不会立马销毁, 会等到调用该方法的方法执行结束后进行销毁处理
         /// </summary>
         public void Destroy(GameObject gameObject) => gameObjects.Remove(gameObject);
-
-        /// <summary>
-        /// 获取游戏物体个数
-        /// </summary>
-        public int GameObjectCount => gameObjects.Count;
-
-        /// <summary>
-        /// 获取组件个数
-        /// </summary>
-        public int ComponentCount => components.Count;
     }
 }
