@@ -31,7 +31,7 @@
         public Component AddComponent(Type type) => gameObject.AddComponent(type);
 
         /// <summary>
-        /// 获取指定的类型
+        /// 获取指定的类型及其子类
         /// </summary>
         public T GetComponent<T>() where T : Component => gameObject.GetComponent<T>();
 

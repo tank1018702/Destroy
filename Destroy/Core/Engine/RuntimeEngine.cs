@@ -38,18 +38,19 @@
                     Environment.Exit(0);
                 }
             }
-
-            CreatScriptableGameObjects();
-
-            Time time = new Time();
-            float tickTime = (float)1 / tickPerSecond;
-            int delayTime = 1000 / tickPerSecond;
-            float deltaTime = 0;
-
-            //设置Time类属性
-            RuntimeReflector.SetStaticPrivateProperty(time, "TickTime", tickTime);
+            //Add script and required components to the gameObjects
+            CreateGameObjects();
 
             Stopwatch stopwatch = new Stopwatch();
+            Time time = new Time();
+            //每帧因该花的时间(最少应为1毫秒)
+            int tickTime = 1000 / tickPerSecond < 1 ? 1 : 1000 / tickPerSecond;
+            //脚本运行花费时间
+            int runTime = 0;
+            //线程休眠时间
+            int delayTime = 0;
+            //这一帧距离上一帧的时间
+            float deltaTime = 0;
 
             while (true)
             {
@@ -58,22 +59,23 @@
                 //设置Time类属性
                 RuntimeReflector.SetStaticPrivateProperty(time, "DeltaTime", deltaTime);
 
-                #region LifeCycle
+                UpdateGameObjects();
 
-                CallScriptMethod(gameObjects, "Start", true);   //调用Start
-                CollisionSystem.Update(gameObjects);            //碰撞检测
-                CallScriptMethod(gameObjects, "Update", false); //调用Update
-                RendererSystem.Update(gameObjects);             //渲染物体
-
-                #endregion
-
-                Thread.Sleep(delayTime);
-                //计算时间
-                deltaTime = stopwatch.ElapsedMilliseconds / (float)1000;
+                //计算应该休眠的时间, 保证每秒运行相应Tick次数
+                runTime = (int)stopwatch.ElapsedMilliseconds;
+                delayTime = tickTime - runTime;
+                if (delayTime > 0)
+                {
+                    deltaTime = (float)(runTime + delayTime) / 1000;
+                    Thread.Sleep(delayTime);
+                }
+                //代码运行时间超过Tick一秒应该花的时间
+                else
+                    deltaTime = (float)runTime / 1000;
             }
         }
 
-        private void CreatScriptableGameObjects()
+        private void CreateGameObjects()
         {
             Assembly assembly = Assembly.GetEntryAssembly(); //获取调用该方法的程序集而不是引擎所在的程序集
 
@@ -108,6 +110,15 @@
                         gameObject.AddComponent(type);
                 }
             }
+        }
+
+        private void UpdateGameObjects()
+        {
+            //LifeCycle
+            CallScriptMethod(gameObjects, "Start", true);   //调用Start
+            CallScriptMethod(gameObjects, "Update", false); //调用Update
+            CollisionSystem.Update(gameObjects);            //碰撞检测
+            RendererSystem.Update(gameObjects);             //渲染物体
         }
 
         private class OrderClass

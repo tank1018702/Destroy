@@ -13,13 +13,21 @@
         public override void Start()
         {
             CharBlock charBlock = new CharBlock(10, 10, ' ');
-            ColorBlock fore = new ColorBlock(charBlock.Width, charBlock.Height, ConsoleColor.Red);
-            ColorBlock back = new ColorBlock(charBlock.Width, charBlock.Height, ConsoleColor.Blue);
-
-            RendererData data = new RendererData(charBlock.Chars, 2, fore.Colors, back.Colors);
+            ColorBlock colorBlock = new ColorBlock(10, 10, ConsoleColor.Red);
+            RendererData rendererData = new RendererData(charBlock.Chars, 2, colorBlock.Colors, colorBlock.Colors);
+            RendererSystem.Init(10, 10);
 
             Renderer renderer = AddComponent<Renderer>();
-            renderer.Init(data, false, Vector2Int.Zero, Vector2Int.Zero, CoordinateType.Window);
+            renderer.Init(rendererData);
+
+            //CharBlock charBlock = new CharBlock(10, 10, ' ');
+            //ColorBlock fore = new ColorBlock(charBlock.Width, charBlock.Height, ConsoleColor.Red);
+            //ColorBlock back = new ColorBlock(charBlock.Width, charBlock.Height, ConsoleColor.Blue);
+            //RendererData data = new RendererData(charBlock.Chars, 2, fore.Colors, back.Colors);
+            //Renderer renderer = AddComponent<Renderer>();
+            //RectCollider rectCollider = AddComponent<RectCollider>();
+            //rectCollider.Init(Vector2Int.Zero);
+            //renderer.Init(data);
         }
 
         public override void Update()

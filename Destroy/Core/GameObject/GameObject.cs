@@ -6,12 +6,23 @@
 
     public class GameObject
     {
-        public string Name;
-        public GameObject gameObject;
-        public Transform transform;
-
-        private List<GameObject> gameObjects;
+        private List<GameObject> gameObjects = null;
         private List<Component> components;
+
+        /// <summary>
+        /// 名字
+        /// </summary>
+        public string Name;
+
+        /// <summary>
+        /// 游戏物体
+        /// </summary>
+        public GameObject gameObject;
+
+        /// <summary>
+        /// Transform组件
+        /// </summary>
+        public Transform transform;
 
         /// <summary>
         /// 创建一个被Engine托管的新游戏物体
@@ -75,14 +86,15 @@
         }
 
         /// <summary>
-        /// 获取指定的类型
+        /// 获取指定的类型及其子类
         /// </summary>
         public T GetComponent<T>() where T : Component
         {
+            Type t = typeof(T);
             foreach (var component in components)
             {
                 //返回同类型或子类
-                if (typeof(T) == component.GetType())
+                if (component.GetType() == t || component.GetType().IsSubclassOf(t))
                     return component as T;
             }
             return null;
