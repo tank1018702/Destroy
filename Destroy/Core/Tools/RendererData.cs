@@ -1,68 +1,60 @@
 ﻿namespace Destroy
 {
     using System;
-    using Destroy.Graphics;
 
     public struct RendererData
     {
-        public char[,] Chars { get; set; }
-
-        public ConsoleColor[,] ForeColors { get; set; }
-
-        public ConsoleColor[,] BackColors { get; set; }
+        public RendererGrid[,] Grids { get; set; }
 
         public int CharWidth { get; set; }
 
-        public int Width => Chars.GetLength(1);
+        public int Width => Grids.GetLength(1);
 
-        public int Height => Chars.GetLength(0);
+        public int Height => Grids.GetLength(0);
 
         public RendererData(int width, int height)
         {
+            Grids = new RendererGrid[height, width];
             CharWidth = 1;
-            CharBlock charBlock = new CharBlock(width, height, ' ');
-            ColorBlock fore = new ColorBlock(width, height, ConsoleColor.Gray);
-            ColorBlock back = new ColorBlock(width, height, ConsoleColor.Black);
-            Chars = charBlock.Chars;
-            ForeColors = fore.Colors;
-            BackColors = back.Colors;
+            for (int i = 0; i < Grids.GetLength(0); i++)
+                for (int j = 0; j < Grids.GetLength(1); j++)
+                    Grids[i, j] = new RendererGrid(' ', ConsoleColor.Gray, ConsoleColor.Black);
         }
 
-        public RendererData(char[,] chars)
+        public RendererData(int width, int height, int charWidth)
         {
-            CharWidth = 1;
-            Chars = chars;
-            ColorBlock fore = new ColorBlock(Chars.GetLength(1), Chars.GetLength(0), ConsoleColor.Gray);
-            ColorBlock back = new ColorBlock(Chars.GetLength(1), Chars.GetLength(0), ConsoleColor.Black);
-            ForeColors = fore.Colors;
-            BackColors = back.Colors;
-        }
-
-        public RendererData(char[,] chars, int charWidth)
-        {
+            Grids = new RendererGrid[height, width];
             CharWidth = charWidth;
-            Chars = chars;
-            ColorBlock fore = new ColorBlock(Chars.GetLength(1), Chars.GetLength(0), ConsoleColor.Gray);
-            ColorBlock back = new ColorBlock(Chars.GetLength(1), Chars.GetLength(0), ConsoleColor.Black);
-            ForeColors = fore.Colors;
-            BackColors = back.Colors;
+            for (int i = 0; i < Grids.GetLength(0); i++)
+                for (int j = 0; j < Grids.GetLength(1); j++)
+                    Grids[i, j] = new RendererGrid(' ', ConsoleColor.Gray, ConsoleColor.Black);
         }
 
-        public RendererData(char[,] chars, int charWidth, ConsoleColor[,] foreColors)
+        public RendererData(int width, int height, int charWidth, char c)
         {
+            Grids = new RendererGrid[height, width];
             CharWidth = charWidth;
-            Chars = chars;
-            ColorBlock back = new ColorBlock(Chars.GetLength(1), Chars.GetLength(0), ConsoleColor.Black);
-            ForeColors = foreColors;
-            BackColors = back.Colors;
+            for (int i = 0; i < Grids.GetLength(0); i++)
+                for (int j = 0; j < Grids.GetLength(1); j++)
+                    Grids[i, j] = new RendererGrid(c, ConsoleColor.Gray, ConsoleColor.Black);
         }
 
-        public RendererData(char[,] chars, int charWidth, ConsoleColor[,] foreColors, ConsoleColor[,] backColors)
+        public RendererData(int width, int height, int charWidth, char c, ConsoleColor fore)
         {
+            Grids = new RendererGrid[height, width];
             CharWidth = charWidth;
-            Chars = chars;
-            ForeColors = foreColors;
-            BackColors = backColors;
+            for (int i = 0; i < Grids.GetLength(0); i++)
+                for (int j = 0; j < Grids.GetLength(1); j++)
+                    Grids[i, j] = new RendererGrid(c, fore, ConsoleColor.Black);
+        }
+
+        public RendererData(int width, int height, int charWidth, char c, ConsoleColor fore, ConsoleColor back)
+        {
+            Grids = new RendererGrid[height, width];
+            CharWidth = charWidth;
+            for (int i = 0; i < Grids.GetLength(0); i++)
+                for (int j = 0; j < Grids.GetLength(1); j++)
+                    Grids[i, j] = new RendererGrid(c, fore, back);
         }
     }
 }

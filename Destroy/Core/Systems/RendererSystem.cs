@@ -8,10 +8,10 @@
         private static RendererData canvas;
         private static RendererData canvasBuffer;
 
-        public static void Init(int width, int height)
+        public static void Init(int width, int height, int charWidth)
         {
-            canvas = new RendererData(width, height);
-            canvasBuffer = new RendererData(width, height);
+            canvas = new RendererData(width, height, charWidth);
+            canvasBuffer = new RendererData(width, height, charWidth);
         }
 
         public static void Update(List<GameObject> gameObjects)
@@ -19,7 +19,6 @@
             //相机未初始化
             if (canvas.Equals(default(RendererData)))
                 return;
-
             foreach (GameObject gameObject in gameObjects)
             {
                 Renderer renderer = gameObject.GetComponent<Renderer>();
@@ -46,13 +45,9 @@
                     else if (transform.Coordinate == CoordinateType.Window)
                         y = transform.Position.Y + i;
 
-                    char c = rendererData.Chars[i, j];
-                    ConsoleColor foreColor = rendererData.ForeColors[i, j];
-                    ConsoleColor backColor = rendererData.BackColors[i, j];
+                    RendererGrid grid = rendererData.Grids[i, j];
                     //根据坐标系在画布中设置元素
-                    Coordinate.SetInArray(canvas.Chars, c, x, y, transform.Coordinate);
-                    Coordinate.SetInArray(canvas.ForeColors, foreColor, x, y, transform.Coordinate);
-                    Coordinate.SetInArray(canvas.BackColors, backColor, x, y, transform.Coordinate);
+                    Coordinate.SetInArray(canvas.Grids, grid, x, y, transform.Coordinate);
                 }
             }
         }
@@ -63,16 +58,13 @@
             {
                 for (int j = 0; j < canvas.Width; j++)
                 {
+                    RendererGrid grid = canvas.Grids[i, j];
+                    RendererGrid buffer = canvasBuffer.Grids[i, j];
                     //Diff
-                    if (canvas.Chars[i, j] != canvasBuffer.Chars[i, j])
+                    if (!grid.Equals(buffer))
                     {
-                        int x = j;
-                        int y = canvas.CharWidth * i;
-                        Print.SetCursorPos(x, y);
-                        char c = canvas.Chars[i, j];
-                        ConsoleColor foreColor = canvas.ForeColors[i, j];
-                        ConsoleColor backColor = canvas.BackColors[i, j];
-                        Print.Draw(c, foreColor, backColor);
+                        Print.SetCursorPos(j * canvas.CharWidth, i);
+                        Print.Draw(grid.Char, grid.ForeColor, grid.BackColor);
                     }
                 }
             }

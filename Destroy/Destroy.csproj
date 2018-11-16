@@ -64,6 +64,7 @@
     <Compile Include="Core\Systems\RendererSystem.cs" />
     <Compile Include="Core\Tools\Audio.cs" />
     <Compile Include="Core\Tools\RendererData.cs" />
+    <Compile Include="Core\Tools\RendererGrid.cs" />
     <Compile Include="Core\Tools\Storage.cs" />
     <Compile Include="Core\Tools\Time.cs" />
     <Compile Include="Core\Tools\Utils.cs" />

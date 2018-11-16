@@ -9,12 +9,17 @@
         public Transform Parent;
         private List<Transform> childs;
 
-        public void Init(Vector2Int position, CoordinateType coordinate, Transform parent)
+        public Transform()
         {
-            Position = position;
-            Coordinate = coordinate;
-            Parent = parent;
+            Position = Vector2Int.Zero;
+            Coordinate = CoordinateType.Window;
+            Parent = null;
             childs = new List<Transform>();
+        }
+
+        public void Translate(Vector2Int vector)
+        {
+            Position += vector;
         }
 
         public Transform GetChild(string name)
