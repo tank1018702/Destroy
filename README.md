@@ -1,71 +1,34 @@
-# Destroy
-DE·Charlie Presents
+# Destroy Develop 1.0
 
-## Welcome
-Welcome to the Destroy(Console Game Engine) repository!
+#### DE · Charlie Presents
 
-Destroy Provides as few as possible useful tools to help you to make Windows Console Games much easier.
+### 介绍:
+Destroy是一个简易的Windows控制台游戏框架。
 
-Here are some features:
+### 特点:
+组件式设计，提供游戏物体的生命周期（类似Unity），以及一系列相对应组件与常用工具。
 
-1. Graphic Canvas and Renderer Systems
+### 目标:
+Destroy的目标是 : 提供简单实用的工具来帮助你更轻松地制作Windows控制台游戏或2D游戏原型。（特别是RPG游戏：参考塞尔达传说：荒野之息的2D游戏原型）
 
-2. State & Frame Synchonization Network Framework
+### 现阶段计划:
 
-3. Entity Component System Framework (beta)
+Destroy已经从DE(原型开发)升级到了DEV(初期开发)阶段, 架构基本定型。但依然缺乏一些核心系统的支持：
 
-It will be release soon.
+1. 渲染系统
 
-## Dev Edition
+2. 物理系统
 
-RendererSystem is ready.
+3. 网络系统
 
-RendererSystem is already for production.(Updated to 2.0)
+4. AI寻路系统
 
-Gameplay framework is finished.
+在之后的更新中会不断完善这些，更新的优先级也从高到低排列。
 
-Add some example games.
+欢迎提交分支
 
-## TODO
+### 示例项目 & API帮助
 
-1. make the gameplay framework work well.
+由于依然处于Develop阶段，暂时不会放出示例项目与API文档。
 
-2. utf8 => unicode(utf16), string => char.
-
-3. make a new networking module.
-
-# 秒天秒地
-DE·Charlie Presents
-
-## 欢迎
-欢迎来到秒天秒地(控制台游戏引擎)仓库!
-
-秒天秒地提供尽可能少的有用工具来帮助您制作Windows控制台游戏变得更容易。
-
-以下是一些特性:
-
-1. 图形画布和渲染系统
-
-2. 状态和帧同步网络框架
-
-3. 实体组件系统框架（beta）
-
-它很快就会发布。
-
-## 开发版本
-
-渲染系统就绪。
-
-渲染系统可用于生产。（升级至2.0）
-
-Gameplay框架已经完成。
-
-增加几个示例项目
-
-## 目标
-
-1. 保证现有的gameplay框架运行正常。
-
-2. utf8 => Unicode(utf16), string => char。
-
-3. 制作全新的网络模块。
+暂时不推荐用于实际游戏中。
