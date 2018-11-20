@@ -11,7 +11,7 @@
 
         public Renderer()
         {
-            Str = "  ";
+            Str = "";
             ForeColor = ConsoleColor.Gray;
             BackColor = ConsoleColor.Black;
             Order = uint.MaxValue;

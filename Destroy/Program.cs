@@ -14,17 +14,17 @@
         {
             GameObject go = new GameObject("Camera");
             Camera camera = go.AddComponent<Camera>();
+            go.GetComponent<Transform>().Position = new Vector2Int(Console.BufferWidth, Console.BufferHeight);
             RendererSystem.Init(go);
-
+            
             Collider collider = GetComponent<Collider>();
             Renderer renderer = GetComponent<Renderer>();
-            renderer.Str = "网";
+            renderer.Str = "";
         }
 
         public override void Update()
         {
-            transform.Position += new Vector2Int(0, 1);
-            //Console.WriteLine(transform.Position.ToString());
+            transform.Position += new Vector2Int(0, -1);
         }
 
         public override void OnCollisionEnter(Collider collision)

@@ -9,8 +9,8 @@
 
         public Camera()
         {
-            BufferWidth = Console.WindowHeight;
-            BufferHeight = Console.WindowWidth;
+            BufferWidth = Console.BufferWidth;
+            BufferHeight = Console.BufferHeight;
         }
     }
 }
