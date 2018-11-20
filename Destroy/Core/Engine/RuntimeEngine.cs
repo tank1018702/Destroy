@@ -17,12 +17,9 @@
             //Initial
             gameObjects = new List<GameObject>();
             //Register Method
-            NewGameObject += gameObject =>
-            {
-                gameObjects.Add(gameObject);
-                //注入gameObjects的引用
-                RuntimeReflector.SetPrivateField(gameObject, "gameObjects", gameObjects);
-            };
+            NewGameObject += gameObject => gameObjects.Add(gameObject);
+            //注入gameObjects的引用
+            RuntimeReflector.SetPrivateStaticField(new GameObject(), "gameObjects", gameObjects);
         }
 
         public void Run(int tickPerSecond, bool allowMultiple = true)
@@ -57,7 +54,7 @@
                 //开始计时
                 stopwatch.Restart();
                 //设置Time类属性
-                RuntimeReflector.SetStaticPrivateProperty(time, "DeltaTime", deltaTime);
+                RuntimeReflector.SetPublicStaticProperty(time, "DeltaTime", deltaTime);
 
                 UpdateGameObjects();
 
@@ -117,7 +114,7 @@
             //LifeCycle
             CallScriptMethod(gameObjects, "Start", true);   //调用Start
             CallScriptMethod(gameObjects, "Update", false); //调用Update
-            CollisionSystem.Update(gameObjects);            //碰撞检测
+            //CollisionSystem.Update(gameObjects);            //碰撞检测
             RendererSystem.Update(gameObjects);             //渲染物体
         }
 
@@ -154,13 +151,13 @@
             return orderClasses;
         }
 
-        public static void CallScriptMethod(List<GameObject> gameObjects, string methodName, bool start = false, params object[] parameters)
+        public static void CallScriptMethod(List<GameObject> gameObjects, string methodName, bool callOnce = false, params object[] parameters)
         {
             for (int i = 0; i < gameObjects.Count; i++)
             {
                 GameObject gameObject = gameObjects[i];
                 //反射获取components引用实现动态遍历components
-                List<Component> components = (List<Component>)RuntimeReflector.GetPrivateField(gameObject, "components");
+                List<Component> components = (List<Component>)RuntimeReflector.GetPrivateInstanceField(gameObject, "components");
 
                 for (int j = 0; j < components.Count; j++)
                 {
@@ -173,11 +170,11 @@
                         break;
                     Script script = (Script)component;
                     //Call Once
-                    if (start && script.Started)
+                    if (callOnce && script.Started)
                         return;
-                    if (start)
+                    if (callOnce)
                         script.Started = true;
-                    RuntimeReflector.InvokePublicMethod(script, methodName, parameters);
+                    RuntimeReflector.InvokePublicInstanceMethod(script, methodName, parameters);
                 }
             }
         }

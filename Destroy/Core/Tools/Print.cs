@@ -39,18 +39,5 @@
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.BackgroundColor = ConsoleColor.Black;
         }
-
-        public static void SetCursorPos(int x, int y)
-        {
-            try
-            {
-                Console.SetCursorPosition(x, y);
-            }
-            catch (Exception)
-            {
-                Debug.Error("设置光标时，超出了屏幕缓冲区界限。");
-                Debug.Error("When a cursor is set, it exceed the screen buffer boundaries.");
-            }
-        }
     }
 }

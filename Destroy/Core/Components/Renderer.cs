@@ -1,19 +1,20 @@
 ﻿namespace Destroy
 {
+    using System;
+
     public class Renderer : Component
     {
-        /// <summary>
-        /// 原数组
-        /// </summary>
-        public RendererData Data;
+        public string Str;
+        public ConsoleColor ForeColor;
+        public ConsoleColor BackColor;
+        public uint Order;
 
-        /// <summary>
-        /// 初始化
-        /// </summary>
-        public void Init(RendererData data)
+        public Renderer()
         {
-            Data = data;
-            Initialized = true;
+            Str = "  ";
+            ForeColor = ConsoleColor.Gray;
+            BackColor = ConsoleColor.Black;
+            Order = uint.MaxValue;
         }
     }
 }

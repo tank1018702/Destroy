@@ -26,7 +26,7 @@
                         y = block.Position.Y + i;
 
                     int x = (block.Position.X + j) * block.CharWidth;
-                    Print.SetCursorPos(x, y);
+                    Console.SetCursorPosition(x, y);
 
                     char c = block.Chars[i, j];
                     ConsoleColor foreColor = block.ForeColors[i, j];
@@ -58,7 +58,7 @@
                             y = block.Position.Y + i;
 
                         int x = (block.Position.X + j) * block.CharWidth;
-                        Print.SetCursorPos(x, y);
+                        Console.SetCursorPosition(x, y);
 
                         char c = block.Chars[i, j];
                         ConsoleColor foreColor = block.ForeColors[i, j];

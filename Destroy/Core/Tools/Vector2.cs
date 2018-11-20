@@ -74,6 +74,13 @@
             left.Y /= right;
             return left;
         }
-    }
 
+        public static explicit operator Vector2(Vector2Int vector)
+        {
+            Vector2 vector2 = new Vector2();
+            vector2.X = vector.X;
+            vector2.Y = vector.Y;
+            return vector2;
+        }
+    }
 }

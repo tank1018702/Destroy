@@ -6,7 +6,6 @@
 
     public class GameObject
     {
-        private List<GameObject> gameObjects = null;
         private List<Component> components;
 
         /// <summary>
@@ -25,7 +24,7 @@
         public Transform transform;
 
         /// <summary>
-        /// 创建一个被Engine托管的新游戏物体
+        /// 创建一个被Engine托管的游戏物体
         /// </summary>
         public GameObject()
         {
@@ -38,7 +37,7 @@
         }
 
         /// <summary>
-        /// 创建一个被Engine托管的新游戏物体
+        /// 创建一个被Engine托管的游戏物体
         /// </summary>
         public GameObject(string name)
         {
@@ -133,9 +132,16 @@
         }
 
         /// <summary>
+        /// 获取组件个数
+        /// </summary>
+        public int ComponentCount => components.Count;
+
+        private static List<GameObject> gameObjects = new List<GameObject>();
+
+        /// <summary>
         /// 根据名字寻找场景中一个游戏物体, 若有多个同名物体也只返回一个。
         /// </summary>
-        public GameObject Find(string name)
+        public static GameObject Find(string name)
         {
             foreach (var gameObject in gameObjects)
             {
@@ -148,16 +154,11 @@
         /// <summary>
         /// 销毁一个游戏物体, 不会立马销毁, 会等到调用该方法的方法执行结束后进行销毁处理
         /// </summary>
-        public void Destroy(GameObject gameObject) => gameObjects.Remove(gameObject);
-
+        public static void Destroy(GameObject gameObject) => gameObjects.Remove(gameObject);
+        
         /// <summary>
         /// 获取游戏物体个数
         /// </summary>
-        public int GameObjectCount => gameObjects.Count;
-
-        /// <summary>
-        /// 获取组件个数
-        /// </summary>
-        public int ComponentCount => components.Count;
+        public static int GameObjectCount => gameObjects.Count;
     }
 }

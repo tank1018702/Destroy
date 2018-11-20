@@ -7,43 +7,27 @@
     using System.Threading;
     using Destroy.Graphics;
 
-    [CreatGameObject]
+    [CreatGameObject(0, "GameObject", typeof(Collider), typeof(Renderer))]
     public class A : Script
     {
         public override void Start()
         {
-            RendererSystem.Init(40, 40, 2);
+            GameObject go = new GameObject("Camera");
+            Camera camera = go.AddComponent<Camera>();
+            RendererSystem.Init(go);
 
-            var r = AddComponent<Renderer>();
-            RendererData data = new RendererData(5, 5, 2, ' ', ConsoleColor.Gray, ConsoleColor.Red);
-            r.Init(data);
-            transform.Translate(new Vector2Int(5, 0));
-
-            //CharBlock charBlock = new CharBlock(10, 10, ' ');
-            //ColorBlock fore = new ColorBlock(charBlock.Width, charBlock.Height, ConsoleColor.Red);
-            //ColorBlock back = new ColorBlock(charBlock.Width, charBlock.Height, ConsoleColor.Blue);
-            //RendererData data = new RendererData(charBlock.Chars, 2, fore.Colors, back.Colors);
-            //Renderer renderer = AddComponent<Renderer>();
-            //RectCollider rectCollider = AddComponent<RectCollider>();
-            //rectCollider.Init(Vector2Int.Zero);
-            //renderer.Init(data);
+            Collider collider = GetComponent<Collider>();
+            Renderer renderer = GetComponent<Renderer>();
+            renderer.Str = "网";
         }
-        //int i = 0;
+
         public override void Update()
         {
-            //if (i == 1)
-            //{
-            //    transform.Translate(new Vector2Int(0, 1));
-            //}
-            //i++;
-
-            if (Input.GetKey(KeyCode.D))
-            {
-                transform.Translate(new Vector2Int(0, 1));
-            }
+            transform.Position += new Vector2Int(0, 1);
+            //Console.WriteLine(transform.Position.ToString());
         }
 
-        public override void OnCollision(Collider collision)
+        public override void OnCollisionEnter(Collider collision)
         {
         }
     }

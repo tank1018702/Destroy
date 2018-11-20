@@ -14,7 +14,6 @@
         {
             BufferHeight = bufferHeight;
             BufferWidth = bufferWidth;
-
             Console.WindowHeight = BufferHeight;
             Console.BufferHeight = BufferHeight;
             Console.WindowWidth = BufferWidth;

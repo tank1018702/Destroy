@@ -5,71 +5,89 @@
 
     public static class RendererSystem
     {
-        private static RendererData canvas;
-        private static RendererData canvasBuffer;
+        private static bool ready;
+        private static Renderer[,] renderers;
+        private static Renderer[,] rendererBuffers;
+        private static int minX;
+        private static int maxX;
+        private static int minY;
+        private static int maxY;
 
-        public static void Init(int width, int height, int charWidth)
+        public static void Init(GameObject cameraObj)
         {
-            canvas = new RendererData(width, height, charWidth);
-            canvasBuffer = new RendererData(width, height, charWidth);
+            Camera camera = cameraObj.GetComponent<Camera>();
+            if (camera != null)
+            {
+                Transform transform = cameraObj.GetComponent<Transform>();
+                int bufferHeight = camera.BufferHeight;
+                int bufferWidth = camera.BufferWidth;
+
+                ready = true;
+                renderers = new Renderer[bufferHeight, bufferWidth];
+                rendererBuffers = new Renderer[bufferHeight, bufferWidth];
+                minX = transform.Position.X;
+                maxX = transform.Position.X + bufferWidth - 1;
+                minY = transform.Position.Y - bufferHeight + 1;
+                maxY = transform.Position.Y;
+            }
         }
 
         public static void Update(List<GameObject> gameObjects)
         {
-            //相机未初始化
-            if (canvas.Equals(default(RendererData)))
+            if (!ready)
+            {
+                Debug.Error("渲染系统未初始化!");
                 return;
+            }
+            List<GameObject> visibleGameObjects = new List<GameObject>();
+
             foreach (GameObject gameObject in gameObjects)
             {
                 Renderer renderer = gameObject.GetComponent<Renderer>();
-                if (renderer == null || !renderer.Initialized)
+                if (renderer == null)
                     continue;
-
                 Transform transform = gameObject.GetComponent<Transform>();
-                PreRendererCanvas(renderer.Data, transform);
+                //可见性过滤
+                if (VisibilityFilter(renderer, transform))
+                    visibleGameObjects.Add(gameObject);
+            }
+            foreach (var gameObject in visibleGameObjects)
+            {
+                Renderer renderer = gameObject.GetComponent<Renderer>();
+                Transform transform = gameObject.GetComponent<Transform>();
+                renderers[transform.Position.X, transform.Position.Y] = renderer;
             }
             RendererCanvasBuffer();
         }
 
-        public static void PreRendererCanvas(RendererData rendererData, Transform transform)
+        public static bool VisibilityFilter(Renderer renderer, Transform transform)
         {
-            for (int i = 0; i < rendererData.Height; i++)
-            {
-                for (int j = 0; j < rendererData.Width; j++)
-                {
-                    int x = transform.Position.X + j;
-                    int y = -1;
-                    //算Y轴方向
-                    if (transform.Coordinate == CoordinateType.Normal)
-                        y = transform.Position.Y - i;
-                    else if (transform.Coordinate == CoordinateType.Window)
-                        y = transform.Position.Y + i;
-
-                    RendererGrid grid = rendererData.Grids[i, j];
-                    //根据坐标系在画布中设置元素
-                    Coordinate.SetInArray(canvas.Grids, grid, x, y, transform.Coordinate);
-                }
-            }
+            int x = transform.Position.X;
+            int y = transform.Position.Y;
+            if (x >= minX && x <= maxX && y >= minY && y <= maxY)
+                return true;
+            else
+                return false;
         }
 
         public static void RendererCanvasBuffer()
         {
-            for (int i = 0; i < canvas.Height; i++)
+            for (int i = 0; i < renderers.GetLength(0); i++)
             {
-                for (int j = 0; j < canvas.Width; j++)
+                for (int j = 0; j < renderers.GetLength(1); j++)
                 {
-                    RendererGrid grid = canvas.Grids[i, j];
-                    RendererGrid buffer = canvasBuffer.Grids[i, j];
+                    Renderer renderer = renderers[i, j];
+                    Renderer bufferRenderer = rendererBuffers[i, j];
                     //Diff
-                    if (!grid.Equals(buffer))
+                    if (renderer != bufferRenderer)
                     {
-                        Print.SetCursorPos(j * canvas.CharWidth, i);
-                        Print.Draw(grid.Char, grid.ForeColor, grid.BackColor);
+                        Console.SetCursorPosition(j, i);
+                        Print.Draw(renderer.Str, renderer.ForeColor, renderer.BackColor);
                     }
                 }
             }
             //Cache
-            canvasBuffer = canvas;
+            rendererBuffers = renderers;
         }
     }
 }
