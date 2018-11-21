@@ -267,6 +267,9 @@
             return inputKey;
         }
 
+        /// <summary>
+        /// 获取输入的字符
+        /// </summary>
         [Obsolete("Dont suggest using this.")]
         public static char GetInputChar()
         {

@@ -6,9 +6,24 @@
     using System.Text;
 #if Protobuf
     using Google.Protobuf;
-#endif
 
-    public class Serializer
+    public partial class Serializer
+    {
+        public static byte[] ProtoSerializer<T>(T obj) where T : IMessage
+        {
+            byte[] data = obj.ToByteArray();
+            return data;
+        }
+
+        public static T ProtoDeserializer<T>(byte[] data) where T : IMessage, new()
+        {
+            IMessage message = new T();
+            T msg = (T)message.Descriptor.Parser.ParseFrom(data);
+            return msg;
+        }
+    }
+#endif
+    public partial class Serializer
     {
         /// <summary>
         /// 如果不想序列化类中某个字段或属性使用 [NonSerializable]
@@ -25,18 +40,18 @@
                 return data;
             }
         }
+
         public static byte[] JsonSerialize<T>(T obj)
         {
             string json = JsonMapper.ToJson(obj);
             byte[] data = Encoding.UTF8.GetBytes(json);
             return data;
         }
+
         public static byte[] NetSerialize<T>(T t)
         {
             byte[] data = null;
 
-            //protobuf-net傻逼API设计, 第一次使用Serialize无法填充数组只能获取到长度
-            //只能使用两次Serializer.Serialize才能读取出byte
             using (Stream stream = new MemoryStream())
             {
                 ProtoBuf.Serializer.Serialize(stream, t);
@@ -61,12 +76,14 @@
                 return (T)obj;
             }
         }
+
         public static T JsonDeserialize<T>(byte[] data, int index, int count) where T : new()
         {
             string json = Encoding.UTF8.GetString(data, index, count);
             T obj = JsonMapper.ToObject<T>(json);  //反序列化时必须保证类型拥有无参构造
             return obj;
         }
+
         public static T NetDeserialize<T>(byte[] data)
         {
             using (Stream stream = new MemoryStream(data))
@@ -75,19 +92,5 @@
                 return t;
             }
         }
-#if Protobuf
-        public static byte[] ProtoSerializer<T>(T obj) where T : IMessage
-        {
-            byte[] data = obj.ToByteArray();
-            return data;
-        }
-
-        public static T ProtoDeserializer<T>(byte[] data) where T : IMessage, new()
-        {
-            IMessage message = new T();
-            T msg = (T)message.Descriptor.Parser.ParseFrom(data);
-            return msg;
-        }
-#endif
     }
 }

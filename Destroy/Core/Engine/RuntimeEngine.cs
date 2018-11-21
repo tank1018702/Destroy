@@ -19,7 +19,9 @@
             //Register Method
             NewGameObject += gameObject => gameObjects.Add(gameObject);
             //注入gameObjects的引用
-            RuntimeReflector.SetPrivateStaticField(new GameObject(), "gameObjects", gameObjects);
+            GameObject temp = new GameObject();
+            RuntimeReflector.SetPrivateStaticField(temp, "gameObjects", gameObjects);
+            GameObject.Destroy(temp);
         }
 
         public void Run(int tickPerSecond, bool allowMultiple = true)
@@ -35,7 +37,7 @@
                     Environment.Exit(0);
                 }
             }
-            //Add script and required components to the gameObjects
+            
             CreateGameObjects();
 
             Stopwatch stopwatch = new Stopwatch();
@@ -93,9 +95,9 @@
             {
                 Type type = (Type)item.Value;
                 CreatGameObject creatGameObject = type.GetCustomAttribute<CreatGameObject>();
-                //创建游戏物体
+                
+                //调用构造方法
                 GameObject gameObject = new GameObject(creatGameObject.Name);
-
                 //添加脚本组件(脚本必须包含public无参构造方法, 并且这里会调用一次构造)
                 gameObject.AddComponent(type);
                 //添加required组件
@@ -112,12 +114,12 @@
         {
             //LifeCycle
             CallScriptMethod(gameObjects, "Start", true);   //调用Start
-            CallScriptMethod(gameObjects, "Update", false); //调用Update
-            //CollisionSystem.Update(gameObjects);            //碰撞检测
-            RendererSystem.Update(gameObjects);             //渲染物体
+            CallScriptMethod(gameObjects, "Update");        //调用Update
+            //PhysicsSystem.Update(gameObjects);              //碰撞检测
+            //RendererSystem.Update(gameObjects);             //渲染物体
         }
 
-        public static void CallScriptMethod(List<GameObject> gameObjects, string methodName, bool callOnce = false, params object[] parameters)
+        public static void CallScriptMethod(List<GameObject> gameObjects, string methodName, bool start = false, params object[] parameters)
         {
             for (int i = 0; i < gameObjects.Count; i++)
             {
@@ -135,10 +137,10 @@
                     if (!gameObjects.Contains(gameObject))
                         break;
                     Script script = (Script)component;
-                    //Call Once
-                    if (callOnce && script.Started)
-                        return;
-                    if (callOnce)
+                    //每个脚本的Start只能调用一次
+                    if (start && script.Started)
+                        continue;
+                    if (start)
                         script.Started = true;
                     RuntimeReflector.InvokePublicInstanceMethod(script, methodName, parameters);
                 }

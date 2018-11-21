@@ -10,8 +10,6 @@
 
         public virtual void Update() { }
 
-        public virtual void OnCollisionEnter(Collider collision) { }
-
-        public virtual void OnTriggerEnter(Collider collision) { }
+        public virtual void OnCollision(Collider collision) { }
     }
 }

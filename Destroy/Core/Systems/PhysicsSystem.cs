@@ -2,7 +2,7 @@
 //{
 //    using System.Collections.Generic;
 
-//    public static class CollisionSystem
+//    public static class PhysicsSystem
 //    {
 //        public static void Update(List<GameObject> gameObjects)
 //        {
@@ -40,7 +40,7 @@
 //                        if (RectIntersects(transform.Position, otherTransform.Position, rectCollider, otherRectCollider))
 //                        {
 //                            //调用该碰撞体的OnCollision方法
-//                            RuntimeEngine.CallScriptMethod(gameObject, "OnCollisionEnter", false, otherCollider);
+//                            RuntimeEngine.CallScriptMethod(gameObject, "OnCollision", false, otherCollider);
 //                        }
 //                    }
 //                }

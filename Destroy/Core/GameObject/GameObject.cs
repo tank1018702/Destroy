@@ -24,7 +24,7 @@
         public Transform transform;
 
         /// <summary>
-        /// 创建一个被Engine托管的游戏物体
+        /// 创建一个游戏物体
         /// </summary>
         public GameObject()
         {
@@ -37,7 +37,7 @@
         }
 
         /// <summary>
-        /// 创建一个被Engine托管的游戏物体
+        /// 创建一个游戏物体
         /// </summary>
         public GameObject(string name)
         {
@@ -159,6 +159,6 @@
         /// <summary>
         /// 获取游戏物体个数
         /// </summary>
-        public static int GameObjectCount => gameObjects.Count;
+        public static int Count => gameObjects.Count;
     }
 }
