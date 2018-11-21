@@ -76,8 +76,7 @@
         {
             Assembly assembly = Assembly.GetEntryAssembly(); //获取调用该方法的程序集而不是引擎所在的程序集
 
-            List<OrderClass> orderClasses = new List<OrderClass>();
-
+            List<KeyValuePair<uint, object>> pairs = new List<KeyValuePair<uint, object>>();
             //获取游戏物体上的脚本
             foreach (var _class in assembly.GetTypes())
             {
@@ -85,26 +84,26 @@
                 //是否继承Script并且创建游戏物体
                 if (_class.IsSubclassOf(typeof(Script)) && creatGameObject != null)
                 {
-                    OrderClass orderClass = new OrderClass(creatGameObject.CreatOrder, _class);
-                    orderClasses.Add(orderClass);
+                    pairs.Add(new KeyValuePair<uint, object>(creatGameObject.CreatOrder, _class));
                 }
             }
-
             //Sorting(order越小的越先调用)
-            foreach (OrderClass orderClass in InsertionSort(orderClasses))
+            Mathematics.InsertionSort(pairs);
+            foreach (KeyValuePair<uint, object> item in pairs)
             {
-                CreatGameObject creatGameObject = orderClass.Type.GetCustomAttribute<CreatGameObject>();
+                Type type = (Type)item.Value;
+                CreatGameObject creatGameObject = type.GetCustomAttribute<CreatGameObject>();
                 //创建游戏物体
                 GameObject gameObject = new GameObject(creatGameObject.Name);
 
                 //添加脚本组件(脚本必须包含public无参构造方法, 并且这里会调用一次构造)
-                gameObject.AddComponent(orderClass.Type);
+                gameObject.AddComponent(type);
                 //添加required组件
-                foreach (Type type in creatGameObject.RequiredComponents)
+                foreach (Type each in creatGameObject.RequiredComponents)
                 {
                     //如果继承Component类型(必须包含public无参构造方法)
-                    if (type.IsSubclassOf(typeof(Component)))
-                        gameObject.AddComponent(type);
+                    if (each.IsSubclassOf(typeof(Component)))
+                        gameObject.AddComponent(each);
                 }
             }
         }
@@ -116,39 +115,6 @@
             CallScriptMethod(gameObjects, "Update", false); //调用Update
             //CollisionSystem.Update(gameObjects);            //碰撞检测
             RendererSystem.Update(gameObjects);             //渲染物体
-        }
-
-        private class OrderClass
-        {
-            public uint Order;
-            public Type Type;
-
-            public OrderClass(uint order, Type type)
-            {
-                Order = order;
-                Type = type;
-            }
-
-            public OrderClass Copy() => new OrderClass(Order, Type);
-        }
-
-        private List<OrderClass> InsertionSort(List<OrderClass> orderClasses)
-        {
-            int preIndex;
-            OrderClass current;
-            for (int i = 1; i < orderClasses.Count; i++)
-            {
-                preIndex = i - 1;
-                current = orderClasses[i].Copy();
-
-                while (preIndex >= 0 && orderClasses[preIndex].Order > current.Order)
-                {
-                    orderClasses[preIndex + 1] = orderClasses[preIndex]; //前一个覆盖当前
-                    preIndex--;
-                }
-                orderClasses[preIndex + 1] = current;
-            }
-            return orderClasses;
         }
 
         public static void CallScriptMethod(List<GameObject> gameObjects, string methodName, bool callOnce = false, params object[] parameters)
