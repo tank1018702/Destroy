@@ -42,7 +42,6 @@
 
         public override void OnCollision(Collider collision)
         {
-            Console.WriteLine("c");
         }
     }
 
