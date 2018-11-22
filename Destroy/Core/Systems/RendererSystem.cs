@@ -6,6 +6,8 @@
     public static class RendererSystem
     {
         private static bool ready;
+        private static Vector2Int cameraPos;
+        private static Matrix world2camera;
         private static Renderer[,] renderers;
         private static Renderer[,] rendererBuffers;
         private static int minX;
@@ -18,17 +20,21 @@
             Camera camera = cameraObj.GetComponent<Camera>();
             if (camera != null)
             {
-                Transform transform = cameraObj.GetComponent<Transform>();
+                ready = true;
+                cameraPos = cameraObj.GetComponent<Transform>().Position;
                 int bufferHeight = camera.BufferHeight;
                 int bufferWidth = camera.BufferWidth;
-
-                ready = true;
+                world2camera = new Matrix(2, 2);
+                world2camera[0, 0] = 0;
+                world2camera[0, 1] = 1;
+                world2camera[1, 0] = -1;
+                world2camera[1, 1] = 0;
                 renderers = new Renderer[bufferHeight, bufferWidth];
                 rendererBuffers = new Renderer[bufferHeight, bufferWidth];
-                minX = transform.Position.X;
-                maxX = transform.Position.X + bufferWidth - 1;
-                minY = transform.Position.Y - bufferHeight + 1;
-                maxY = transform.Position.Y;
+                minX = cameraPos.X;
+                maxX = cameraPos.X + bufferWidth - 1;
+                minY = cameraPos.Y - bufferHeight + 1;
+                maxY = cameraPos.Y;
             }
         }
 
@@ -48,26 +54,25 @@
                     continue;
                 Transform transform = gameObject.GetComponent<Transform>();
                 //可见性过滤
-                if (VisibilityFilter(renderer, transform))
+                int x = transform.Position.X;
+                int y = transform.Position.Y;
+                if (x >= minX && x <= maxX && y >= minY && y <= maxY)
                     visibleGameObjects.Add(gameObject);
             }
             foreach (var gameObject in visibleGameObjects)
             {
                 Renderer renderer = gameObject.GetComponent<Renderer>();
                 Transform transform = gameObject.GetComponent<Transform>();
-                renderers[transform.Position.X, transform.Position.Y] = renderer;
+
+                Vector2Int vector = transform.Position - cameraPos;
+                Matrix vec = new Matrix(1, 2);
+                vec[0, 0] = vector.X;
+                vec[0, 1] = vector.Y;
+                Matrix matrix = vec * world2camera; //获得旋转后的坐标系
+                Vector2Int tVector = new Vector2Int(matrix[0, 0], matrix[0, 1]);
+                renderers[tVector.X, tVector.Y] = renderer;
             }
             RendererCanvasBuffer();
-        }
-
-        public static bool VisibilityFilter(Renderer renderer, Transform transform)
-        {
-            int x = transform.Position.X;
-            int y = transform.Position.Y;
-            if (x >= minX && x <= maxX && y >= minY && y <= maxY)
-                return true;
-            else
-                return false;
         }
 
         public static void RendererCanvasBuffer()
@@ -82,12 +87,19 @@
                     if (renderer != bufferRenderer)
                     {
                         Console.SetCursorPosition(j, i);
-                        Print.Draw(renderer.Str, renderer.ForeColor, renderer.BackColor);
+                        if (renderer == null)
+                            Print.Draw("  ", ConsoleColor.Gray, ConsoleColor.Black);
+                        else
+                            Print.Draw(renderer.Str, renderer.ForeColor, renderer.BackColor);
                     }
                 }
             }
             //Cache
-            rendererBuffers = renderers;
+            for (int i = 0; i < renderers.GetLength(0); i++)
+                for (int j = 0; j < renderers.GetLength(1); j++)
+                    rendererBuffers[i, j] = renderers[i, j];
+            //Clean
+            renderers = new Renderer[rendererBuffers.GetLength(0), rendererBuffers.GetLength(1)];
         }
     }
 }

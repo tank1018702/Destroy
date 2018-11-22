@@ -7,20 +7,15 @@
     /// </summary>
     public enum KeyCode
     {
-        None = 0,                   // 空
-
-        #region Double
-
-        Enter = 0x0d,               // Enter
-        Delete = 0x2e,              // Delete
-
 #if DoubleKey
         //Shift = 0x10,               // Shift
         //Ctrl = 0x11,                // Control
         //Alt = 0x12,                 // Alt
 #endif
 
-        #endregion
+        None = 0,                   // 空
+        Enter = 0x0d,               // Enter
+        Delete = 0x2e,              // Delete
 
         #region Keyboard
 

@@ -9,6 +9,11 @@
         private List<Component> components;
 
         /// <summary>
+        /// 是否激活
+        /// </summary>
+        public bool Active;
+
+        /// <summary>
         /// 名字
         /// </summary>
         public string Name;
@@ -34,6 +39,7 @@
             //添加默认组件
             gameObject = this;
             transform = AddComponent<Transform>();
+            transform.transform = transform;
         }
 
         /// <summary>
@@ -47,6 +53,7 @@
             //添加默认组件
             gameObject = this;
             transform = AddComponent<Transform>();
+            transform.transform = transform;
         }
 
         /// <summary>

@@ -80,7 +80,7 @@
                 for (int j = 0; j < rc; j++)
                 {
                     for (int k = 0; k < lc; k++)
-                        matrix[i, j] = matrix[i, j] + left[i, k] * right[k, j];
+                        matrix[i, j] += left[i, k] * right[k, j];
                 }
             }
             return matrix;

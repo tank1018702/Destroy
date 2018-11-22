@@ -7,33 +7,55 @@
     using System.IO;
     using System.Runtime.InteropServices;
     using System.Threading;
-    using Destroy.Graphics;
 
     [CreatGameObject]
     public class Map : Script
     {
-        void Init()
-        {
-            Window.SetIOEncoding(Encoding.UTF8);
-            Window.SetBufferSize(40, 20);
-        }
-
         public override void Start()
         {
-            Console.WriteLine(0);
+            GameObject camera = new GameObject("Camera");
+            camera.AddComponent<Camera>();
+            RendererSystem.Init(camera);
+            Console.CursorVisible = false;
+
+            Renderer renderer = AddComponent<Renderer>();
+            renderer.Str = "1";
+            renderer.ForeColor = ConsoleColor.Red;
+            renderer.BackColor = ConsoleColor.Blue;
         }
 
         public override void Update()
         {
-            AddComponent<Bullet>();
+            int x = Input.GetDirectInput(KeyCode.A, KeyCode.D);
+            int y = Input.GetDirectInput(KeyCode.S, KeyCode.W);
+            transform.Translate(new Vector2Int(x, y));
+
+            if (Input.GetKey(KeyCode.J))
+            {
+                GameObject bullet = new GameObject("Bullet");
+                bullet.transform.Position = transform.Position;
+                bullet.AddComponent<Collider>();
+                Bullet b = bullet.AddComponent<Bullet>();
+                b.Init();
+            }
+        }
+
+        public override void OnCollision(Collider collision)
+        {
+            Console.WriteLine("c");
         }
     }
 
     public class Bullet : Script
     {
-        public override void Start()
+        public void Init()
         {
-            Console.WriteLine(1);
+            Renderer renderer = AddComponent<Renderer>();
+            renderer.Str = "0";
+        }
+        public override void Update()
+        {
+            transform.Translate(new Vector2Int(1, 0));
         }
     }
 
@@ -42,7 +64,7 @@
         private static void Main()
         {
             RuntimeEngine runtimeEngine = new RuntimeEngine();
-            runtimeEngine.Run(1);
+            runtimeEngine.Run(20);
         }
     }
 }

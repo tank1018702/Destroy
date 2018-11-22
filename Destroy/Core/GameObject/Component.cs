@@ -6,6 +6,11 @@
     public abstract class Component
     {
         /// <summary>
+        /// 是否启用
+        /// </summary>
+        public bool Enable;
+
+        /// <summary>
         /// 游戏物体
         /// </summary>
         public GameObject gameObject;

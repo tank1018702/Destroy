@@ -18,7 +18,7 @@
             gameObjects = new List<GameObject>();
             //Register Method
             NewGameObject += gameObject => gameObjects.Add(gameObject);
-            //注入gameObjects的引用
+            //创建静态GameObject
             GameObject temp = new GameObject();
             RuntimeReflector.SetPrivateStaticField(temp, "gameObjects", gameObjects);
             GameObject.Destroy(temp);
@@ -42,14 +42,9 @@
 
             Stopwatch stopwatch = new Stopwatch();
             Time time = new Time();
-            //每帧因该花的时间(最少应为1毫秒)
-            int tickTime = 1000 / tickPerSecond < 1 ? 1 : 1000 / tickPerSecond;
-            //脚本运行花费时间
-            int runTime = 0;
-            //线程休眠时间
-            int delayTime = 0;
-            //这一帧距离上一帧的时间
-            float deltaTime = 0;
+            int tickTime = 1000 / tickPerSecond < 1 ? 1 : 1000 / tickPerSecond; //每帧因该花的时间(最少应为1毫秒)
+            float deltaTime = 0; //这一帧距离上一帧的时间
+            float totalTime = 0; //总时间
 
             while (true)
             {
@@ -57,15 +52,17 @@
                 stopwatch.Restart();
                 //设置Time类属性
                 RuntimeReflector.SetPublicStaticProperty(time, "DeltaTime", deltaTime);
+                totalTime += deltaTime;
+                RuntimeReflector.SetPublicStaticProperty(time, "TotalTime", totalTime);
 
-                UpdateGameObjects();
+                UpdateGameObjects(); //更新所有游戏物体
 
                 //计算应该休眠的时间, 保证每秒运行相应Tick次数
-                runTime = (int)stopwatch.ElapsedMilliseconds;
-                delayTime = tickTime - runTime;
+                int runTime = (int)stopwatch.ElapsedMilliseconds;
+                int delayTime = tickTime - runTime;
                 if (delayTime > 0)
                 {
-                    deltaTime = (float)(runTime + delayTime) / 1000;
+                    deltaTime = (float)tickTime / 1000;
                     Thread.Sleep(delayTime);
                 }
                 //代码运行时间超过Tick一秒应该花的时间
@@ -112,11 +109,10 @@
 
         private void UpdateGameObjects()
         {
-            //LifeCycle
             CallScriptMethod(gameObjects, "Start", true);   //调用Start
             CallScriptMethod(gameObjects, "Update");        //调用Update
-            //PhysicsSystem.Update(gameObjects);              //碰撞检测
-            //RendererSystem.Update(gameObjects);             //渲染物体
+            PhysicsSystem.Update(gameObjects);              //碰撞检测
+            RendererSystem.Update(gameObjects);             //渲染物体
         }
 
         public static void CallScriptMethod(List<GameObject> gameObjects, string methodName, bool start = false, params object[] parameters)
