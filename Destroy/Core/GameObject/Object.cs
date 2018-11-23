@@ -20,7 +20,7 @@
         private static List<GameObject> gameObjects = new List<GameObject>();
 
         /// <summary>
-        /// 禁用并销毁一个物体
+        /// 销毁一个物体
         /// </summary>
         public static void Destroy(Object obj)
         {
@@ -31,7 +31,6 @@
             if (type.IsSubclassOf(typeof(Component)))
             {
                 Component component = (Component)obj;
-                component.Active = false;
                 List<Component> components = (List<Component>)RuntimeReflector.GetPrivateInstanceField
                     (component.gameObject, "components");
 
@@ -39,16 +38,17 @@
                 StackTrace stackTrace = new StackTrace(true);
                 MethodBase method = stackTrace.GetFrame(1).GetMethod();
                 string name = method.DeclaringType.Name;
-                //不能移除调用方法的脚本
+                //不能移除调用方法的脚本, 只禁用
                 if (name == component.Name)
+                {
+                    component.Active = false;
                     return;
-
+                }
                 components.Remove(component);
             }
             else
             {
                 GameObject gameObject = (GameObject)obj;
-                gameObject.Active = false;
                 gameObjects.Remove(gameObject);
             }
         }
