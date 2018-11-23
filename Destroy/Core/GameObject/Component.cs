@@ -3,13 +3,8 @@
     using System;
     using System.Collections.Generic;
 
-    public abstract class Component
+    public abstract class Component : Object
     {
-        /// <summary>
-        /// 是否启用
-        /// </summary>
-        public bool Enable;
-
         /// <summary>
         /// 游戏物体
         /// </summary>
@@ -39,11 +34,6 @@
         /// 获取所有指定的类型及其子类
         /// </summary>
         public List<T> GetComponents<T>() where T : Component => gameObject.GetComponents<T>();
-
-        /// <summary>
-        /// 移除指定组件
-        /// </summary>
-        public void RemoveComponent<T>() where T : Component => gameObject.RemoveComponent<T>();
 
         /// <summary>
         /// 获取组件个数

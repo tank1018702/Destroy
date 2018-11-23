@@ -10,18 +10,21 @@
     {
         private readonly List<GameObject> gameObjects;
 
-        public static Action<GameObject> NewGameObject;
+        public static Action<GameObject> Manage;
 
         public RuntimeEngine()
         {
             //Initial
             gameObjects = new List<GameObject>();
             //Register Method
-            NewGameObject += gameObject => gameObjects.Add(gameObject);
+            Manage += gameObject => gameObjects.Add(gameObject);
             //创建静态GameObject
-            GameObject temp = new GameObject();
-            RuntimeReflector.SetPrivateStaticField(temp, "gameObjects", gameObjects);
-            GameObject.Destroy(temp);
+            GameObject tempGo = new GameObject();
+            RuntimeReflector.SetPrivateStaticField(tempGo, "gameObjects", gameObjects);
+            //创建静态Object
+            Object tempObj = new Object();
+            RuntimeReflector.SetPrivateStaticField(tempObj, "gameObjects", gameObjects);
+            Object.Destroy(tempGo);
         }
 
         public void Run(int tickPerSecond, bool allowMultiple = true)
@@ -37,7 +40,7 @@
                     Environment.Exit(0);
                 }
             }
-            
+
             CreateGameObjects();
 
             Stopwatch stopwatch = new Stopwatch();
@@ -88,13 +91,13 @@
             }
             //Sorting(order越小的越先调用)
             Mathematics.InsertionSort(pairs);
-            foreach (KeyValuePair<uint, object> item in pairs)
+            foreach (KeyValuePair<uint, object> pair in pairs)
             {
-                Type type = (Type)item.Value;
+                Type type = (Type)pair.Value;
                 CreatGameObject creatGameObject = type.GetCustomAttribute<CreatGameObject>();
-                
+
                 //调用构造方法
-                GameObject gameObject = new GameObject(creatGameObject.Name);
+                GameObject gameObject = new GameObject { Name = creatGameObject.Name };
                 //添加脚本组件(脚本必须包含public无参构造方法, 并且这里会调用一次构造)
                 gameObject.AddComponent(type);
                 //添加required组件
@@ -111,8 +114,45 @@
         {
             CallScriptMethod(gameObjects, "Start", true);   //调用Start
             CallScriptMethod(gameObjects, "Update");        //调用Update
-            PhysicsSystem.Update(gameObjects);              //碰撞检测
-            RendererSystem.Update(gameObjects);             //渲染物体
+            //PhysicsSystem.Update(gameObjects);              //碰撞检测
+            //RendererSystem.Update(gameObjects);             //渲染物体
+        }
+
+        public static void CallStart(List<GameObject> gameObjects)
+        {
+            for (int i = 0; i < gameObjects.Count; i++)
+            {
+                GameObject gameObject = gameObjects[i];
+                if (!gameObject.Active) //保证游戏物体激活
+                    continue;
+
+                //反射获取components引用实现动态遍历components
+                List<Component> components = (List<Component>)RuntimeReflector.GetPrivateInstanceField(gameObject, "components");
+
+                for (int j = 0; j < components.Count; j++)
+                {
+                    Component component = components[j];
+                    //游戏物体未激活停止执行后续Script
+                    if (!gameObject.Active)
+                        break;
+                    //如果游戏物体被销毁则停止执行后续Script
+                    if (!gameObjects.Contains(gameObject))
+                        break;
+                    //保证组件激活
+                    if (!component.Active)
+                        continue;
+                    //筛选继承Script的组件
+                    if (!component.GetType().IsSubclassOf(typeof(Script)))
+                        continue;
+
+                    Script script = (Script)component;
+                    //每个脚本的Start只能调用一次
+                    if (script.Started)
+                        continue;
+                    script.Started = true;
+                    script.Start();
+                }
+            }
         }
 
         public static void CallScriptMethod(List<GameObject> gameObjects, string methodName, bool start = false, params object[] parameters)
@@ -120,6 +160,7 @@
             for (int i = 0; i < gameObjects.Count; i++)
             {
                 GameObject gameObject = gameObjects[i];
+
                 //反射获取components引用实现动态遍历components
                 List<Component> components = (List<Component>)RuntimeReflector.GetPrivateInstanceField(gameObject, "components");
 

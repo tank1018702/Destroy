@@ -4,19 +4,14 @@
     using System.Collections.Generic;
     using System.Reflection;
 
-    public class GameObject
+    public class GameObject : Object
     {
         private List<Component> components;
 
         /// <summary>
-        /// 是否激活
+        /// 标签
         /// </summary>
-        public bool Active;
-
-        /// <summary>
-        /// 名字
-        /// </summary>
-        public string Name;
+        public string Tag;
 
         /// <summary>
         /// 游戏物体
@@ -33,27 +28,15 @@
         /// </summary>
         public GameObject()
         {
+            //添加默认组件
             Name = "GameObject";
-            components = new List<Component>();
-            RuntimeEngine.NewGameObject(this);
-            //添加默认组件
+            Tag = "None";
             gameObject = this;
+            components = new List<Component>();
             transform = AddComponent<Transform>();
             transform.transform = transform;
-        }
-
-        /// <summary>
-        /// 创建一个游戏物体
-        /// </summary>
-        public GameObject(string name)
-        {
-            Name = name;
-            components = new List<Component>();
-            RuntimeEngine.NewGameObject(this);
-            //添加默认组件
-            gameObject = this;
-            transform = AddComponent<Transform>();
-            transform.transform = transform;
+            //进入托管模式
+            RuntimeEngine.Manage(this);
         }
 
         /// <summary>
@@ -124,29 +107,15 @@
         }
 
         /// <summary>
-        /// 移除指定组件
-        /// </summary>
-        public void RemoveComponent<T>() where T : Component
-        {
-            //不能移除默认组件Transform
-            if (typeof(T) == typeof(Transform))
-                return;
-            for (int i = 0; i < components.Count; i++)
-            {
-                if (components[i].GetType() == typeof(T))
-                    components.RemoveAt(i);
-            }
-        }
-
-        /// <summary>
         /// 获取组件个数
         /// </summary>
         public int ComponentCount => components.Count;
 
+
         private static List<GameObject> gameObjects = new List<GameObject>();
 
         /// <summary>
-        /// 根据名字寻找场景中一个游戏物体, 若有多个同名物体也只返回一个。
+        /// 根据名字寻找游戏物体, 若有多个同名物体也只返回一个。
         /// </summary>
         public static GameObject Find(string name)
         {
@@ -159,10 +128,19 @@
         }
 
         /// <summary>
-        /// 销毁一个游戏物体, 不会立马销毁, 会等到调用该方法的方法执行结束后进行销毁处理
+        /// 根据标签寻找游戏物体, 若有多个则返回多个。
         /// </summary>
-        public static void Destroy(GameObject gameObject) => gameObjects.Remove(gameObject);
-        
+        public static GameObject[] FindWithTag(string tag)
+        {
+            List<GameObject> list = new List<GameObject>();
+            foreach (var gameObject in gameObjects)
+            {
+                if (gameObject.Tag == tag)
+                    list.Add(gameObject);
+            }
+            return list.ToArray();
+        }
+
         /// <summary>
         /// 获取游戏物体个数
         /// </summary>
