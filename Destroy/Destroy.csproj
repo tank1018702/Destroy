@@ -62,6 +62,7 @@
     <Compile Include="Core\Engine\RuntimeReflactor.cs" />
     <Compile Include="Core\GameObject\Object.cs" />
     <Compile Include="Core\Math\Matrix.cs" />
+    <Compile Include="Core\Systems\NetworkSystem.cs" />
     <Compile Include="Core\Systems\RendererSystem.cs" />
     <Compile Include="Core\Tools\Audio.cs" />
     <Compile Include="Core\Tools\Storage.cs" />
@@ -84,7 +85,7 @@
     <Compile Include="Core\Tools\Debug.cs" />
     <Compile Include="Test\Graphics\CharBlock.cs" />
     <Compile Include="Test\Graphics\ColorBlock.cs" />
-    <Compile Include="Core\Math\Coordinate.cs" />
+    <Compile Include="Test\Coordinate.cs" />
     <Compile Include="Core\Tools\Input.cs" />
     <Compile Include="Core\Math\Vector2Int.cs" />
     <Compile Include="Test\Graphics\RendererSystem.cs" />

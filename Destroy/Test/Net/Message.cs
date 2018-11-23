@@ -7,13 +7,29 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public enum SenderType
+    public interface NetworkClient
+    {
+        void Connect();
+        void Send();
+        void Receive();
+        void Close();
+    }
+
+    public interface NetworkServer
+    {
+        void Accept();
+        void Broadcast();
+        void Receive();
+        void Close();
+    }
+
+    public enum SenderType : ushort
     {
         Server,
         Client
     }
 
-    public enum MessageType
+    public enum MessageType : ushort
     {
 
     }

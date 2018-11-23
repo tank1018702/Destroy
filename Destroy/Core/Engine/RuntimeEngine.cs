@@ -117,6 +117,7 @@
             CallScriptMethod(gameObjects, "Update");        //调用Update
             PhysicsSystem.Update(gameObjects);              //碰撞检测
             RendererSystem.Update(gameObjects);             //渲染物体
+            NetworkSystem.Update(gameObjects);              //传输消息
         }
 
         public static void CallScriptMethod(List<GameObject> gameObjects, string methodName, bool start = false, params object[] parameters)
@@ -145,11 +146,11 @@
                         continue;
 
                     Script script = (Script)component;
-                    if (!start && !script.Started) //等待下一个生命周期
+                    if (!start && !script.Started) //中途创建, 等待下一个生命周期
                         continue;
-                    if (start && script.Started)  //每个脚本的Start只能调用一次
+                    if (start && script.Started)   //每个脚本的Start只能调用一次
                         continue;
-                    if (start)                    //调用Start
+                    if (start)                     //调用Start
                         script.Started = true;
                     RuntimeReflector.InvokePublicInstanceMethod(script, methodName, parameters);
                 }

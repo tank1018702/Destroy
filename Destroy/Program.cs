@@ -8,29 +8,6 @@
     using System.Runtime.InteropServices;
     using System.Threading;
 
-    //[CreatGameObject]
-    //public class Map : Script
-    //{
-    //    public override void Start()
-    //    {
-    //        Console.CursorVisible = false;
-    //        GameObject camera = new GameObject { Name = "Camera" };
-    //        camera.AddComponent<Camera>();
-    //        RendererSystem.Init(camera);
-
-    //        Renderer renderer = AddComponent<Renderer>();
-    //        renderer.Str = "1";
-    //        renderer.ForeColor = ConsoleColor.Red;
-    //        renderer.BackColor = ConsoleColor.Blue;
-    //    }
-
-
-
-    //    public override void OnCollision(Collider collision)
-    //    {
-    //    }
-    //}
-
     [CreatGameObject]
     public class Player : Script
     {

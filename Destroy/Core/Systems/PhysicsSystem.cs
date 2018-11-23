@@ -11,7 +11,7 @@
                 GameObject gameObject = gameObjects[i];
                 //获取该碰撞体
                 Collider collider = gameObject.GetComponent<Collider>();
-                if (collider == null)
+                if (!gameObject.Active || collider == null || !collider.Active)
                     continue;
 
                 //遍历其他所有游戏物体进行检测
@@ -21,9 +21,11 @@
                     //不与自己发生碰撞
                     if (gameObject == other)
                         continue;
+                    //获取他人的碰撞体
                     Collider otherCollider = other.GetComponent<Collider>();
-                    if (otherCollider == null)
+                    if (!other.Active || otherCollider == null || !otherCollider.Active)
                         continue;
+
                     Transform transform = gameObject.GetComponent<Transform>();
                     Transform otherTransform = other.GetComponent<Transform>();
                     //发生碰撞
@@ -32,6 +34,7 @@
                 }
             }
         }
+
         ///// <summary>
         ///// 矩形碰撞检测
         ///// </summary>
