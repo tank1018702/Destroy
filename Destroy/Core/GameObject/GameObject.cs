@@ -28,11 +28,12 @@
         /// </summary>
         public GameObject()
         {
-            //添加默认组件
             Name = "GameObject";
+            Active = true;
             Tag = "None";
             gameObject = this;
             components = new List<Component>();
+            //添加默认组件
             transform = AddComponent<Transform>();
             transform.transform = transform;
             //进入托管模式
@@ -49,6 +50,8 @@
                     return null;
 
             T instance = new T();
+            instance.Name = typeof(T).Name;
+            instance.Active = true;
             instance.gameObject = this;
             instance.transform = transform;
             components.Add(instance);
@@ -67,6 +70,8 @@
             Assembly assembly = Assembly.GetEntryAssembly();
 
             Component component = (Component)assembly.CreateInstance($"{type.Namespace}.{type.Name}");
+            component.Name = type.Name;
+            component.Active = true;
             component.gameObject = this;
             component.transform = transform;
             components.Add(component);

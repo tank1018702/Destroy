@@ -7,6 +7,7 @@
         private int[,] items;
 
         public int Row => items.GetLength(0);
+
         public int Column => items.GetLength(1);
 
         public Matrix(int row, int column)
@@ -42,9 +43,7 @@
             for (int i = 0; i < row; i++)
             {
                 for (int j = 0; j < column; j++)
-                {
                     matrix[i, j] = left[i, j] + right[i, j];
-                }
             }
             return matrix;
         }
@@ -59,9 +58,20 @@
             for (int i = 0; i < row; i++)
             {
                 for (int j = 0; j < column; j++)
-                {
                     matrix[i, j] = left[i, j] - right[i, j];
-                }
+            }
+            return matrix;
+        }
+
+        public static Matrix operator *(Matrix left, int right)
+        {
+            int row = left.Row;
+            int column = left.Column;
+            Matrix matrix = new Matrix(row, column);
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                    matrix[i, j] = left[i, j] * right;
             }
             return matrix;
         }

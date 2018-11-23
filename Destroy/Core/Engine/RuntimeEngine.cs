@@ -112,47 +112,11 @@
 
         private void UpdateGameObjects()
         {
+            //GameObject在List中的位置将会影响游戏物体在生命周期中的更新顺序
             CallScriptMethod(gameObjects, "Start", true);   //调用Start
             CallScriptMethod(gameObjects, "Update");        //调用Update
-            //PhysicsSystem.Update(gameObjects);              //碰撞检测
-            //RendererSystem.Update(gameObjects);             //渲染物体
-        }
-
-        public static void CallStart(List<GameObject> gameObjects)
-        {
-            for (int i = 0; i < gameObjects.Count; i++)
-            {
-                GameObject gameObject = gameObjects[i];
-                if (!gameObject.Active) //保证游戏物体激活
-                    continue;
-
-                //反射获取components引用实现动态遍历components
-                List<Component> components = (List<Component>)RuntimeReflector.GetPrivateInstanceField(gameObject, "components");
-
-                for (int j = 0; j < components.Count; j++)
-                {
-                    Component component = components[j];
-                    //游戏物体未激活停止执行后续Script
-                    if (!gameObject.Active)
-                        break;
-                    //如果游戏物体被销毁则停止执行后续Script
-                    if (!gameObjects.Contains(gameObject))
-                        break;
-                    //保证组件激活
-                    if (!component.Active)
-                        continue;
-                    //筛选继承Script的组件
-                    if (!component.GetType().IsSubclassOf(typeof(Script)))
-                        continue;
-
-                    Script script = (Script)component;
-                    //每个脚本的Start只能调用一次
-                    if (script.Started)
-                        continue;
-                    script.Started = true;
-                    script.Start();
-                }
-            }
+            PhysicsSystem.Update(gameObjects);              //碰撞检测
+            RendererSystem.Update(gameObjects);             //渲染物体
         }
 
         public static void CallScriptMethod(List<GameObject> gameObjects, string methodName, bool start = false, params object[] parameters)
@@ -167,17 +131,25 @@
                 for (int j = 0; j < components.Count; j++)
                 {
                     Component component = components[j];
+                    //游戏物体未激活停止执行后续Script
+                    if (!gameObject.Active)
+                        break;
+                    //游戏物体被销毁停止执行后续Script
+                    if (!gameObjects.Contains(gameObject))
+                        break;
+                    //保证组件激活
+                    if (!component.Active)
+                        continue;
                     //筛选继承Script的组件
                     if (!component.GetType().IsSubclassOf(typeof(Script)))
                         continue;
-                    //如果游戏物体被销毁则停止执行后续Script
-                    if (!gameObjects.Contains(gameObject))
-                        break;
+
                     Script script = (Script)component;
-                    //每个脚本的Start只能调用一次
-                    if (start && script.Started)
+                    if (!start && !script.Started) //等待下一个生命周期
                         continue;
-                    if (start)
+                    if (start && script.Started)  //每个脚本的Start只能调用一次
+                        continue;
+                    if (start)                    //调用Start
                         script.Started = true;
                     RuntimeReflector.InvokePublicInstanceMethod(script, methodName, parameters);
                 }

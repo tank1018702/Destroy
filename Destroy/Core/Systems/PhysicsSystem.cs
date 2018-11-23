@@ -6,16 +6,18 @@
     {
         public static void Update(List<GameObject> gameObjects)
         {
-            foreach (GameObject gameObject in gameObjects)
+            for (int i = 0; i < gameObjects.Count; i++)
             {
+                GameObject gameObject = gameObjects[i];
                 //获取该碰撞体
                 Collider collider = gameObject.GetComponent<Collider>();
                 if (collider == null)
                     continue;
 
                 //遍历其他所有游戏物体进行检测
-                foreach (GameObject other in gameObjects)
+                for (int j = 0; j < gameObjects.Count; j++)
                 {
+                    GameObject other = gameObjects[j];
                     //不与自己发生碰撞
                     if (gameObject == other)
                         continue;

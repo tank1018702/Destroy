@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Reflection;
+    using System.Diagnostics;
 
     public class Object
     {
@@ -15,11 +17,10 @@
         /// </summary>
         public bool Active;
 
-
         private static List<GameObject> gameObjects = new List<GameObject>();
 
         /// <summary>
-        /// 在合适的时机禁用并销毁一个物体
+        /// 禁用并销毁一个物体
         /// </summary>
         public static void Destroy(Object obj)
         {
@@ -33,6 +34,15 @@
                 component.Active = false;
                 List<Component> components = (List<Component>)RuntimeReflector.GetPrivateInstanceField
                     (component.gameObject, "components");
+
+                //获取调用该方法的方法
+                StackTrace stackTrace = new StackTrace(true);
+                MethodBase method = stackTrace.GetFrame(1).GetMethod();
+                string name = method.DeclaringType.Name;
+                //不能移除调用方法的脚本
+                if (name == component.Name)
+                    return;
+
                 components.Remove(component);
             }
             else
