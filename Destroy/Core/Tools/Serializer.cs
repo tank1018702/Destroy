@@ -4,6 +4,7 @@
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
     using System.Text;
+
 #if Protobuf
     using Google.Protobuf;
 
@@ -23,6 +24,7 @@
         }
     }
 #endif
+
     public partial class Serializer
     {
         /// <summary>

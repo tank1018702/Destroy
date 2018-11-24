@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Destroy.ECS
+﻿namespace Destroy.ECS
 {
+    using global::System.Collections.Generic;
+    using global::System.Linq;
+
     public class EntityManager
     {
         private struct EntityComponent

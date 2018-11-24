@@ -1,12 +1,8 @@
-﻿using System;
-using System.Drawing;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Destroy.Test
+﻿namespace Destroy.Test
 {
+    using System;
+    using System.Drawing;
+
     public struct Pixel
     {
         public Vector2Int Pos;

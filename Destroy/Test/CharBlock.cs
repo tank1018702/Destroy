@@ -1,4 +1,4 @@
-﻿namespace Destroy.Graphics
+﻿namespace Destroy.Test
 {
     public struct CharBlock
     {

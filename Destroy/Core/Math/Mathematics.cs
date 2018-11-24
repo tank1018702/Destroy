@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Destroy
+﻿namespace Destroy
 {
+    using System.Collections.Generic;
+
     public static class Mathematics
     {
         /// <summary>

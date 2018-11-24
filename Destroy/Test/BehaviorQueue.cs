@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace Destroy
+﻿namespace Destroy.Test
 {
+    using System;
+    using System.Collections.Generic;
+
     public delegate void Behavior(object obj);
 
     public class BehaviorQueue

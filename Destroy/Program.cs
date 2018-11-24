@@ -7,6 +7,7 @@
     using System.IO;
     using System.Runtime.InteropServices;
     using System.Threading;
+    using Destroy.Net;
 
     //[CreatGameObject]
     //public class Player : Script
@@ -96,7 +97,7 @@
     {
         public override void Start()
         {
-
+            
         }
     }
 

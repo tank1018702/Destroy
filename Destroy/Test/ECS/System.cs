@@ -1,9 +1,7 @@
 ﻿namespace Destroy.ECS
 {
-    abstract class System
+    public abstract class System
     {
-
-
         protected abstract void OnUpdate();
     }
 }

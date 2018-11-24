@@ -1,4 +1,4 @@
-﻿namespace Destroy
+﻿namespace Destroy.Test
 {
     public enum CoordinateType
     {
