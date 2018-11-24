@@ -39,5 +39,10 @@
         /// 获取组件个数
         /// </summary>
         public int ComponentCount => gameObject.ComponentCount;
+
+        /// <summary>
+        /// 克隆接口
+        /// </summary>
+        public abstract Component Clone();
     }
 }

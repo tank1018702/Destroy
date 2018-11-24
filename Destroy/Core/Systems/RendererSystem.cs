@@ -63,12 +63,8 @@
                 Transform transform = gameObject.GetComponent<Transform>();
 
                 Vector2Int vector = transform.Position - cameraPos;
-                Matrix vec = new Matrix(1, 2);
-                vec[0, 0] = vector.X;
-                vec[0, 1] = vector.Y;
-                Matrix matrix = vec * world2camera; //获得该点在摄像机坐标系中的位置
-                Vector2Int tVector = new Vector2Int(matrix[0, 0], matrix[0, 1]);
-                renderers[tVector.X, tVector.Y] = renderer;
+                vector *= world2camera;     //获得该点在摄像机坐标系中的位置
+                renderers[vector.X, vector.Y] = renderer;
             }
             RendererCanvasBuffer();
         }

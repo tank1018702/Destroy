@@ -59,6 +59,7 @@
     <Compile Include="Core\Components\Camera.cs" />
     <Compile Include="Core\Components\Transform.cs" />
     <Compile Include="Core\Engine\LowLevelAPI.cs" />
+    <Compile Include="Core\Engine\RuntimeDebugger.cs" />
     <Compile Include="Core\Engine\RuntimeReflactor.cs" />
     <Compile Include="Core\GameObject\Object.cs" />
     <Compile Include="Core\Math\Matrix.cs" />

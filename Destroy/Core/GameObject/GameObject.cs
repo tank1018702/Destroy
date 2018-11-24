@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Reflection;
 
-    public class GameObject : Object
+    public sealed class GameObject : Object
     {
         private List<Component> components;
 
@@ -29,6 +29,23 @@
         public GameObject()
         {
             Name = "GameObject";
+            Active = true;
+            Tag = "None";
+            gameObject = this;
+            components = new List<Component>();
+            //添加默认组件
+            transform = AddComponent<Transform>();
+            transform.transform = transform;
+            //进入托管模式
+            RuntimeEngine.Manage(this);
+        }
+
+        /// <summary>
+        /// 创建一个游戏物体
+        /// </summary>
+        public GameObject(string name)
+        {
+            Name = name;
             Active = true;
             Tag = "None";
             gameObject = this;
@@ -67,7 +84,7 @@
             foreach (var each in components)
                 if (each.GetType() == type)
                     return null;
-            Assembly assembly = Assembly.GetEntryAssembly();
+            Assembly assembly = RuntimeReflector.GetAssembly;
 
             Component component = (Component)assembly.CreateInstance($"{type.Namespace}.{type.Name}");
             component.Name = type.Name;
@@ -115,6 +132,40 @@
         /// 获取组件个数
         /// </summary>
         public int ComponentCount => components.Count;
+
+        /// <summary>
+        /// 克隆接口, 继承Script的类不会被复制而会被重新实例化
+        /// </summary>
+        public GameObject Clone()
+        {
+            GameObject cloneGameObject = new GameObject
+            {
+                Name = Name,
+                Active = Active,
+                Tag = Tag
+            };
+            //获取引用
+            List<Component> list = RuntimeReflector.GetPrivateInstanceField(cloneGameObject, "components") as List<Component>;
+            foreach (var component in components)
+            {
+                if (component.Name == "Transform") //不添加重复组件
+                    continue;
+
+                Type type = component.GetType();
+                if (type.IsSubclassOf(typeof(Script)))
+                {
+                    cloneGameObject.AddComponent(type); //脚本实例化
+                }
+                else
+                {
+                    Component clone = component.Clone();
+                    clone.gameObject = cloneGameObject;
+                    clone.transform = cloneGameObject.transform;
+                    list.Add(clone);
+                }
+            }
+            return cloneGameObject;
+        }
 
 
         private static List<GameObject> gameObjects = new List<GameObject>();

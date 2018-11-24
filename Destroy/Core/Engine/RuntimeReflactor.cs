@@ -2,8 +2,19 @@
 {
     using System.Reflection;
 
-    public static class RuntimeReflector
+    internal static class RuntimeReflector
     {
+        private static Assembly assembly;
+        public static Assembly GetAssembly
+        {
+            get
+            {
+                if (assembly == null)
+                    assembly = Assembly.GetEntryAssembly();
+                return assembly;
+            }
+        }
+
         public static void SetPublicStaticProperty(object instance, string propertyName, object value)
         {
             PropertyInfo property = instance.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Static);

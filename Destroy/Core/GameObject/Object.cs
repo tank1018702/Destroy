@@ -17,6 +17,7 @@
         /// </summary>
         public bool Active;
 
+
         private static List<GameObject> gameObjects = new List<GameObject>();
 
         /// <summary>

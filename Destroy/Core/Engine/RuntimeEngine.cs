@@ -9,13 +9,15 @@
     public class RuntimeEngine
     {
         private readonly List<GameObject> gameObjects;
+        private readonly RuntimeDebugger debugger;
 
         public static Action<GameObject> Manage;
 
-        public RuntimeEngine()
+        public RuntimeEngine(RuntimeDebugger debugger = null)
         {
             //Initial
             gameObjects = new List<GameObject>();
+            this.debugger = debugger;
             //Register Method
             Manage += gameObject => gameObjects.Add(gameObject);
             //创建静态GameObject
@@ -24,6 +26,7 @@
             //创建静态Object
             Object tempObj = new Object();
             RuntimeReflector.SetPrivateStaticField(tempObj, "gameObjects", gameObjects);
+            tempObj = null;
             Object.Destroy(tempGo);
         }
 
@@ -58,7 +61,11 @@
                 totalTime += deltaTime;
                 RuntimeReflector.SetPublicStaticProperty(time, "TotalTime", totalTime);
 
-                UpdateGameObjects(); //更新所有游戏物体
+                UpdateGameObjects();    //更新所有游戏物体
+                if (debugger != null)   //更新调试器
+                {
+                    debugger.Watch();
+                }
 
                 //计算应该休眠的时间, 保证每秒运行相应Tick次数
                 int runTime = (int)stopwatch.ElapsedMilliseconds;
@@ -76,17 +83,17 @@
 
         private void CreateGameObjects()
         {
-            Assembly assembly = Assembly.GetEntryAssembly(); //获取调用该方法的程序集而不是引擎所在的程序集
+            Assembly assembly = RuntimeReflector.GetAssembly;
 
             List<KeyValuePair<uint, object>> pairs = new List<KeyValuePair<uint, object>>();
             //获取游戏物体上的脚本
-            foreach (var _class in assembly.GetTypes())
+            foreach (var type in assembly.GetTypes())
             {
-                CreatGameObject creatGameObject = _class.GetCustomAttribute<CreatGameObject>();
+                CreatGameObject creatGameObject = type.GetCustomAttribute<CreatGameObject>();
                 //是否继承Script并且创建游戏物体
-                if (_class.IsSubclassOf(typeof(Script)) && creatGameObject != null)
+                if (type.IsSubclassOf(typeof(Script)) && creatGameObject != null)
                 {
-                    pairs.Add(new KeyValuePair<uint, object>(creatGameObject.CreatOrder, _class));
+                    pairs.Add(new KeyValuePair<uint, object>(creatGameObject.CreatOrder, type));
                 }
             }
             //Sorting(order越小的越先调用)
@@ -97,7 +104,7 @@
                 CreatGameObject creatGameObject = type.GetCustomAttribute<CreatGameObject>();
 
                 //调用构造方法
-                GameObject gameObject = new GameObject { Name = creatGameObject.Name };
+                GameObject gameObject = new GameObject(creatGameObject.Name);
                 //添加脚本组件(脚本必须包含public无参构造方法, 并且这里会调用一次构造)
                 gameObject.AddComponent(type);
                 //添加required组件

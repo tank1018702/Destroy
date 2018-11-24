@@ -95,5 +95,16 @@
             }
             return matrix;
         }
+
+        public static Vector2Int operator *(Vector2Int left, Matrix right)
+        {
+            if (right.Row != 2)
+                throw new Exception("无法相乘");
+            Matrix matrix = new Matrix(1, 2);
+            matrix[0, 0] = left.X;
+            matrix[0, 1] = left.Y;
+            Matrix result = matrix * right;
+            return new Vector2Int(result[0, 0], result[0, 1]);
+        }
     }
 }
