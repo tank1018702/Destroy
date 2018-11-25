@@ -11,8 +11,6 @@
     {
         public static void Update(List<GameObject> gameObjects)
         {
-            Type client = typeof(NetworkClient);
-            Type server = typeof(NetworkServer);
             
         }
     }

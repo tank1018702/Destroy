@@ -120,6 +120,7 @@
         private void UpdateGameObjects()
         {
             //GameObject在List中的位置将会影响游戏物体在生命周期中的更新顺序
+            InvokeSystem.Update();
             CallScriptMethod(gameObjects, "Start", true);   //调用Start
             CallScriptMethod(gameObjects, "Update");        //调用Update
             PhysicsSystem.Update(gameObjects);              //碰撞检测
