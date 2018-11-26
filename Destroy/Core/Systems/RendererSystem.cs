@@ -15,9 +15,9 @@
 
         public static void Init(GameObject camera)
         {
-            Camera c = camera.GetComponent<Camera>();
-            bufferHeight = c.BufferHeight;
-            bufferWidth = c.BufferWidth;
+            Camera cameraComponent = camera.GetComponent<Camera>();
+            bufferHeight = cameraComponent.BufferHeight;
+            bufferWidth = cameraComponent.BufferWidth;
             renderers = new Renderer[bufferHeight, bufferWidth];
             rendererBuffers = new Renderer[bufferHeight, bufferWidth];
 
@@ -53,9 +53,7 @@
                 int x = transform.Position.X;
                 int y = transform.Position.Y;
                 if (x >= minX && x <= maxX && y >= minY && y <= maxY)
-                {
                     pairs.Add(new KeyValuePair<uint, object>(renderer.Order, gameObject));
-                }
             }
             Mathematics.InsertionSort(pairs);
             pairs.Reverse(); //排序(从大到小)
@@ -72,7 +70,7 @@
             }
             Display();
         }
-
+        
         public static void Display()
         {
             for (int i = 0; i < renderers.GetLength(0); i++)

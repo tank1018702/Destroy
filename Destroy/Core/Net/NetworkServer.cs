@@ -26,7 +26,7 @@
     {
         private TcpListener listener;                                   //服务器套接字
         private Dictionary<int, MessageEvent> messageEvents;            //注册消息
-        private ConcurrentQueue<ServerCallback> callBacks;                    //回调事件
+        private ConcurrentQueue<ServerCallback> callBacks;              //回调事件
 
         public NetworkServer(int port)
         {
@@ -45,10 +45,7 @@
         {
             int key = Message.EnumToKey(sender, type);
             if (messageEvents.ContainsKey(key))
-            {
-                Debug.Error("不能添加重复key");
                 return;
-            }
             messageEvents.Add(key, @event);
         }
         
