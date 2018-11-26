@@ -1,4 +1,4 @@
-# Destroy DEV 1.6
+# Destroy DEV 1.7
 
 #### DE · Charlie Presents
 
@@ -29,7 +29,7 @@ Destroy已经从DE(原型开发)升级到了DEV(初期开发)阶段, 架构基�
 
 ### TODO:
 
-1. 网络模块
+1. 网络模块(已完成)
 
 2. 改进渲染系统
 

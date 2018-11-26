@@ -67,12 +67,10 @@ public class Server : Script
     public void Register(ActionType action, MessageType type, MessageEvent @event)
     {
         int key = MessageSerializer.Enum2Int(action, type);
-        if (messageEvents.ContainsKey(key))
-        {
+        if (!messageEvents.ContainsKey(key))
+            messageEvents.Add(key, @event);
+        else
             Debug.Error("不能添加重复key!");
-            return;
-        }
-        messageEvents.Add(key, @event);
     }
 
     void OnPlayerInput(object obj, byte[] data)

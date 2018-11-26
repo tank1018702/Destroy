@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
 
     internal static class RendererSystem
     {
@@ -57,8 +58,7 @@
                 }
             }
             Mathematics.InsertionSort(pairs);
-            //排序(从大到小)
-            pairs.Reverse();
+            pairs.Reverse(); //排序(从大到小)
             foreach (var pair in pairs)
             {
                 GameObject gameObject = (GameObject)pair.Value;
@@ -84,12 +84,33 @@
                     //Diff
                     if (renderer != bufferRenderer)
                     {
-                        Console.SetCursorPosition(j, i);
+                        //renderer移动
+                        if (renderer == null && bufferRenderer != null)
+                        {
+                            StringBuilder builder = new StringBuilder();
+                            for (int k = 0; k < bufferRenderer.Width; k++)
+                                builder.Append(" ");
+                            string space = builder.ToString();
 
-                        if (renderer == null)
-                            Print.Draw(" ", ConsoleColor.Gray, ConsoleColor.Black);
+                            int x = j * bufferRenderer.Width;
+                            if (x > Console.BufferWidth - 1)
+                                x = Console.BufferWidth - 1;
+                            int y = i;
+
+                            Console.SetCursorPosition(x, y);
+                            Print.Draw(space, ConsoleColor.Gray, ConsoleColor.Black);
+                        }
+                        //renderer更新
                         else
+                        {
+                            int x = j * renderer.Width;
+                            if (x > Console.BufferWidth - 1)
+                                x = Console.BufferWidth - 1;
+                            int y = i;
+
+                            Console.SetCursorPosition(x, y);
                             Print.Draw(renderer.Str, renderer.ForeColor, renderer.BackColor);
+                        }
                     }
                 }
             }

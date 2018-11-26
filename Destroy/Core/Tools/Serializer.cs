@@ -8,7 +8,7 @@
 #if Protobuf
     using Google.Protobuf;
 
-    public partial class Serializer
+    public static partial class Serializer
     {
         public static byte[] ProtoSerializer<T>(T obj) where T : IMessage
         {
@@ -25,7 +25,7 @@
     }
 #endif
 
-    public partial class Serializer
+    public static partial class Serializer
     {
         /// <summary>
         /// 如果不想序列化类中某个字段或属性使用 [NonSerializable]
