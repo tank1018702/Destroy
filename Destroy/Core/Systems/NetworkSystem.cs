@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using Destroy.Net;
 
-    public static class NetworkSystem
+    internal static class NetworkSystem
     {
         public static void Update(List<GameObject> gameObjects)
         {

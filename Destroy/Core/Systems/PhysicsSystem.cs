@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public static class PhysicsSystem
+    internal static class PhysicsSystem
     {
         public static void Update(List<GameObject> gameObjects)
         {

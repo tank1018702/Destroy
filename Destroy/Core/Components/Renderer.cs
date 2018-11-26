@@ -7,12 +7,17 @@
         public string Str;
         public ConsoleColor ForeColor;
         public ConsoleColor BackColor;
+        /// <summary>
+        /// Order为0时脚本显示优先级最高(最后被渲染), 然后向着数轴正方向递减。
+        /// </summary>
+        public uint Order;
 
         public Renderer()
         {
             Str = "";
             ForeColor = ConsoleColor.Gray;
             BackColor = ConsoleColor.Black;
+            Order = uint.MaxValue;
         }
 
         public override Component Clone()
@@ -23,6 +28,7 @@
             renderer.Str = Str;
             renderer.ForeColor = ForeColor;
             renderer.BackColor = BackColor;
+            renderer.Order = Order;
             return renderer;
         }
     }

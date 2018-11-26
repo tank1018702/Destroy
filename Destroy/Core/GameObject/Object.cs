@@ -54,14 +54,6 @@
             }
         }
 
-        /// <summary>
-        /// 延迟调用一个方法(该方法必须为实例无参public方法)
-        /// </summary>
-        public static void Invoke(object instance, string methodName, float delayTime)
-        {
-            InvokeSystem.Requests.Add(new InvokeSystem.InvokeRequest(instance, methodName, delayTime));
-        }
-
         public static implicit operator bool(Object exists)
         {
             if (exists != null)

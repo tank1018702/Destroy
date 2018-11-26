@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public static class RendererSystem
+    internal static class RendererSystem
     {
         private static GameObject camera;
         private static Matrix world2camera;
@@ -33,17 +33,14 @@
         public static void Update(List<GameObject> gameObjects)
         {
             if (!camera || !camera.GetComponent<Camera>())
-            {
-                Debug.Error("渲染系统未初始化!");
                 return;
-            }
             Vector2Int cameraPos = camera.GetComponent<Transform>().Position;
             int minX = cameraPos.X;
             int maxX = cameraPos.X + bufferWidth - 1;
             int minY = cameraPos.Y - bufferHeight + 1;
             int maxY = cameraPos.Y;
 
-            List<GameObject> visibleGameObjects = new List<GameObject>();
+            List<KeyValuePair<uint, object>> pairs = new List<KeyValuePair<uint, object>>();
 
             foreach (GameObject gameObject in gameObjects)
             {
@@ -55,10 +52,17 @@
                 int x = transform.Position.X;
                 int y = transform.Position.Y;
                 if (x >= minX && x <= maxX && y >= minY && y <= maxY)
-                    visibleGameObjects.Add(gameObject);
+                {
+                    pairs.Add(new KeyValuePair<uint, object>(renderer.Order, gameObject));
+                }
             }
-            foreach (var gameObject in visibleGameObjects)
+            Mathematics.InsertionSort(pairs);
+            //排序(从大到小)
+            pairs.Reverse();
+            foreach (var pair in pairs)
             {
+                GameObject gameObject = (GameObject)pair.Value;
+
                 Renderer renderer = gameObject.GetComponent<Renderer>();
                 Transform transform = gameObject.GetComponent<Transform>();
 
@@ -66,10 +70,10 @@
                 vector *= world2camera;     //获得该点在摄像机坐标系中的位置
                 renderers[vector.X, vector.Y] = renderer;
             }
-            RendererCanvasBuffer();
+            Display();
         }
 
-        public static void RendererCanvasBuffer()
+        public static void Display()
         {
             for (int i = 0; i < renderers.GetLength(0); i++)
             {
@@ -81,8 +85,9 @@
                     if (renderer != bufferRenderer)
                     {
                         Console.SetCursorPosition(j, i);
+
                         if (renderer == null)
-                            Print.Draw("  ", ConsoleColor.Gray, ConsoleColor.Black);
+                            Print.Draw(" ", ConsoleColor.Gray, ConsoleColor.Black);
                         else
                             Print.Draw(renderer.Str, renderer.ForeColor, renderer.BackColor);
                     }
@@ -92,7 +97,7 @@
             for (int i = 0; i < renderers.GetLength(0); i++)
                 for (int j = 0; j < renderers.GetLength(1); j++)
                     rendererBuffers[i, j] = renderers[i, j];
-            //Clean
+            //Clear
             renderers = new Renderer[rendererBuffers.GetLength(0), rendererBuffers.GetLength(1)];
         }
     }
