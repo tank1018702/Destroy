@@ -1,4 +1,4 @@
-# Destroy DEV 1.5.9
+# Destroy DEV 1.6
 
 #### DE · Charlie Presents
 
@@ -31,7 +31,9 @@ Destroy已经从DE(原型开发)升级到了DEV(初期开发)阶段, 架构基�
 
 1. 网络模块
 
-2. 可视化调试器
+2. 改进渲染系统
+
+3. 可视化调试器
 
 ### 已知Bug:
 
