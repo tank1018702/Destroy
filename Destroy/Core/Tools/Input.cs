@@ -173,7 +173,7 @@
         /// </summary>
         public static bool GetKey(KeyCode keyCode)
         {
-            if (!RunInBackground && Utils.IsBackground)
+            if (!RunInBackground && Application.IsBackground)
                 return false;
 
             return (LowLevelAPI.GetAsyncKeyState((int)keyCode) & 0x8000) != 0;
@@ -184,7 +184,7 @@
         /// </summary>
         public static bool GetKeyDown(KeyCode keyCode)
         {
-            if (!RunInBackground && Utils.IsBackground)
+            if (!RunInBackground && Application.IsBackground)
                 return false;
 
             //如果没有按当前键就获取当前按的键
@@ -205,7 +205,7 @@
         /// </summary>
         public static bool GetKeyUp(KeyCode keyCode)
         {
-            if (!RunInBackground && Utils.IsBackground)
+            if (!RunInBackground && Application.IsBackground)
                 return false;
 
             KeyCode inputKeyCode = GetCurrentKey();
@@ -229,7 +229,7 @@
         /// </summary>
         public static int GetDirectInput(KeyCode negative, KeyCode positive)
         {
-            if (!RunInBackground && Utils.IsBackground)
+            if (!RunInBackground && Application.IsBackground)
                 return 0;
 
             int result = 0;
@@ -246,7 +246,7 @@
         /// </summary>
         public static KeyCode GetCurrentKey()
         {
-            if (!RunInBackground && Utils.IsBackground)
+            if (!RunInBackground && Application.IsBackground)
                 return KeyCode.None;
 
             KeyCode inputKey = KeyCode.None;
@@ -268,7 +268,7 @@
         [Obsolete("Dont suggest using this.")]
         public static char GetInputChar()
         {
-            if (!RunInBackground && Utils.IsBackground)
+            if (!RunInBackground && Application.IsBackground)
                 return default(char);
 
             while (Console.KeyAvailable)

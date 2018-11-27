@@ -8,18 +8,15 @@
     {
         private static GameObject camera;
         private static Matrix world2camera;
-        private static int bufferHeight;
-        private static int bufferWidth;
+        private static int charWidth;
+        private static int height;
+        private static int width;
         private static Renderer[,] renderers;
         private static Renderer[,] rendererBuffers;
 
         public static void Init(GameObject camera)
         {
-            Camera cameraComponent = camera.GetComponent<Camera>();
-            bufferHeight = cameraComponent.BufferHeight;
-            bufferWidth = cameraComponent.BufferWidth;
-            renderers = new Renderer[bufferHeight, bufferWidth];
-            rendererBuffers = new Renderer[bufferHeight, bufferWidth];
+            RendererSystem.camera = camera;
 
             world2camera = new Matrix(2, 2); //顺时针旋转点90度
             world2camera[0, 0] = 0;
@@ -28,7 +25,19 @@
             world2camera[1, 1] = 0;
             world2camera *= -1; //旋转点变为旋转坐标系
 
-            RendererSystem.camera = camera;
+            Camera cameraComponent = camera.GetComponent<Camera>();
+            charWidth = cameraComponent.CharWidth;
+            height = cameraComponent.Height;
+            width = cameraComponent.Width;
+            renderers = new Renderer[height, width];
+            rendererBuffers = new Renderer[height, width];
+
+            //设置窗口(最右边留出一列)
+            Console.CursorVisible = false;
+            Console.WindowHeight = height;
+            Console.BufferHeight = height;
+            Console.WindowWidth = (width + 1) * charWidth;
+            Console.BufferWidth = (width + 1) * charWidth;
         }
 
         public static void Update(List<GameObject> gameObjects)
@@ -37,8 +46,8 @@
                 return;
             Vector2Int cameraPos = camera.GetComponent<Transform>().Position;
             int minX = cameraPos.X;
-            int maxX = cameraPos.X + bufferWidth - 1;
-            int minY = cameraPos.Y - bufferHeight + 1;
+            int maxX = cameraPos.X + width - 1;
+            int minY = cameraPos.Y - height + 1;
             int maxY = cameraPos.Y;
 
             List<KeyValuePair<uint, object>> pairs = new List<KeyValuePair<uint, object>>();
@@ -70,7 +79,7 @@
             }
             Display();
         }
-        
+
         public static void Display()
         {
             for (int i = 0; i < renderers.GetLength(0); i++)
@@ -82,42 +91,33 @@
                     //Diff
                     if (renderer != bufferRenderer)
                     {
+                        Console.SetCursorPosition(j * charWidth, i);
                         //renderer移动
                         if (renderer == null && bufferRenderer != null)
                         {
                             StringBuilder builder = new StringBuilder();
-                            for (int k = 0; k < bufferRenderer.Width; k++)
+                            for (int k = 0; k < charWidth; k++)
                                 builder.Append(" ");
                             string space = builder.ToString();
-
-                            int x = j * bufferRenderer.Width;
-                            if (x > Console.BufferWidth - 1)
-                                x = Console.BufferWidth - 1;
-                            int y = i;
-
-                            Console.SetCursorPosition(x, y);
                             Print.Draw(space, ConsoleColor.Gray, ConsoleColor.Black);
                         }
                         //renderer更新
                         else
                         {
-                            int x = j * renderer.Width;
-                            if (x > Console.BufferWidth - 1)
-                                x = Console.BufferWidth - 1;
-                            int y = i;
-
-                            Console.SetCursorPosition(x, y);
                             Print.Draw(renderer.Str, renderer.ForeColor, renderer.BackColor);
                         }
                     }
                 }
             }
-            //Cache
+            //Cache & //Clear
             for (int i = 0; i < renderers.GetLength(0); i++)
+            {
                 for (int j = 0; j < renderers.GetLength(1); j++)
+                {
                     rendererBuffers[i, j] = renderers[i, j];
-            //Clear
-            renderers = new Renderer[rendererBuffers.GetLength(0), rendererBuffers.GetLength(1)];
+                    renderers[i, j] = null;
+                }
+            }
         }
     }
 }

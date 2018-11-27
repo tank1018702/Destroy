@@ -11,7 +11,6 @@
         /// Order为0时脚本显示优先级最高(最后被渲染), 然后向着数轴正方向递减。
         /// </summary>
         public uint Order;
-        public int Width;
 
         public Renderer()
         {
@@ -19,7 +18,6 @@
             ForeColor = ConsoleColor.Gray;
             BackColor = ConsoleColor.Black;
             Order = uint.MaxValue;
-            Width = 0;
         }
 
         public override Component Clone()
@@ -31,7 +29,6 @@
             renderer.ForeColor = ForeColor;
             renderer.BackColor = BackColor;
             renderer.Order = Order;
-            renderer.Width = Width;
             return renderer;
         }
     }

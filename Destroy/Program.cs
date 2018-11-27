@@ -13,16 +13,18 @@
     [CreatGameObject]
     public class A : Script
     {
+        GameObject camera;
+
         public override void Start()
         {
-            GameObject camera = new GameObject();
-            camera.AddComponent<Camera>();
+            camera = new GameObject();
+            Camera c = camera.AddComponent<Camera>();
+            c.CharWidth = 3;
             RendererSystem.Init(camera);
 
             Renderer renderer = AddComponent<Renderer>();
             renderer.Order = 0;
-            renderer.Str = "正";
-            renderer.Width = 3;
+            renderer.Str = "吊";
             renderer.ForeColor = ConsoleColor.Red;
 
             GameObject go = new GameObject();
@@ -30,20 +32,24 @@
             Renderer renderer2 = go.AddComponent<Renderer>();
             renderer2.Order = 1;
             renderer2.Str = "2";
-            renderer2.Width = 1;
             renderer2.ForeColor = ConsoleColor.Blue;
         }
 
         public override void Update()
         {
             if (Input.GetKey(KeyCode.A))
-                transform.Translate(new Vector2Int(-1, 0));
+                transform.Translate(Vector2Int.Left);
             if (Input.GetKey(KeyCode.D))
-                transform.Translate(new Vector2Int(1, 0));
-            if (Input.GetKey(KeyCode.S))
-                transform.Translate(new Vector2Int(0, -1));
+                transform.Translate(Vector2Int.Right);
             if (Input.GetKey(KeyCode.W))
-                transform.Translate(new Vector2Int(0, 1));
+                transform.Translate(Vector2Int.Up);
+            if (Input.GetKey(KeyCode.S))
+                transform.Translate(Vector2Int.Down);
+
+            if(Input.GetKey(KeyCode.G))
+                camera.transform.Translate(new Vector2Int(1, 0));
+            if (Input.GetKey(KeyCode.F))
+                camera.transform.Translate(new Vector2Int(-1, 0));
         }
     }
 

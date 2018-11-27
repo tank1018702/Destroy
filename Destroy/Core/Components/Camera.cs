@@ -1,16 +1,16 @@
 ﻿namespace Destroy
 {
-    using System;
-
     public class Camera : Component
     {
-        public int BufferWidth;
-        public int BufferHeight;
+        public int Width;
+        public int Height;
+        public int CharWidth;
 
         public Camera()
         {
-            BufferWidth = Console.BufferWidth;
-            BufferHeight = Console.BufferHeight;
+            Width = 20;
+            Height = 20;
+            CharWidth = 1;
         }
 
         public override Component Clone()
@@ -18,8 +18,9 @@
             Camera camera = new Camera();
             camera.Name = Name;
             camera.Active = Active;
-            camera.BufferWidth = BufferWidth;
-            camera.BufferHeight = BufferHeight;
+            camera.Width = Width;
+            camera.Height = Height;
+            camera.CharWidth = CharWidth;
             return camera;
         }
     }

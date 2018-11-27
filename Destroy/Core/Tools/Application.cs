@@ -3,7 +3,7 @@
     using System;
     using System.Diagnostics;
 
-    public static class Utils
+    public static class Application
     {
         public static void OpenNewProcess(string path)
         {
@@ -37,5 +37,13 @@
         }
 
         public static string ProgramDirectory => Environment.CurrentDirectory + "\\";
+
+        public static void Close(bool safe = true)
+        {
+            if (safe)
+                Process.GetCurrentProcess().Kill();
+            else
+                Environment.Exit(0);
+        }
     }
 }
