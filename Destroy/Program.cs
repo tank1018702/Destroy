@@ -13,13 +13,13 @@
     [CreatGameObject]
     public class A : Script
     {
-        GameObject camera;
+        Camera c;
 
         public override void Start()
         {
-            camera = new GameObject();
-            Camera c = camera.AddComponent<Camera>();
-            c.CharWidth = 3;
+            GameObject camera = new GameObject();
+            c = camera.AddComponent<Camera>();
+            c.CharWidth = 2;
             RendererSystem.Init(camera);
 
             Renderer renderer = AddComponent<Renderer>();
@@ -45,60 +45,9 @@
                 transform.Translate(Vector2Int.Up);
             if (Input.GetKey(KeyCode.S))
                 transform.Translate(Vector2Int.Down);
-
-            if(Input.GetKey(KeyCode.G))
-                camera.transform.Translate(new Vector2Int(1, 0));
-            if (Input.GetKey(KeyCode.F))
-                camera.transform.Translate(new Vector2Int(-1, 0));
+            c.Center(gameObject);
         }
     }
-
-
-
-    //[CreatGameObject]
-    //public class N : Script
-    //{
-    //    public void OnHello(object obj, byte[] data)
-    //    {
-    //        Hello hello = Serializer.NetDeserialize<Hello>(data);
-    //        string a = (string)obj;
-    //        Console.WriteLine(a + "   " + hello.Msg);
-    //    }
-
-    //    public override void Start()
-    //    {
-    //        Server server = new Server(8848);
-    //        server.Register(SenderType.Client, MessageType.Hello, OnHello);
-    //        server.Start();
-    //        Client client = new Client(NetworkUtils.LocalIPv4Str, 8848);
-    //        client.Connect();
-    //        client.Send(SenderType.Client, MessageType.Hello, new Hello() { Msg = "123" });
-    //    }
-    //}
-
-    //public class Client : NetworkClient
-    //{
-    //    public Client(string serverIp, int serverPort) : base(serverIp, serverPort)
-    //    {
-    //    }
-
-    //    protected override void OnConnected()
-    //    {
-    //        Console.WriteLine("连接成功");
-    //    }
-    //}
-
-    //public class Server : NetworkServer
-    //{
-    //    public Server(int port) : base(port)
-    //    {
-    //    }
-
-    //    protected override object OnAccept(TcpClient tcpClient)
-    //    {
-    //        return "Server";
-    //    }
-    //}
 
     public class Program
     {

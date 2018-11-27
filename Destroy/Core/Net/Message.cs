@@ -4,48 +4,29 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Net.Sockets;
-    using ProtoBuf;
-
-    public enum SenderType : ushort
-    {
-        Server,
-        Client
-    }
-
-    public enum MessageType : ushort
-    {
-        Hello
-    }
-
-    [ProtoContract]
-    public class Hello
-    {
-        [ProtoMember(1)]
-        public string Msg;
-    }
 
     public delegate void MessageEvent(object obj, byte[] data);
 
     public static class Message
     {
-        public static int EnumToKey(SenderType sender, MessageType type)
+        public static int EnumToKey(ushort cmd1, ushort cmd2)
         {
-            ushort temp = (ushort)((ushort)sender << 8);
-            ushort key = (ushort)(temp + (ushort)type);
+            ushort temp = (ushort)(cmd1 << 8);
+            ushort key = (ushort)(temp + cmd2);
             return key;
         }
 
         /// <summary>
         /// 打TCP包
         /// </summary>
-        public static byte[] PackTCPMessage<T>(SenderType sender, MessageType type, T message)
+        public static byte[] PackTCPMessage<T>(ushort cmd1, ushort cmd2, T message)
         {
             List<byte> datas = new List<byte>();
 
-            byte[] senderData = BitConverter.GetBytes((ushort)sender);
-            byte[] typeData = BitConverter.GetBytes((ushort)type);
+            byte[] senderData = BitConverter.GetBytes(cmd1);
+            byte[] typeData = BitConverter.GetBytes(cmd2);
             //使用Protobuf-net
-            byte[] data = Destroy.Serializer.NetSerialize(message);
+            byte[] data = Serializer.NetSerialize(message);
             byte[] bodyLen = BitConverter.GetBytes((ushort)(senderData.Length + typeData.Length + data.Length));
 
             //packet head
@@ -61,7 +42,7 @@
         /// <summary>
         /// 解TCP包
         /// </summary>
-        public static void UnpackTCPMessage(Socket socket, out SenderType sender, out MessageType type, out byte[] data)
+        public static void UnpackTCPMessage(Socket socket, out ushort cmd1, out ushort cmd2, out byte[] data)
         {
             ushort bodyLen;
             byte[] head = new byte[2];
@@ -74,8 +55,8 @@
             using (MemoryStream stream = new MemoryStream(body))
             {
                 BinaryReader reader = new BinaryReader(stream);
-                sender = (SenderType)reader.ReadUInt16();       // 2bytes
-                type = (MessageType)reader.ReadUInt16();        // 2bytes
+                cmd1 = reader.ReadUInt16();                     // 2bytes
+                cmd2 = reader.ReadUInt16();                     // 2bytes
                 data = reader.ReadBytes(bodyLen - 4);           // nbytes
             }
         }
@@ -83,22 +64,22 @@
         /// <summary>
         /// 解指定类型TCP包
         /// </summary>
-        public static void UnpackTCPMessage<T>(Socket socket, out SenderType sender, out MessageType type, out T message)
+        public static void UnpackTCPMessage<T>(Socket socket, out ushort cmd1, out ushort cmd2, out T message)
         {
-            UnpackTCPMessage(socket, out sender, out type, out byte[] data);
-            message = Destroy.Serializer.NetDeserialize<T>(data);
+            UnpackTCPMessage(socket, out cmd1, out cmd2, out byte[] data);
+            message = Serializer.NetDeserialize<T>(data);
         }
 
         /// <summary>
         /// 打UDP包
         /// </summary>
-        public static byte[] PackUDPMessage<T>(SenderType sender, MessageType type, T message)
+        public static byte[] PackUDPMessage<T>(ushort cmd1, ushort cmd2, T message)
         {
             List<byte> datas = new List<byte>();
 
-            byte[] senderData = BitConverter.GetBytes((ushort)sender);
-            byte[] typeData = BitConverter.GetBytes((ushort)type);
-            byte[] data = Destroy.Serializer.NetSerialize<T>(message); //使用Protobuf-net
+            byte[] senderData = BitConverter.GetBytes(cmd1);
+            byte[] typeData = BitConverter.GetBytes(cmd2);
+            byte[] data = Serializer.NetSerialize(message); //使用Protobuf-net
 
             //packet
             datas.AddRange(senderData); // 2bytes
@@ -111,16 +92,16 @@
         /// <summary>
         /// 解包指定类型UDP包
         /// </summary>
-        public static void UnpackUDPMessage<T>(byte[] data, out SenderType sender, out MessageType type, out T message)
+        public static void UnpackUDPMessage<T>(byte[] data, out ushort cmd1, out ushort cmd2, out T message)
         {
             using (MemoryStream stream = new MemoryStream(data))
             {
                 BinaryReader reader = new BinaryReader(stream);
-                sender = (SenderType)reader.ReadUInt16();           // 2bytes
-                type = (MessageType)reader.ReadUInt16();            // 2bytes
+                cmd1 = reader.ReadUInt16();                         // 2bytes
+                cmd2 = reader.ReadUInt16();                         // 2bytes
                 byte[] msgData = reader.ReadBytes(data.Length - 4); // nbytes
 
-                message = Destroy.Serializer.NetDeserialize<T>(msgData);  //使用Protobuf-net
+                message = Serializer.NetDeserialize<T>(msgData);    //使用Protobuf-net
             }
         }
     }

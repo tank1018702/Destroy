@@ -41,17 +41,17 @@
             Handle();
         }
 
-        public virtual void Register(SenderType sender, MessageType type, MessageEvent @event)
+        public void Register(ushort cmd1, ushort cmd2, MessageEvent @event)
         {
-            int key = Message.EnumToKey(sender, type);
+            int key = Message.EnumToKey(cmd1, cmd2);
             if (messageEvents.ContainsKey(key))
                 return;
             messageEvents.Add(key, @event);
         }
-        
-        public virtual void Send<T>(TcpClient tcpClient, SenderType sender, MessageType type, T message)
+
+        protected void Send<T>(TcpClient tcpClient, ushort cmd1, ushort cmd2, T message)
         {
-            byte[] data = Message.PackTCPMessage(sender, type, message);
+            byte[] data = Message.PackTCPMessage(cmd1, cmd2, message);
             try
             {
                 tcpClient.Client.Send(data);
@@ -62,9 +62,9 @@
             }
         }
 
-        protected abstract object OnAccept(TcpClient tcpClient);
+        protected virtual object OnAccept(TcpClient tcpClient) { return null; }
 
-        protected virtual void Await()
+        private void Await()
         {
             listener.Start();
 
@@ -92,7 +92,7 @@
             }
         }
 
-        protected virtual void Handle()
+        private void Handle()
         {
             Thread handle = new Thread(_Handle) { IsBackground = true };
             handle.Start();
@@ -109,7 +109,7 @@
             }
         }
 
-        protected virtual void Receive(object param)
+        private void Receive(object param)
         {
             var pair = (KeyValuePair<TcpClient, object>)param;
             Socket socket = pair.Key.Client;
@@ -119,8 +119,8 @@
             {
                 try
                 {
-                    Message.UnpackTCPMessage(socket, out SenderType sender, out MessageType type, out byte[] data);
-                    int key = Message.EnumToKey(sender, type);
+                    Message.UnpackTCPMessage(socket, out ushort cmd1, out ushort cmd2, out byte[] data);
+                    int key = Message.EnumToKey(cmd1, cmd2);
                     if (messageEvents.ContainsKey(key))
                     {
                         MessageEvent @event = messageEvents[key];

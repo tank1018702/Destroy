@@ -77,10 +77,10 @@
                 vector *= world2camera;     //获得该点在摄像机坐标系中的位置
                 renderers[vector.X, vector.Y] = renderer;
             }
-            Display();
+            DisplayGameObjects();
         }
 
-        public static void Display()
+        public static void DisplayGameObjects()
         {
             for (int i = 0; i < renderers.GetLength(0); i++)
             {

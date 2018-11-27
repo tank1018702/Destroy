@@ -166,7 +166,7 @@ public class Server : Script
 
             frameIndex++;
 
-            Thread.Sleep(500); // 20 times per second
+            Thread.Sleep(50); // 20 times per second
         }
     }
 

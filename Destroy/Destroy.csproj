@@ -96,6 +96,7 @@
     <Compile Include="Test\ECS\GameWorld.cs" />
     <Compile Include="Test\ECS\IComponent.cs" />
     <Compile Include="Core\Net\NetworkUtils.cs" />
+    <Compile Include="Test\MultiplayerGame.cs" />
     <Compile Include="Test\UDPRoom.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -105,6 +106,8 @@
   <ItemGroup>
     <None Include="Config\App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Core\UI\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -123,9 +123,9 @@
             InvokeSystem.Update();
             CallScriptMethod(gameObjects, "Start", true);   //调用Start
             CallScriptMethod(gameObjects, "Update");        //调用Update
+            //NetworkSystem.Update(gameObjects);              //传输消息
             PhysicsSystem.Update(gameObjects);              //碰撞检测
             RendererSystem.Update(gameObjects);             //渲染物体
-            NetworkSystem.Update(gameObjects);              //传输消息
         }
 
         public static void CallScriptMethod(List<GameObject> gameObjects, string methodName, bool start = false, params object[] parameters)
