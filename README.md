@@ -1,4 +1,4 @@
-# Destroy DEV 1.8.1
+# Destroy DEV 1.9
 
 #### DE · Charlie Presents
 
@@ -45,7 +45,7 @@ Destroy已经从DE(原型开发)升级到了DEV(初期开发)阶段, 架构基�
 
 暂时不推荐用于实际游戏中。
 
-### 特别感谢(排名不分先后):
+### 特别感谢 & 参考(排名不分先后):
 
 1. https://unity3d.com
 
