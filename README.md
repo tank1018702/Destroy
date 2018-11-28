@@ -44,3 +44,15 @@ Destroy已经从DE(原型开发)升级到了DEV(初期开发)阶段, 架构基�
 由于依然处于Develop阶段，暂时不会放出示例项目与API文档。
 
 暂时不推荐用于实际游戏中。
+
+### 特别感谢(排名不分先后):
+
+1. https://unity3d.com
+
+2. https://github.com/ollelogdahl/ConsoleGameEngine
+
+3. https://github.com/Easycker/ConsoleGameFramework
+
+4. https://github.com/KristianBalaj/2d-console-game-engine
+
+5. https://github.com/MaxMls/WindowsConsoleGame

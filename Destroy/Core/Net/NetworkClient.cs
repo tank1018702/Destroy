@@ -9,12 +9,14 @@
     public abstract class NetworkClient
     {
         private TcpClient client;
+        private NetworkStream stream;
         private IPEndPoint targetEP;
         private Dictionary<int, MessageEvent> messageEvents;
 
         public NetworkClient(string serverIp, int serverPort)
         {
             client = new TcpClient();
+            stream = null;
             targetEP = new IPEndPoint(IPAddress.Parse(serverIp), serverPort);
             messageEvents = new Dictionary<int, MessageEvent>();
         }
@@ -24,8 +26,9 @@
             try
             {
                 client.Connect(targetEP);
+                stream = client.GetStream();
                 OnConnected();
-                Thread receive = new Thread(Receive);
+                Thread receive = new Thread(Receive) { IsBackground = true };
                 receive.Start();
             }
             catch (Exception ex)
@@ -36,7 +39,7 @@
 
         public void Register(ushort cmd1, ushort cmd2, MessageEvent @event)
         {
-            int key = Message.EnumToKey(cmd1, cmd2);
+            int key = MessagePacker.EnumToKey(cmd1, cmd2);
             if (messageEvents.ContainsKey(key))
             {
                 Debug.Error("不能添加重复key");
@@ -47,7 +50,7 @@
 
         protected void Send<T>(ushort cmd1, ushort cmd2, T message)
         {
-            byte[] data = Message.PackTCPMessage(cmd1, cmd2, message);
+            byte[] data = MessagePacker.PackTCPMessage(cmd1, cmd2, message);
             try
             {
                 client.Client.Send(data);
@@ -66,8 +69,8 @@
             {
                 try
                 {
-                    Message.UnpackTCPMessage(client.Client, out ushort cmd1, out ushort cmd2, out byte[] data);
-                    int key = Message.EnumToKey(cmd1, cmd2);
+                    MessagePacker.UnpackTCPMessage(stream, out ushort cmd1, out ushort cmd2, out byte[] data);
+                    int key = MessagePacker.EnumToKey(cmd1, cmd2);
                     if (messageEvents.ContainsKey(key))
                     {
                         MessageEvent @event = messageEvents[key];

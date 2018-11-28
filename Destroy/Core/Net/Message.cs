@@ -7,7 +7,7 @@
 
     public delegate void MessageEvent(object obj, byte[] data);
 
-    public static class Message
+    public static class MessagePacker
     {
         public static int EnumToKey(ushort cmd1, ushort cmd2)
         {
@@ -42,32 +42,23 @@
         /// <summary>
         /// 解TCP包
         /// </summary>
-        public static void UnpackTCPMessage(Socket socket, out ushort cmd1, out ushort cmd2, out byte[] data)
+        public static void UnpackTCPMessage(NetworkStream stream, out ushort cmd1, out ushort cmd2, out byte[] data)
         {
             ushort bodyLen;
             byte[] head = new byte[2];
-            socket.Receive(head);
+            stream.Read(head, 0, head.Length);
 
             bodyLen = BitConverter.ToUInt16(head, 0);           // 2bytes (the length of the packet body)
             byte[] body = new byte[bodyLen];
-            socket.Receive(body);
+            stream.Read(head, 0, head.Length);
 
-            using (MemoryStream stream = new MemoryStream(body))
+            using (MemoryStream memory = new MemoryStream(body))
             {
-                BinaryReader reader = new BinaryReader(stream);
+                BinaryReader reader = new BinaryReader(memory);
                 cmd1 = reader.ReadUInt16();                     // 2bytes
                 cmd2 = reader.ReadUInt16();                     // 2bytes
                 data = reader.ReadBytes(bodyLen - 4);           // nbytes
             }
-        }
-
-        /// <summary>
-        /// 解指定类型TCP包
-        /// </summary>
-        public static void UnpackTCPMessage<T>(Socket socket, out ushort cmd1, out ushort cmd2, out T message)
-        {
-            UnpackTCPMessage(socket, out cmd1, out cmd2, out byte[] data);
-            message = Serializer.NetDeserialize<T>(data);
         }
 
         /// <summary>

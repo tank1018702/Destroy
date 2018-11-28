@@ -33,10 +33,7 @@
             client.Send(data, data.Length, target);
         }
 
-        public void Send(byte[] data, IPEndPoint target)
-        {
-            client.Send(data, data.Length, target);
-        }
+        public void Send(byte[] data, IPEndPoint target) => client.Send(data, data.Length, target);
 
         public byte[] Receive(out IPEndPoint remoteEP)
         {

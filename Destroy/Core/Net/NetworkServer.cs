@@ -6,131 +6,136 @@
     using System.Net.Sockets;
     using System.Threading;
 
-    public class ServerCallback
-    {
-        private MessageEvent @event;
-        private object obj;
-        private byte[] data;
-
-        public ServerCallback(MessageEvent @event, object obj, byte[] data)
-        {
-            this.@event = @event;
-            this.obj = obj;
-            this.data = data;
-        }
-
-        public void Excute() => @event(obj, data);
-    }
-
     public abstract class NetworkServer
     {
+        private sealed class ServerMessage
+        {
+            private NetworkStream stream;
+            private byte[] data;
+
+            public ServerMessage(NetworkStream stream, byte[] data)
+            {
+                this.stream = stream;
+                this.data = data;
+            }
+
+            public void Send() => stream.Write(data, 0, data.Length);
+        }
+
+        private sealed class ServerCallback
+        {
+            private MessageEvent @event;
+            private object obj;
+            private byte[] data;
+
+            public ServerCallback(MessageEvent @event, object obj, byte[] data)
+            {
+                this.@event = @event;
+                this.obj = obj;
+                this.data = data;
+            }
+
+            public void Excute() => @event(obj, data);
+        }
+
         private TcpListener listener;                                   //服务器套接字
-        private Dictionary<int, MessageEvent> messageEvents;            //注册消息
+        private Dictionary<int, MessageEvent> events;                   //注册消息
         private ConcurrentQueue<ServerCallback> callBacks;              //回调事件
+        private ConcurrentQueue<ServerMessage> messages;                //待发送消息
 
         public NetworkServer(int port)
         {
             listener = new TcpListener(NetworkUtils.LocalIPv4, port);
-            messageEvents = new Dictionary<int, MessageEvent>();
+            events = new Dictionary<int, MessageEvent>();
             callBacks = new ConcurrentQueue<ServerCallback>();
+            messages = new ConcurrentQueue<ServerMessage>();
         }
 
         public void Start()
         {
-            Await();
-            Handle();
+            listener.Start();
+
+            Thread await = new Thread(__Await) { IsBackground = true };
+            await.Start();
+
+            Thread handle = new Thread(__Handle) { IsBackground = true };
+            handle.Start();
         }
 
         public void Register(ushort cmd1, ushort cmd2, MessageEvent @event)
         {
-            int key = Message.EnumToKey(cmd1, cmd2);
-            if (messageEvents.ContainsKey(key))
+            int key = MessagePacker.EnumToKey(cmd1, cmd2);
+            if (events.ContainsKey(key))
                 return;
-            messageEvents.Add(key, @event);
+            events.Add(key, @event);
         }
 
         protected void Send<T>(TcpClient tcpClient, ushort cmd1, ushort cmd2, T message)
         {
-            byte[] data = Message.PackTCPMessage(cmd1, cmd2, message);
-            try
+            byte[] data = MessagePacker.PackTCPMessage(cmd1, cmd2, message);
+            messages.Enqueue(new ServerMessage(tcpClient.GetStream(), data));
+        }
+
+        protected virtual void OnAccept(TcpClient tcpClient) { }
+
+        protected virtual void OnReceive(TcpClient tcpClient) { }
+
+        /// <summary>
+        /// 一个线程
+        /// </summary>
+        private void __Await()
+        {
+            while (true)
             {
-                tcpClient.Client.Send(data);
-            }
-            catch (Exception ex)
-            {
-                Debug.Error(ex.Message);
+                TcpClient tcpClient = listener.AcceptTcpClient();
+                OnAccept(tcpClient); //执行回调
+
+                Thread receive = new Thread(__Receive) { IsBackground = true };
+                receive.Start(tcpClient);
             }
         }
 
-        protected virtual object OnAccept(TcpClient tcpClient) { return null; }
-
-        private void Await()
+        /// <summary>
+        /// 一个线程
+        /// </summary>
+        private void __Handle()
         {
-            listener.Start();
-
-            Thread await = new Thread(_Await) { IsBackground = true };
-            await.Start();
-
-            void _Await()
+            while (true)
             {
-                while (true)
-                {
-                    try
-                    {
-                        TcpClient tcpClient = listener.AcceptTcpClient();
-                        object obj = OnAccept(tcpClient);
-                        KeyValuePair<TcpClient, object> pair = new KeyValuePair<TcpClient, object>(tcpClient, obj);
+                //处理回调
+                if (callBacks.Count > 0)
+                    if (callBacks.TryDequeue(out ServerCallback callback))
+                        callback.Excute();
 
-                        Thread receive = new Thread(Receive) { IsBackground = true };
-                        receive.Start(pair);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.Error(ex.Message);
-                    }
-                }
+                //发送消息
+                if (messages.Count > 0)
+                    if (messages.TryDequeue(out ServerMessage message))
+                        message.Send();
+
+                Thread.Sleep(1);
             }
         }
 
-        private void Handle()
+        /// <summary>
+        /// 多个线程
+        /// </summary>
+        private void __Receive(object param)
         {
-            Thread handle = new Thread(_Handle) { IsBackground = true };
-            handle.Start();
-
-            void _Handle()
-            {
-                while (true)
-                {
-                    if (callBacks.Count > 0)
-                        if (callBacks.TryDequeue(out ServerCallback callback))
-                            callback.Excute();
-                    Thread.Sleep(1);
-                }
-            }
-        }
-
-        private void Receive(object param)
-        {
-            var pair = (KeyValuePair<TcpClient, object>)param;
-            Socket socket = pair.Key.Client;
-            object obj = pair.Value;
+            TcpClient tcpClient = (TcpClient)param;
+            NetworkStream stream = tcpClient.GetStream();
 
             while (true)
             {
-                try
+                MessagePacker.UnpackTCPMessage(stream, out ushort cmd1, out ushort cmd2, out byte[] data);
+                //执行回调
+                OnReceive(tcpClient);
+
+                int key = MessagePacker.EnumToKey(cmd1, cmd2);
+                if (events.ContainsKey(key))
                 {
-                    Message.UnpackTCPMessage(socket, out ushort cmd1, out ushort cmd2, out byte[] data);
-                    int key = Message.EnumToKey(cmd1, cmd2);
-                    if (messageEvents.ContainsKey(key))
-                    {
-                        MessageEvent @event = messageEvents[key];
-                        ServerCallback callback = new ServerCallback(@event, obj, data);
-                        callBacks.Enqueue(callback);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.Error(ex.Message);
+                    MessageEvent messageEvent = events[key];
+                    ServerCallback callback = new ServerCallback(messageEvent, tcpClient, data);
+                    callBacks.Enqueue(callback);
                 }
             }
         }

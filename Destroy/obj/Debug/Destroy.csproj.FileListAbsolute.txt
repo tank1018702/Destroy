@@ -34,3 +34,4 @@ C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.exe.conf
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Destroy.exe
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.exe
 C:\Users\Administrator\Desktop\Github\Destroy\Destroy\obj\Debug\Destroy.csprojAssemblyReference.cache
+C:\Users\Administrator\Desktop\Github\Destroy\Destroy\bin\Debug\Colorful.Console.dll

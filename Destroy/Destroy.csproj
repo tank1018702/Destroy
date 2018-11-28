@@ -39,6 +39,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Colorful.Console">
+      <HintPath>..\Plugins\Colorful.Console.dll</HintPath>
+    </Reference>
     <Reference Include="LitJSON">
       <HintPath>..\Plugins\LitJSON.dll</HintPath>
     </Reference>
@@ -89,6 +92,7 @@
     <Compile Include="Test\Coordinate.cs" />
     <Compile Include="Core\Tools\Input.cs" />
     <Compile Include="Core\Math\Vector2Int.cs" />
+    <Compile Include="Test\Expand.cs" />
     <Compile Include="Test\Http.cs" />
     <Compile Include="Test\ECS\System.cs" />
     <Compile Include="Test\ECS\Entity.cs" />
