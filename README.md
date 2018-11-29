@@ -1,4 +1,4 @@
-# Destroy DEV 1.9
+# Destroy DEV 2.0
 
 #### DE · Charlie Presents
 

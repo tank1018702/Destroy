@@ -1,7 +1,6 @@
 ﻿namespace Destroy.Test
 {
     using System;
-    using System.Drawing;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Net.Sockets;
@@ -275,13 +274,13 @@
         {
         }
 
-        protected override void OnConnected()
+        protected override void OnConnect()
         {
             Register((ushort)GameState.Room, (ushort)Room.S2C_StartSync, S2C_StartSync);
             Register((ushort)GameState.Game, (ushort)Game.S2C_PosSync, S2C_PosSync);
         }
 
-        private void S2C_PosSync(object obj, byte[] data)
+        private void S2C_PosSync(byte[] data)
         {
             S2C_PosSync pos = Destroy.Serializer.NetDeserialize<S2C_PosSync>(data);
             //Write
@@ -293,7 +292,7 @@
             }
         }
 
-        private void S2C_StartSync(object obj, byte[] data)
+        private void S2C_StartSync(byte[] data)
         {
             S2C_StartSync start = Destroy.Serializer.NetDeserialize<S2C_StartSync>(data);
             frame = start.Frame;

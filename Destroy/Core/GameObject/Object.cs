@@ -7,6 +7,8 @@
 
     public class Object
     {
+        private bool active;
+
         /// <summary>
         /// 名字
         /// </summary>
@@ -15,8 +17,16 @@
         /// <summary>
         /// 是否激活
         /// </summary>
-        public bool Active;
-
+        public bool Active
+        {
+            get => active;
+            set
+            {
+                if (Name == "Transform" && value == false) //不能禁用Transform
+                    return;
+                active = value;
+            }
+        }
 
         private static List<GameObject> gameObjects = new List<GameObject>();
 

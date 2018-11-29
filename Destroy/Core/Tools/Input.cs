@@ -154,6 +154,11 @@
     public static class Input
     {
         /// <summary>
+        /// 是否在窗口未激活情况下获取输入
+        /// </summary>
+        public static bool RunInBackground { set; get; }
+
+        /// <summary>
         /// 上一次按下的键
         /// </summary>
         private static KeyCode LastInputKey { get; set; }
@@ -164,12 +169,7 @@
         private static KeyCode LastDropKey { get; set; }
 
         /// <summary>
-        /// 是否在窗口未激活情况下获取输入
-        /// </summary>
-        public static bool RunInBackground { set; get; }
-
-        /// <summary>
-        /// 获取持续的按键输入
+        /// 持续获取按键输入
         /// </summary>
         public static bool GetKey(KeyCode keyCode)
         {
@@ -180,7 +180,7 @@
         }
 
         /// <summary>
-        /// 获取按下指定按键
+        /// 获取按下的按键
         /// </summary>
         public static bool GetKeyDown(KeyCode keyCode)
         {
@@ -201,7 +201,7 @@
         }
 
         /// <summary>
-        /// 获取松开指定按键
+        /// 获取松开的按键
         /// </summary>
         public static bool GetKeyUp(KeyCode keyCode)
         {
@@ -262,10 +262,113 @@
             return inputKey;
         }
 
+
+        /// <summary>
+        /// 上一次按下的标准键
+        /// </summary>
+        private static ConsoleKey LastInputStdKey { get; set; }
+
+        /// <summary>
+        /// 上一次松开的标准键
+        /// </summary>
+        private static ConsoleKey LastDropStdKey { get; set; }
+
+        /// <summary>
+        /// 持续获取标准按键输入
+        /// </summary>
+        public static bool GetKey(ConsoleKey keyCode)
+        {
+            if (!RunInBackground && Application.IsBackground)
+                return false;
+
+            return (LowLevelAPI.GetAsyncKeyState((int)keyCode) & 0x8000) != 0;
+        }
+
+        /// <summary>
+        /// 获取按下的标准键
+        /// </summary>
+        public static bool GetKeyDown(ConsoleKey keyCode)
+        {
+            if (!RunInBackground && Application.IsBackground)
+                return false;
+
+            //如果没有按当前键就获取当前按的键
+            if (!GetKey(keyCode))
+                LastInputStdKey = GetCurrentStdKey();
+            //按下了指定键并且当前键不等于上次一键
+            if (GetKey(keyCode) && keyCode != LastInputStdKey)
+            {
+                //更新上一次键
+                LastInputStdKey = keyCode;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 获取松开的标准键
+        /// </summary>
+        public static bool GetKeyUp(ConsoleKey keyCode)
+        {
+            if (!RunInBackground && Application.IsBackground)
+                return false;
+
+            ConsoleKey inputKeyCode = GetCurrentStdKey();
+            if (inputKeyCode == keyCode)
+            {
+                LastDropStdKey = keyCode;
+                return false;
+            }
+            if (LastDropStdKey == keyCode && inputKeyCode != LastDropStdKey)
+            {
+                LastDropStdKey = inputKeyCode;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 获取指定方向上的标准键输入
+        /// </summary>
+        public static int GetDirectInput(ConsoleKey negative, ConsoleKey positive)
+        {
+            if (!RunInBackground && Application.IsBackground)
+                return 0;
+
+            int result = 0;
+            if (GetKey(negative))
+                result -= 1;
+            if (GetKey(positive))
+                result += 1;
+
+            return result;
+        }
+
+        /// <summary>
+        /// 获取当前按下的标准键 (默认返回F24)
+        /// </summary>
+        public static ConsoleKey GetCurrentStdKey()
+        {
+            if (!RunInBackground && Application.IsBackground)
+                return ConsoleKey.F24;
+
+            ConsoleKey inputKey = ConsoleKey.F24;
+
+            foreach (int key in Enum.GetValues(typeof(ConsoleKey)))
+            {
+                if (GetKey((ConsoleKey)key))
+                {
+                    inputKey = (ConsoleKey)key;
+                    break;
+                }
+            }
+            return inputKey;
+        }
+
+
         /// <summary>
         /// 获取输入的字符
         /// </summary>
-        [Obsolete("Dont suggest using this.")]
         public static char GetInputChar()
         {
             if (!RunInBackground && Application.IsBackground)

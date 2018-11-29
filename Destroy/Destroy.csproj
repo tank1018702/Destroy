@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{29678C39-7511-4CE8-925F-08E663872CDA}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>Destroy</RootNamespace>
     <AssemblyName>Destroy</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -60,16 +60,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Components\Camera.cs" />
+    <Compile Include="Net\Components\NetTransform.cs" />
     <Compile Include="Core\Components\Transform.cs" />
     <Compile Include="Core\Engine\LowLevelAPI.cs" />
     <Compile Include="Core\Engine\RuntimeDebugger.cs" />
     <Compile Include="Core\Engine\RuntimeReflactor.cs" />
     <Compile Include="Core\GameObject\Object.cs" />
     <Compile Include="Core\Math\Matrix.cs" />
-    <Compile Include="Core\Net\NetworkClient.cs" />
-    <Compile Include="Core\Net\NetworkServer.cs" />
+    <Compile Include="Net\Messages\PlayerInfo.cs" />
+    <Compile Include="Net\Messages\Position.cs" />
+    <Compile Include="Net\Messages\RoomInfo.cs" />
+    <Compile Include="Net\NetworkClient.cs" />
+    <Compile Include="Net\NetworkEnums.cs" />
+    <Compile Include="Net\NetworkServer.cs" />
     <Compile Include="Core\Systems\InvokeSystem.cs" />
-    <Compile Include="Core\Systems\NetworkSystem.cs" />
+    <Compile Include="Net\Player.cs" />
+    <Compile Include="Net\Room.cs" />
+    <Compile Include="Net\Standard\GameClient.cs" />
+    <Compile Include="Net\Standard\RoomClient.cs" />
+    <Compile Include="Net\Standard\RoomServer.cs" />
+    <Compile Include="Net\Standard\GameServer.cs" />
+    <Compile Include="Net\Systems\NetworkSystem.cs" />
     <Compile Include="Core\Systems\RendererSystem.cs" />
     <Compile Include="Core\Tools\Audio.cs" />
     <Compile Include="Core\Tools\Storage.cs" />
@@ -85,7 +96,7 @@
     <Compile Include="Test\BehaviorQueue.cs" />
     <Compile Include="Core\Math\Mathematics.cs" />
     <Compile Include="Test\BitmapConverter.cs" />
-    <Compile Include="Core\Net\Message.cs" />
+    <Compile Include="Net\Tools\NetworkMessage.cs" />
     <Compile Include="Core\Components\Collider.cs" />
     <Compile Include="Core\Systems\PhysicsSystem.cs" />
     <Compile Include="Core\Tools\Debug.cs" />
@@ -99,9 +110,9 @@
     <Compile Include="Test\ECS\EntityManager.cs" />
     <Compile Include="Test\ECS\GameWorld.cs" />
     <Compile Include="Test\ECS\IComponent.cs" />
-    <Compile Include="Core\Net\NetworkUtils.cs" />
+    <Compile Include="Net\Tools\NetworkUtils.cs" />
     <Compile Include="Test\MultiplayerGame.cs" />
-    <Compile Include="Test\UDPRoom.cs" />
+    <Compile Include="Net\UDPRoom.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Tools\Print.cs" />
@@ -110,8 +121,6 @@
   <ItemGroup>
     <None Include="Config\App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\UI\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

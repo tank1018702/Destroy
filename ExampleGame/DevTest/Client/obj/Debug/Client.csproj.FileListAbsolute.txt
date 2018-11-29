@@ -1,0 +1,6 @@
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\Client\bin\Debug\Client.exe.config
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\Client\bin\Debug\Client.exe
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\Client\bin\Debug\Client.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\Client\obj\Debug\Client.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\Client\obj\Debug\Client.exe
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\Client\obj\Debug\Client.pdb

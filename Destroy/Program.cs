@@ -1,15 +1,5 @@
 ﻿namespace Destroy
 {
-    using System;
-    using System.Text;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Runtime.InteropServices;
-    using System.Threading;
-    using Destroy.Net;
-    using System.Net.Sockets;
-
     //[CreatGameObject]
     //public class A : Script
     //{

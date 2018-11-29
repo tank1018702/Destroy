@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Text;
 
-    internal static class RendererSystem
+    public static class RendererSystem
     {
         private static GameObject camera;
         private static Matrix world2camera;
@@ -16,6 +16,12 @@
 
         public static void Init(GameObject camera)
         {
+            if (!camera || !camera.Active)
+                return;
+            Camera cameraComponent = camera.GetComponent<Camera>();
+            if (!cameraComponent || !cameraComponent.Active)
+                return;
+
             RendererSystem.camera = camera;
 
             world2camera = new Matrix(2, 2); //顺时针旋转点90度
@@ -25,7 +31,6 @@
             world2camera[1, 1] = 0;
             world2camera *= -1; //旋转点变为旋转坐标系
 
-            Camera cameraComponent = camera.GetComponent<Camera>();
             charWidth = cameraComponent.CharWidth;
             height = cameraComponent.Height;
             width = cameraComponent.Width;
@@ -42,8 +47,12 @@
 
         public static void Update(List<GameObject> gameObjects)
         {
-            if (!camera || !camera.GetComponent<Camera>())
+            if (!camera || !camera.Active)
                 return;
+            Camera cam = camera.GetComponent<Camera>();
+            if (!cam || !cam.Active)
+                return;
+
             Vector2Int cameraPos = camera.GetComponent<Transform>().Position;
             int minX = cameraPos.X;
             int maxX = cameraPos.X + width - 1;
@@ -54,10 +63,14 @@
 
             foreach (GameObject gameObject in gameObjects)
             {
-                Renderer renderer = gameObject.GetComponent<Renderer>();
-                if (renderer == null)
+                if (!gameObject.Active)
                     continue;
+                Renderer renderer = gameObject.GetComponent<Renderer>();
+                if (!renderer || !renderer.Active)
+                    continue;
+
                 Transform transform = gameObject.GetComponent<Transform>();
+
                 //可见性过滤
                 int x = transform.Position.X;
                 int y = transform.Position.Y;
@@ -80,7 +93,7 @@
             DisplayGameObjects();
         }
 
-        public static void DisplayGameObjects()
+        private static void DisplayGameObjects()
         {
             for (int i = 0; i < renderers.GetLength(0); i++)
             {

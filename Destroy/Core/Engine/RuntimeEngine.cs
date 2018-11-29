@@ -8,18 +8,21 @@
 
     public class RuntimeEngine
     {
+        public static Action<GameObject> Manage;
+        public Thread GameThread { get; private set; }
+
         private readonly List<GameObject> gameObjects;
         private readonly RuntimeDebugger debugger;
 
-        public static Action<GameObject> Manage;
-
         public RuntimeEngine(RuntimeDebugger debugger = null)
         {
+            //Register Method
+            Manage += gameObject => gameObjects.Add(gameObject);
             //Initial
             gameObjects = new List<GameObject>();
             this.debugger = debugger;
-            //Register Method
-            Manage += gameObject => gameObjects.Add(gameObject);
+            GameThread = null;
+
             //创建静态GameObject
             GameObject tempGo = new GameObject();
             RuntimeReflector.SetPrivateStaticField(tempGo, "gameObjects", gameObjects);
@@ -39,18 +42,19 @@
                 if (!nonexsitent)
                 {
                     Debug.Error("该游戏不允许多个实例同时运行!");
-                    Thread.Sleep(2500);
+                    Thread.Sleep(2000);
                     Environment.Exit(0);
                 }
             }
 
+            GameThread = Thread.CurrentThread;
             CreateGameObjects();
 
             Stopwatch stopwatch = new Stopwatch();
             Time time = new Time();
             int tickTime = 1000 / tickPerSecond < 1 ? 1 : 1000 / tickPerSecond; //每帧因该花的时间(最少应为1毫秒)
             float deltaTime = 0; //这一帧距离上一帧的时间
-            float totalTime = 0; //总时间
+            float totalTime = 0; //总执行时间
 
             while (true)
             {
@@ -123,8 +127,8 @@
             InvokeSystem.Update();
             CallScriptMethod(gameObjects, "Start", true);   //调用Start
             CallScriptMethod(gameObjects, "Update");        //调用Update
-            //NetworkSystem.Update(gameObjects);              //传输消息
             PhysicsSystem.Update(gameObjects);              //碰撞检测
+            //NetworkSystem.Update(gameObjects);              //传输消息
             RendererSystem.Update(gameObjects);             //渲染物体
         }
 
