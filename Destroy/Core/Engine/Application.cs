@@ -5,15 +5,6 @@
 
     public static class Application
     {
-        public static void OpenNewProcess(string path)
-        {
-            using (Process process = new Process())
-            {
-                process.StartInfo.FileName = path; //设置启动
-                process.Start();
-            }
-        }
-
         public static bool IsBackground
         {
             get
@@ -38,12 +29,26 @@
 
         public static string ProgramDirectory => Environment.CurrentDirectory + "\\";
 
+        public static void OpenNewProcess(string path)
+        {
+            using (Process process = new Process())
+            {
+                process.StartInfo.FileName = path; //设置启动
+                process.Start();
+            }
+        }
+
         public static void Close(bool safe = true)
         {
             if (safe)
                 Process.GetCurrentProcess().Kill();
             else
                 Environment.Exit(0);
+        }
+
+        public static void UseStandardSetting()
+        {
+            //TODO
         }
     }
 }

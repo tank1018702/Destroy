@@ -67,9 +67,7 @@
 
                 UpdateGameObjects();    //更新所有游戏物体
                 if (debugger != null)   //更新调试器
-                {
                     debugger.Watch();
-                }
 
                 //计算应该休眠的时间, 保证每秒运行相应Tick次数
                 int runTime = (int)stopwatch.ElapsedMilliseconds;
@@ -77,7 +75,7 @@
                 if (delayTime > 0)
                 {
                     deltaTime = (float)tickTime / 1000;
-                    Thread.Sleep(delayTime);
+                    Thread.Sleep(delayTime); //不是高精度计时器, 只能起到模拟的效果
                 }
                 //代码运行时间超过Tick一秒应该花的时间
                 else

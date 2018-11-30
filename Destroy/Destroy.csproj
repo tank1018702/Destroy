@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{29678C39-7511-4CE8-925F-08E663872CDA}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>Destroy</RootNamespace>
     <AssemblyName>Destroy</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Components\Camera.cs" />
+    <Compile Include="Core\Engine\RuntimeParallel.cs" />
     <Compile Include="Net\Components\NetTransform.cs" />
     <Compile Include="Core\Components\Transform.cs" />
     <Compile Include="Core\Engine\LowLevelAPI.cs" />
@@ -85,7 +86,7 @@
     <Compile Include="Core\Tools\Audio.cs" />
     <Compile Include="Core\Tools\Storage.cs" />
     <Compile Include="Core\Tools\Time.cs" />
-    <Compile Include="Core\Tools\Application.cs" />
+    <Compile Include="Core\Engine\Application.cs" />
     <Compile Include="Core\Components\Renderer.cs" />
     <Compile Include="Core\GameObject\CreatGameObject.cs" />
     <Compile Include="Core\Engine\RuntimeEngine.cs" />

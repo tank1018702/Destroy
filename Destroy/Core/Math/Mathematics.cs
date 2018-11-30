@@ -17,19 +17,8 @@
         /// </summary>
         public static int ClampInt(int x, int min, int max)
         {
-            if (min > max)
-            {
-                return x;
-            }
-
-            if (x < min)
-            {
-                x = min;
-            }
-            else if (x > max)
-            {
-                x = max;
-            }
+            x = (x > max) ? max : x;
+            x = (x < min) ? min : x;
 
             return x;
         }
