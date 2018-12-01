@@ -59,6 +59,25 @@
             }
         }
 
+        public static void UnpackTCPMessage2(Socket socket, out ushort cmd1, out ushort cmd2, out byte[] data)
+        {
+            ushort bodyLen;
+            byte[] head = new byte[2];
+            socket.Receive(head);
+
+            bodyLen = BitConverter.ToUInt16(head, 0);           // 2bytes (the length of the packet body)
+            byte[] body = new byte[bodyLen];
+            socket.Receive(body);
+
+            using (MemoryStream memory = new MemoryStream(body))
+            {
+                BinaryReader reader = new BinaryReader(memory);
+                cmd1 = reader.ReadUInt16();                     // 2bytes
+                cmd2 = reader.ReadUInt16();                     // 2bytes
+                data = reader.ReadBytes(bodyLen - 4);           // nbytes
+            }
+        }
+
         /// <summary>
         /// 打UDP包
         /// </summary>

@@ -135,7 +135,7 @@
             for (int i = 0; i < gameObjects.Count; i++)
             {
                 GameObject gameObject = gameObjects[i];
-
+                
                 //反射获取components引用实现动态遍历components
                 List<Component> components = (List<Component>)RuntimeReflector.GetPrivateInstanceField(gameObject, "components");
 

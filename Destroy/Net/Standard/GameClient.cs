@@ -1,15 +1,16 @@
 ﻿namespace Destroy.Net
 {
-    public class Client : NetworkClient
-    {
-        public Client(string serverIp, int serverPort) : base(serverIp, serverPort)
-        {
+    using System;
 
+    public class Client : NetworkClient2
+    {
+        protected override void OnConnected()
+        {
+            Console.WriteLine("成功连接上服务器");
         }
 
-        protected override void OnConnect()
+        protected override void OnDisConnected()
         {
-
         }
     }
 }

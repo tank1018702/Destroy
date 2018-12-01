@@ -1,11 +1,9 @@
 ﻿namespace Destroy.Net
 {
-    using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Net.Sockets;
     using System.Threading;
-    using System.Threading.Tasks;
 
     public abstract class NetworkServer
     {
@@ -65,14 +63,20 @@
             listener = new TcpListener(NetworkUtils.LocalIPv4, port);
             callbacks = new ConcurrentQueue<ServerCallback>();
             messages = new ConcurrentQueue<ServerMessage>();
+            await = null;
+            handle = null;
+            receives = new List<Thread>();
+        }
 
+        public void Start()
+        {
             listener.Start();
+
             await = new Thread(__Await) { IsBackground = true };
             await.Start();
+
             handle = new Thread(__Handle) { IsBackground = true };
             handle.Start();
-
-            receives = new List<Thread>();
         }
 
         /// <summary>
@@ -110,48 +114,13 @@
             }
         }
 
-        private List<TcpClient> clients = new List<TcpClient>();
-
         /// <summary>
         /// 一个线程
         /// </summary>
         private void __Handle()
         {
-            Task<TcpClient> acceptTask = null;
-            bool ready = true;
-
             while (true)
             {
-                if (ready)
-                {
-                    acceptTask = listener.AcceptTcpClientAsync();
-                    ready = false;
-                }
-                if (acceptTask.IsCompleted)
-                {
-                    TcpClient tcpClient = acceptTask.Result;
-                    OnAccept(tcpClient); //执行回调
-                    clients.Add(tcpClient);
-                    ready = true;
-                }
-
-                List<Task> tasks = new List<Task>();
-                //接受消息
-                for (int i = 0; i < clients.Count; i++)
-                {
-                    TcpClient client = clients[i];
-                    if (client.Client.Poll(1, SelectMode.SelectRead))
-                    {
-                        Task readTask = Task.Run(() =>
-                        {
-                            NetworkStream stream = client.GetStream();
-                            stream.Read(null, 0, 0);
-                        });
-                        tasks.Add(readTask);
-                    }
-                }
-                Task.WaitAll(tasks.ToArray());
-
                 //处理回调
                 while (callbacks.Count > 0)
                     if (callbacks.TryDequeue(out ServerCallback callback))
