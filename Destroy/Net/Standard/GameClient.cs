@@ -3,7 +3,7 @@
     using System;
     using System.Net.Sockets;
 
-    public class Client : NetClient
+    public class Client : NetworkClient
     {
         public Client(string serverIp, int serverPort) : base(serverIp, serverPort)
         {

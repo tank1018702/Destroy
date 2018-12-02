@@ -3,7 +3,7 @@
     using System;
     using System.Net.Sockets;
 
-    public class Server : NetServer
+    public class Server : NetworkServer
     {
         public Server(int port) : base(port)
         {

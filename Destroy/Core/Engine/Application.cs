@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using System.Runtime.InteropServices;
 
     public static class Application
     {
@@ -48,7 +49,16 @@
 
         public static void UseStandardSetting()
         {
-            //TODO
+            IntPtr stdOutputHandle = LowLevelAPI.GetStdHandle(-11);
+
+            LowLevelAPI.CONSOLE_FONT_INFO_EX fontInfo = new LowLevelAPI.CONSOLE_FONT_INFO_EX();
+            fontInfo.cbSize = (uint)Marshal.SizeOf(fontInfo);
+            fontInfo.nFont = 0;
+            fontInfo.dwFontSize.X = 20;
+            fontInfo.dwFontSize.Y = 20;
+            fontInfo.FaceName = "Consolas";
+
+            LowLevelAPI.SetCurrentConsoleFontEx(stdOutputHandle, true, ref fontInfo);
         }
     }
 }

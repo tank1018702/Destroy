@@ -1,161 +1,125 @@
 ﻿namespace Destroy.Net
 {
-    using System.Collections.Concurrent;
+    using System;
     using System.Collections.Generic;
+    using System.Net;
     using System.Net.Sockets;
-    using System.Threading;
 
     public abstract class NetworkServer
     {
-        public delegate void ServerEvent(object obj, byte[] data);
+        public delegate void CallbackEvent(Socket client, byte[] data);
 
-        private sealed class ServerMessage
+        private sealed class Message
         {
-            private NetworkStream stream;
+            private Socket client;
             private byte[] data;
 
-            public ServerMessage(NetworkStream stream, byte[] data)
+            public Message(Socket client, byte[] data)
             {
-                this.stream = stream;
+                this.client = client;
                 this.data = data;
             }
 
-            public void Send() => stream.Write(data, 0, data.Length);
-        }
-
-        private sealed class ServerCallback
-        {
-            private ServerEvent _event;
-            private object obj;
-            private byte[] data;
-
-            public ServerCallback(ServerEvent _event, object obj, byte[] data)
+            public bool SafeSend(out Socket client)
             {
-                this._event = _event;
-                this.obj = obj;
-                this.data = data;
+                client = this.client;
+                if (client == null || !client.Connected)
+                    return false;
+                client.Send(data);
+                return true;
             }
-
-            public void Excute() => _event(obj, data);
         }
 
-        private static Dictionary<int, ServerEvent> events              //注册消息
-            = new Dictionary<int, ServerEvent>();
+        private Dictionary<int, CallbackEvent> events;
+        private Socket server;
+        private Queue<Message> messages;
+        private bool ready;
+        private IAsyncResult acceptAsync;
+        private List<Socket> clients;
 
-        private TcpListener listener;                                   //服务器
-        private ConcurrentQueue<ServerCallback> callbacks;              //回调事件(回调事件会在一个特定线程中执行, 如果需要修改gameThread的全局数据建议在方法中使用lock)
-        private ConcurrentQueue<ServerMessage> messages;                //待发送消息
+        public NetworkServer(int port)
+        {
+            events = new Dictionary<int, CallbackEvent>();
+            server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            server.Bind(new IPEndPoint(NetworkUtils.LocalIPv4, port));
+            messages = new Queue<Message>();
+            ready = true;
+            acceptAsync = null;
+            clients = new List<Socket>();
+        }
 
-        private Thread await;
-        private Thread handle;
-        private List<Thread> receives;
-
-        public static void Register(ushort cmd1, ushort cmd2, ServerEvent @event)
+        public void Register(ushort cmd1, ushort cmd2, CallbackEvent _event)
         {
             int key = NetworkMessage.EnumToKey(cmd1, cmd2);
             if (events.ContainsKey(key))
                 return;
-            events.Add(key, @event);
+            events.Add(key, _event);
         }
 
-        public NetworkServer(int port)
+        public void Send<T>(Socket client, ushort cmd1, ushort cmd2, T message)
         {
-            listener = new TcpListener(NetworkUtils.LocalIPv4, port);
-            callbacks = new ConcurrentQueue<ServerCallback>();
-            messages = new ConcurrentQueue<ServerMessage>();
-            await = null;
-            handle = null;
-            receives = new List<Thread>();
+            byte[] data = NetworkMessage.PackTCPMessage(cmd1, cmd2, message);
+            messages.Enqueue(new Message(client, data));
         }
 
         public void Start()
         {
-            listener.Start();
-
-            await = new Thread(__Await) { IsBackground = true };
-            await.Start();
-
-            handle = new Thread(__Handle) { IsBackground = true };
-            handle.Start();
+            server.Listen(10); //队列长度
         }
 
-        /// <summary>
-        /// 线程安全
-        /// </summary>
-        protected void Send<T>(TcpClient tcpClient, ushort cmd1, ushort cmd2, T message)
+        public void Handle()
         {
-            byte[] data = NetworkMessage.PackTCPMessage(cmd1, cmd2, message);
-            messages.Enqueue(new ServerMessage(tcpClient.GetStream(), data));
-        }
-
-        /// <summary>
-        /// 线程安全
-        /// </summary>
-        protected virtual void OnAccept(TcpClient tcpClient) { }
-
-        /// <summary>
-        /// 线程不安全
-        /// </summary>
-        protected virtual void OnReceive(TcpClient tcpClient) { }
-
-        /// <summary>
-        /// 一个线程
-        /// </summary>
-        private void __Await()
-        {
-            while (true)
+            if (ready) //异步连接
             {
-                TcpClient tcpClient = listener.AcceptTcpClient();
-                OnAccept(tcpClient); //执行回调
-
-                Thread receive = new Thread(__Receive) { IsBackground = true };
-                receive.Start(tcpClient);
-                receives.Add(receive);
+                acceptAsync = server.BeginAccept(null, null);
+                ready = false;
             }
-        }
-
-        /// <summary>
-        /// 一个线程
-        /// </summary>
-        private void __Handle()
-        {
-            while (true)
+            if (acceptAsync.IsCompleted)
             {
-                //处理回调
-                while (callbacks.Count > 0)
-                    if (callbacks.TryDequeue(out ServerCallback callback))
-                        callback.Excute();
-
-                //发送消息
-                while (messages.Count > 0)
-                    if (messages.TryDequeue(out ServerMessage message))
-                        message.Send();
-
-                Thread.Sleep(1);
+                Socket client = server.EndAccept(acceptAsync); // Try Catch
+                clients.Add(client);
+                OnConnected(client); //执行回调
+                ready = true;
             }
-        }
 
-        /// <summary>
-        /// 多个线程
-        /// </summary>
-        private void __Receive(object param)
-        {
-            TcpClient tcpClient = (TcpClient)param;
-            NetworkStream stream = tcpClient.GetStream();
-
-            while (true)
+            for (int i = 0; i < clients.Count; i++) //异步读取
             {
-                NetworkMessage.UnpackTCPMessage(stream, out ushort cmd1, out ushort cmd2, out byte[] data);
-                OnReceive(tcpClient); //执行回调
-
-                int key = NetworkMessage.EnumToKey(cmd1, cmd2);
-                if (events.ContainsKey(key))
+                Socket client = clients[i];
+                if (!client.Connected)
                 {
-                    ServerEvent _event = events[key];
-                    ServerCallback callback = new ServerCallback(_event, tcpClient, data);
-                    callbacks.Enqueue(callback);
+                    clients.Remove(client);
+                    OnDisconnected(client); //执行回调
+                }
+                else
+                {
+                    if (client.Available > 0) // client.Poll(1, SelectMode.SelectRead)
+                    {
+                        //Receive
+                        NetworkMessage.UnpackTCPMessage2(client, out ushort cmd1, out ushort cmd2, out byte[] data);
+                        int key = NetworkMessage.EnumToKey(cmd1, cmd2);
+
+                        if (events.ContainsKey(key))
+                            events[key](client, data); //执行回调
+                    }
                 }
             }
+
+            //异步发送
+            while (messages.Count > 0)
+                if (!messages.Dequeue().SafeSend(out Socket client)) //发送失败
+                {
+                    clients.Remove(client);
+                    OnDisconnected(client); //执行回调
+                }
+        }
+
+        protected virtual void OnConnected(Socket socket)
+        {
+        }
+
+        protected virtual void OnDisconnected(Socket socket)
+        {
+            socket.Close();
         }
     }
 }

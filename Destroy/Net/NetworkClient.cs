@@ -1,131 +1,92 @@
 ﻿namespace Destroy.Net
 {
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Sockets;
-    using System.Threading;
 
     public abstract class NetworkClient
     {
-        public delegate void ClientEvent(byte[] data);
+        public delegate void CallbackEvent(byte[] data);
 
-        private sealed class ClientCallback
+        private Dictionary<int, CallbackEvent> events;
+        private Socket client;
+        private Queue<byte[]> messages;
+        private readonly string serverIp;
+        private readonly int serverPort;
+
+        public NetworkClient(string serverIp, int serverPort)
         {
-            private ClientEvent _event;
-            private byte[] data;
-
-            public ClientCallback(ClientEvent _event, byte[] data)
-            {
-                this._event = _event;
-                this.data = data;
-            }
-
-            public void Excute() => _event(data);
+            this.serverIp = serverIp;
+            this.serverPort = serverPort;
+            events = new Dictionary<int, CallbackEvent>();
+            client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            messages = new Queue<byte[]>();
         }
 
-        private static Dictionary<int, ClientEvent> events      //注册消息
-            = new Dictionary<int, ClientEvent>();
-
-        private TcpClient client;                               //客户端
-        private NetworkStream stream;                           //网络流
-        private IPEndPoint targetEP;                            //服务器IP端口
-        private ConcurrentQueue<ClientCallback> callbacks;      //回调事件
-        private ConcurrentQueue<byte[]> messages;               //待发送消息
-
-        private Thread handle;
-        private Thread receive;
-
-        public static void Register(ushort cmd1, ushort cmd2, ClientEvent @event)
+        public void Register(ushort cmd1, ushort cmd2, CallbackEvent _event)
         {
             int key = NetworkMessage.EnumToKey(cmd1, cmd2);
             if (events.ContainsKey(key))
                 return;
-            events.Add(key, @event);
+            events.Add(key, _event);
         }
 
-        public NetworkClient(string serverIp, int serverPort)
-        {
-            client = new TcpClient();
-            stream = null;
-            targetEP = new IPEndPoint(IPAddress.Parse(serverIp), serverPort);
-            callbacks = new ConcurrentQueue<ClientCallback>();
-            messages = new ConcurrentQueue<byte[]>();
-            handle = null;
-            receive = null;
-        }
-
-        public void Connect()
-        {
-            client.Connect(targetEP);
-            stream = client.GetStream();
-            OnConnect(); //执行回调
-
-            handle = new Thread(__Handle) { IsBackground = true };
-            handle.Start();
-
-            receive = new Thread(__Receive) { IsBackground = true };
-            receive.Start();
-        }
-
-        /// <summary>
-        /// 线程安全
-        /// </summary>
-        protected void Send<T>(ushort cmd1, ushort cmd2, T message)
+        public void Send<T>(ushort cmd1, ushort cmd2, T message)
         {
             byte[] data = NetworkMessage.PackTCPMessage(cmd1, cmd2, message);
             messages.Enqueue(data);
         }
 
-        /// <summary>
-        /// 线程安全
-        /// </summary>
-        protected virtual void OnConnect() { }
-
-        /// <summary>
-        /// 线程安全
-        /// </summary>
-        protected virtual void OnReceive() { }
-
-        /// <summary>
-        /// 一个线程
-        /// </summary>
-        private void __Handle()
+        public void Start()
         {
-            while (true)
+            client.Connect(new IPEndPoint(IPAddress.Parse(serverIp), serverPort));
+            OnConnected(client); //回调方法
+        }
+
+        public void Handle()
+        {
+            if (!client.Connected)
             {
-                //处理回调
-                while (callbacks.Count > 0)
-                    if (callbacks.TryDequeue(out ClientCallback callback))
-                        callback.Excute();
+                OnDisConnected(client); //执行回调
+                return;
+            }
 
-                //发送消息
-                while (messages.Count > 0)
-                    if (messages.TryDequeue(out byte[] data))
-                        stream.Write(data, 0, data.Length);
+            //接受消息
+            if (client.Available > 0) //client.Poll(1, SelectMode.SelectRead)
+            {
+                NetworkMessage.UnpackTCPMessage2(client, out ushort cmd1, out ushort cmd2, out byte[] data);
+                int key = NetworkMessage.EnumToKey(cmd1, cmd2);
 
-                Thread.Sleep(1);
+                if (events.ContainsKey(key))
+                    events[key](data); //执行回调
+            }
+
+            //发送消息
+            while (messages.Count > 0)
+            {
+                byte[] data = messages.Dequeue();
+                if (!client.Connected)
+                {
+                    OnDisConnected(client);
+                    break;
+                }
+                client.Send(data);
             }
         }
 
         /// <summary>
-        /// 一个线程
+        /// 连接完成
         /// </summary>
-        private void __Receive()
+        protected virtual void OnConnected(Socket client)
         {
-            while (true)
-            {
-                NetworkMessage.UnpackTCPMessage(stream, out ushort cmd1, out ushort cmd2, out byte[] data);
-                OnReceive(); //执行回调
+        }
 
-                int key = NetworkMessage.EnumToKey(cmd1, cmd2);
-                if (events.ContainsKey(key))
-                {
-                    ClientEvent _event = events[key];
-                    ClientCallback callback = new ClientCallback(_event, data);
-                    callbacks.Enqueue(callback);
-                }
-            }
+        /// <summary>
+        /// 连接断开
+        /// </summary>
+        protected virtual void OnDisConnected(Socket client)
+        {
+            client.Close();
         }
     }
 }

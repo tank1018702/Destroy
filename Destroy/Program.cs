@@ -38,6 +38,59 @@
     //    }
     //}
 
+
+    ///// <summary>
+    ///// 矩形碰撞检测
+    ///// </summary>
+    //private static bool RectIntersects(Vector2Int selfPos, Vector2Int otherPos, RectCollider self, RectCollider other)
+    //{
+    //    if (selfPos.X >= otherPos.X + other.Size.X || otherPos.X >= selfPos.X + self.Size.X)
+    //        return false;
+    //    else if (selfPos.Y >= otherPos.Y + other.Size.Y || otherPos.Y >= selfPos.Y + self.Size.Y)
+    //        return false;
+    //    else
+    //        return true;
+    //}
+
+    using System;
+    using System.Net.Sockets;
+    using System.Threading;
+    using Destroy.Net;
+    using ProtoBuf;
+
+    //[ProtoContract]
+    //public class Msg
+    //{
+    //    [ProtoMember(1)]
+    //    public string Str;
+    //}
+
+    //[CreatGameObject]
+    //public class Test : Script
+    //{
+    //    private void GetMsg(Socket socket, byte[] data)
+    //    {
+    //        Msg msg = Serializer.NetDeserialize<Msg>(data);
+    //        Console.WriteLine(Thread.CurrentThread.Name + " " + msg.Str);
+    //    }
+
+    //    Client client;
+
+    //    public override void Start()
+    //    {
+    //        client = new Client(NetworkUtils.LocalIPv4Str, 8848);
+    //        Server server = new Server(8848);
+
+    //        NetworkSystem.Init(server, client);
+    //        server.Register(0, 0, GetMsg);
+    //    }
+
+    //    public override void Update()
+    //    {
+    //        client.Send(0, 0, new Msg { Str = "A" });
+    //    }
+    //}
+
     public class Program
     {
         private static void Main()

@@ -49,6 +49,8 @@
             }
 
             GameThread = Thread.CurrentThread;
+            GameThread.Name = "GameThread";
+
             CreateGameObjects();
 
             Stopwatch stopwatch = new Stopwatch();

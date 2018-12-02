@@ -39,6 +39,7 @@
             //不能销毁Transform组件
             if (type == typeof(Transform))
                 return;
+            //销毁组件
             if (type.IsSubclassOf(typeof(Component)))
             {
                 Component component = (Component)obj;
@@ -57,11 +58,20 @@
                 }
                 components.Remove(component);
             }
+            //销毁游戏物体
             else
             {
                 GameObject gameObject = (GameObject)obj;
                 gameObjects.Remove(gameObject);
             }
+        }
+
+        /// <summary>
+        /// 延迟销毁一个物体
+        /// </summary>
+        public static void Destroy(Object obj, float delayTime)
+        {
+            InvokeSystem.AddDelayAction(() => Destroy(obj), delayTime);
         }
 
         public static implicit operator bool(Object exists)

@@ -39,7 +39,7 @@
             requests.Add(new InvokeRequest(instance, methodName, delayTime));
         }
 
-        public static void CancleInvokeRequest(object instance,string methodName)
+        public static void CancleInvokeRequest(object instance, string methodName)
         {
             for (int i = 0; i < requests.Count; i++)
             {
@@ -49,7 +49,7 @@
             }
         }
 
-        public static bool IsInvoking(object instance,string methodName)
+        public static bool IsInvoking(object instance, string methodName)
         {
             foreach (var request in requests)
             {
@@ -59,23 +59,78 @@
             return false;
         }
 
+        private class DelayAction
+        {
+            public Action Action;
+            public float DelayTime;
+
+            public DelayAction(Action action, float delayTime)
+            {
+                Action = action;
+                DelayTime = delayTime;
+            }
+        }
+
+        private static List<DelayAction> delayActions = new List<DelayAction>();
+
+        public static void AddDelayAction(Action action, float delayTime)
+        {
+            delayActions.Add(new DelayAction(action, delayTime));
+        }
+
+        public static void RemoveDelayAction(Action action)
+        {
+            for (int i = 0; i < delayActions.Count; i++)
+            {
+                DelayAction delayAction = delayActions[i];
+                if (delayAction.Action == action)
+                    delayActions.Remove(delayAction);
+            }
+        }
+
+        public static bool IsDelaying(Action action)
+        {
+            foreach (var delayAction in delayActions)
+            {
+                if (delayAction.Action == action)
+                    return true;
+            }
+            return false;
+        }
+
         public static void Update()
         {
-            for (int i = 0; i < requests.Count; i++)
+            List<InvokeRequest> removeRequests = new List<InvokeRequest>();
+            foreach (InvokeRequest request in requests)
             {
-                InvokeRequest request = requests[i];
                 request.DelayTime -= Time.DeltaTime;
-                if (request.DelayTime <= 0 && request.Instance != null)
-                {
-                    MethodInfo method = request.Instance.GetType().GetMethod(request.MethodName);
-                    try
-                    {
-                        method?.Invoke(request.Instance, null);
-                    }
-                    catch (Exception) { }
-                    requests.Remove(request);
-                }
+                if (request.DelayTime > 0)
+                    continue;
+                removeRequests.Add(request); //准备移除
+                if (request.Instance == null)
+                    continue;
+                //调用
+                MethodInfo methodInfo = request.Instance.GetType().GetMethod(request.MethodName);
+                methodInfo?.Invoke(request.Instance, null);
             }
+            //移除
+            foreach (InvokeRequest request in removeRequests)
+                requests.Remove(request);
+
+            List<DelayAction> removeActions = new List<DelayAction>();
+            foreach (DelayAction delayAction in delayActions)
+            {
+                delayAction.DelayTime -= Time.DeltaTime;
+                if (delayAction.DelayTime > 0)
+                    continue;
+                removeActions.Add(delayAction); //准备移除
+                if (delayAction.Action == null)
+                    continue;
+                delayAction.Action(); //调用
+            }
+            //移除
+            foreach (DelayAction delayAction in removeActions)
+                delayActions.Remove(delayAction);
         }
     }
 }
