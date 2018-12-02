@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.Reflection;
     using System.Threading;
+    using Destroy.Net;
 
     public class RuntimeEngine
     {
@@ -126,7 +127,7 @@
             CallScriptMethod(gameObjects, "Start", true);   //调用Start
             CallScriptMethod(gameObjects, "Update");        //调用Update
             PhysicsSystem.Update(gameObjects);              //碰撞检测
-            //NetworkSystem.Update(gameObjects);              //传输消息
+            NetworkSystem.Update(gameObjects);              //传输消息
             RendererSystem.Update(gameObjects);             //渲染物体
         }
 

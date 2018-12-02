@@ -8,6 +8,7 @@ namespace Destroy.Net
 {
     public enum NetworkRole
     {
+        None,
         Client,
         Server,
         Host,

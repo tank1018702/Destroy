@@ -1,8 +1,9 @@
 ﻿namespace Destroy.Test
 {
+    using System;
+    using System.Net.Sockets;
     using Destroy.Net;
     using ProtoBuf;
-    using System.Net.Sockets;
 
     [ProtoContract]
     public class Msg
@@ -14,28 +15,26 @@
     [CreatGameObject]
     public class C : Script
     {
-        public override void Start()
-        {
-            Client client = new Client();
-            client.Connect(NetworkUtils.LocalIPv4Str, 8848);
-            client.Send(0, 0, new Msg { Str = "A" });
-        }
-    }
-
-    [CreatGameObject(0)]
-    public class S : Script
-    {
         private void GetMsg(Socket socket, byte[] data)
         {
             Msg msg = global::Destroy.Serializer.NetDeserialize<Msg>(data);
-            System.Console.WriteLine(msg.Str);
+            Console.WriteLine(msg.Str);
         }
+
+        Client client;
 
         public override void Start()
         {
+            client = new Client(NetworkUtils.LocalIPv4Str, 8848);
             Server server = new Server(8848);
+
+            NetworkSystem.Init(server, client);
             server.Register(0, 0, GetMsg);
-            server.Start();
+        }
+
+        public override void Update()
+        {
+            client.Send(0, 0, new Msg { Str = "A" });
         }
     }
 }

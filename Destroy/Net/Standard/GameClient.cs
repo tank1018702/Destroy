@@ -1,16 +1,24 @@
 ﻿namespace Destroy.Net
 {
     using System;
+    using System.Net.Sockets;
 
-    public class Client : NetworkClient2
+    public class Client : NetClient
     {
-        protected override void OnConnected()
+        public Client(string serverIp, int serverPort) : base(serverIp, serverPort)
         {
-            Console.WriteLine("成功连接上服务器");
         }
 
-        protected override void OnDisConnected()
+        protected override void OnConnected(Socket client)
         {
+            base.OnConnected(client);
+            Console.WriteLine("成功连接");
+        }
+
+        protected override void OnDisConnected(Socket client)
+        {
+            base.OnDisConnected(client);
+            Console.WriteLine("断开连接");
         }
     }
 }

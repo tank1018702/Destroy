@@ -75,7 +75,7 @@
                 int x = transform.Position.X;
                 int y = transform.Position.Y;
                 if (x >= minX && x <= maxX && y >= minY && y <= maxY)
-                    pairs.Add(new KeyValuePair<uint, object>(renderer.Order, gameObject));
+                    pairs.Add(new KeyValuePair<uint, object>(renderer.Depth, gameObject));
             }
             Mathematics.InsertionSort(pairs);
             pairs.Reverse(); //排序(从大到小)

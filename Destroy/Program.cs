@@ -1,6 +1,5 @@
 ﻿namespace Destroy
 {
-    //[CreatGameObject]
     //public class A : Script
     //{
     //    Camera c;
