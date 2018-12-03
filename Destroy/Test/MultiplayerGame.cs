@@ -6,7 +6,6 @@
 //    using System.Net.Sockets;
 //    using System.Threading;
 //    using Destroy;
-//    using Destroy.Net;
 //    using ProtoBuf;
 
 //    public enum GameState

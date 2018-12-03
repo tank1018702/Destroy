@@ -7,7 +7,7 @@
     public static class RendererSystem
     {
         private static GameObject camera;
-        private static Matrix world2camera;
+        private static Matrix world2camera; //顺时针旋转坐标系90度
         private static int charWidth;
         private static int height;
         private static int width;

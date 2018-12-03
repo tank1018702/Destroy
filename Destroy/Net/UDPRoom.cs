@@ -1,4 +1,4 @@
-﻿namespace Destroy.Net
+﻿namespace Destroy
 {
     using System;
     using System.Diagnostics;

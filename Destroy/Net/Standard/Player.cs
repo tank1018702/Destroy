@@ -1,4 +1,4 @@
-﻿namespace Destroy.Net
+﻿namespace Destroy
 {
     public class Player
     {

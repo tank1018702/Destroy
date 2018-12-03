@@ -68,13 +68,15 @@
   <ItemGroup>
     <Compile Include="Core\Components\Camera.cs" />
     <Compile Include="Core\Engine\RuntimeParallel.cs" />
-    <Compile Include="Net\Components\NetworkTransform.cs" />
+    <Compile Include="Core\Components\NetworkTransform.cs" />
     <Compile Include="Core\Components\Transform.cs" />
     <Compile Include="Core\Engine\LowLevelAPI.cs" />
     <Compile Include="Core\Engine\RuntimeDebugger.cs" />
     <Compile Include="Core\Engine\RuntimeReflactor.cs" />
     <Compile Include="Core\GameObject\Object.cs" />
     <Compile Include="Core\Math\Matrix.cs" />
+    <Compile Include="Core\Tools\ObjectPool.cs" />
+    <Compile Include="Core\Tools\Singleton.cs" />
     <Compile Include="Net\Messages\PlayerInfo.cs" />
     <Compile Include="Net\Messages\Position.cs" />
     <Compile Include="Net\Messages\RoomInfo.cs" />
@@ -88,7 +90,7 @@
     <Compile Include="Net\Standard\RoomClient.cs" />
     <Compile Include="Net\Standard\RoomServer.cs" />
     <Compile Include="Net\Standard\GameServer.cs" />
-    <Compile Include="Net\Systems\NetworkSystem.cs" />
+    <Compile Include="Core\Systems\NetworkSystem.cs" />
     <Compile Include="Core\Systems\RendererSystem.cs" />
     <Compile Include="Core\Tools\Audio.cs" />
     <Compile Include="Core\Tools\Storage.cs" />
@@ -101,18 +103,17 @@
     <Compile Include="Core\GameObject\GameObject.cs" />
     <Compile Include="Core\Components\Script.cs" />
     <Compile Include="Core\Math\Vector2.cs" />
-    <Compile Include="Test\BehaviorQueue.cs" />
+    <Compile Include="Core\Tools\BehaviorQueue.cs" />
     <Compile Include="Core\Math\Mathematics.cs" />
     <Compile Include="Test\BitmapConverter.cs" />
-    <Compile Include="Net\Tools\NetworkMessage.cs" />
+    <Compile Include="Core\Tools\NetworkMessage.cs" />
     <Compile Include="Core\Components\Collider.cs" />
     <Compile Include="Core\Systems\PhysicsSystem.cs" />
     <Compile Include="Core\Tools\Debug.cs" />
-    <Compile Include="Test\Coordinate.cs" />
     <Compile Include="Core\Tools\Input.cs" />
     <Compile Include="Core\Math\Vector2Int.cs" />
     <Compile Include="Test\Http.cs" />
-    <Compile Include="Net\Tools\NetworkUtils.cs" />
+    <Compile Include="Core\Tools\NetworkUtils.cs" />
     <Compile Include="Test\MultiplayerGame.cs" />
     <Compile Include="Net\UDPRoom.cs" />
     <Compile Include="Program.cs" />
