@@ -9,9 +9,11 @@
     public class RuntimeEngine
     {
         public static Action<GameObject> Manage;
+
         public Thread GameThread { get; private set; }
 
         private readonly List<GameObject> gameObjects;
+
         private readonly RuntimeDebugger debugger;
 
         public RuntimeEngine(RuntimeDebugger debugger = null)

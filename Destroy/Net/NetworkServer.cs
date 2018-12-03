@@ -5,7 +5,7 @@
     using System.Net;
     using System.Net.Sockets;
 
-    public abstract class NetworkServer
+    public class NetworkServer
     {
         public delegate void CallbackEvent(Socket client, byte[] data);
 
@@ -48,6 +48,10 @@
             clients = new List<Socket>();
         }
 
+        public event Action<Socket> OnConnected;
+
+        public event Action<Socket> OnDisconnected;
+
         public void Register(ushort cmd1, ushort cmd2, CallbackEvent _event)
         {
             int key = NetworkMessage.EnumToKey(cmd1, cmd2);
@@ -62,12 +66,12 @@
             messages.Enqueue(new Message(client, data));
         }
 
-        public void Start()
+        internal void Start()
         {
             server.Listen(10); //队列长度
         }
 
-        public void Handle()
+        internal void Handle()
         {
             if (ready) //异步连接
             {
@@ -78,7 +82,7 @@
             {
                 Socket client = server.EndAccept(acceptAsync); // Try Catch
                 clients.Add(client);
-                OnConnected(client); //执行回调
+                OnConnected?.Invoke(client); //执行回调
                 ready = true;
             }
 
@@ -87,15 +91,16 @@
                 Socket client = clients[i];
                 if (!client.Connected)
                 {
+                    client.Close();
                     clients.Remove(client);
-                    OnDisconnected(client); //执行回调
+                    OnDisconnected?.Invoke(client); //执行回调
                 }
                 else
                 {
                     if (client.Available > 0) // client.Poll(1, SelectMode.SelectRead)
                     {
                         //Receive
-                        NetworkMessage.UnpackTCPMessage2(client, out ushort cmd1, out ushort cmd2, out byte[] data);
+                        NetworkMessage.UnpackTCPMessage(client, out ushort cmd1, out ushort cmd2, out byte[] data);
                         int key = NetworkMessage.EnumToKey(cmd1, cmd2);
 
                         if (events.ContainsKey(key))
@@ -108,18 +113,10 @@
             while (messages.Count > 0)
                 if (!messages.Dequeue().SafeSend(out Socket client)) //发送失败
                 {
+                    client.Close();
                     clients.Remove(client);
-                    OnDisconnected(client); //执行回调
+                    OnDisconnected?.Invoke(client); //执行回调
                 }
-        }
-
-        protected virtual void OnConnected(Socket socket)
-        {
-        }
-
-        protected virtual void OnDisconnected(Socket socket)
-        {
-            socket.Close();
         }
     }
 }

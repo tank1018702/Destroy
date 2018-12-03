@@ -7,6 +7,9 @@
 
     public static class NetworkMessage
     {
+        /// <summary>
+        /// 枚举转整数
+        /// </summary>
         public static int EnumToKey(ushort cmd1, ushort cmd2)
         {
             ushort temp = (ushort)(cmd1 << 8);
@@ -40,26 +43,7 @@
         /// <summary>
         /// 解TCP包
         /// </summary>
-        public static void UnpackTCPMessage(NetworkStream stream, out ushort cmd1, out ushort cmd2, out byte[] data)
-        {
-            ushort bodyLen;
-            byte[] head = new byte[2];
-            stream.Read(head, 0, head.Length);
-
-            bodyLen = BitConverter.ToUInt16(head, 0);           // 2bytes (the length of the packet body)
-            byte[] body = new byte[bodyLen];
-            stream.Read(head, 0, head.Length);
-
-            using (MemoryStream memory = new MemoryStream(body))
-            {
-                BinaryReader reader = new BinaryReader(memory);
-                cmd1 = reader.ReadUInt16();                     // 2bytes
-                cmd2 = reader.ReadUInt16();                     // 2bytes
-                data = reader.ReadBytes(bodyLen - 4);           // nbytes
-            }
-        }
-
-        public static void UnpackTCPMessage2(Socket socket, out ushort cmd1, out ushort cmd2, out byte[] data)
+        public static void UnpackTCPMessage(Socket socket, out ushort cmd1, out ushort cmd2, out byte[] data)
         {
             ushort bodyLen;
             byte[] head = new byte[2];
@@ -98,7 +82,7 @@
         }
 
         /// <summary>
-        /// 解包指定类型UDP包
+        /// 解UDP包
         /// </summary>
         public static void UnpackUDPMessage<T>(byte[] data, out ushort cmd1, out ushort cmd2, out T message)
         {

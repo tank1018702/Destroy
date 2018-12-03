@@ -1,10 +1,11 @@
 ﻿namespace Destroy
 {
+    using System;
     using System.Collections.Generic;
     using System.Net;
     using System.Net.Sockets;
 
-    public abstract class NetworkClient
+    public class NetworkClient
     {
         public delegate void CallbackEvent(byte[] data);
 
@@ -23,6 +24,16 @@
             messages = new Queue<byte[]>();
         }
 
+        /// <summary>
+        /// 连接完成
+        /// </summary>
+        public event Action<Socket> OnConnected;
+
+        /// <summary>
+        /// 连接断开
+        /// </summary>
+        public event Action<Socket> OnDisConnected;
+
         public void Register(ushort cmd1, ushort cmd2, CallbackEvent _event)
         {
             int key = NetworkMessage.EnumToKey(cmd1, cmd2);
@@ -37,24 +48,25 @@
             messages.Enqueue(data);
         }
 
-        public void Start()
+        internal void Start()
         {
             client.Connect(new IPEndPoint(IPAddress.Parse(serverIp), serverPort));
-            OnConnected(client); //回调方法
+            OnConnected?.Invoke(client); //回调方法
         }
 
-        public void Handle()
+        internal void Handle()
         {
             if (!client.Connected)
             {
-                OnDisConnected(client); //执行回调
+                client.Close();
+                OnDisConnected?.Invoke(client); //执行回调
                 return;
             }
 
             //接受消息
             if (client.Available > 0) //client.Poll(1, SelectMode.SelectRead)
             {
-                NetworkMessage.UnpackTCPMessage2(client, out ushort cmd1, out ushort cmd2, out byte[] data);
+                NetworkMessage.UnpackTCPMessage(client, out ushort cmd1, out ushort cmd2, out byte[] data);
                 int key = NetworkMessage.EnumToKey(cmd1, cmd2);
 
                 if (events.ContainsKey(key))
@@ -67,26 +79,12 @@
                 byte[] data = messages.Dequeue();
                 if (!client.Connected)
                 {
-                    OnDisConnected(client);
+                    client.Close();
+                    OnDisConnected?.Invoke(client); //执行回调
                     break;
                 }
                 client.Send(data);
             }
-        }
-
-        /// <summary>
-        /// 连接完成
-        /// </summary>
-        protected virtual void OnConnected(Socket client)
-        {
-        }
-
-        /// <summary>
-        /// 连接断开
-        /// </summary>
-        protected virtual void OnDisConnected(Socket client)
-        {
-            client.Close();
         }
     }
 }

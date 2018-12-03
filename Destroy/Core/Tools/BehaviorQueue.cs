@@ -1,6 +1,5 @@
-﻿namespace Destroy.Test
+﻿namespace Destroy
 {
-    using System;
     using System.Collections.Generic;
 
     public delegate void Behavior(object obj);

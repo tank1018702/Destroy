@@ -4,3 +4,11 @@ C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\DevTest\bin\De
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\DevTest\obj\Debug\DevTest.csproj.CoreCompileInputs.cache
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\DevTest\obj\Debug\DevTest.exe
 C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\DevTest\obj\Debug\DevTest.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\DevTest\bin\Debug\Destroy.dll
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\DevTest\bin\Debug\protobuf-net.dll
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\DevTest\bin\Debug\LitJSON.dll
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\DevTest\bin\Debug\Destroy.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\DevTest\bin\Debug\Destroy.dll.config
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\DevTest\bin\Debug\protobuf-net.xml
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\DevTest\obj\Debug\DevTest.csprojAssemblyReference.cache
+C:\Users\Administrator\Desktop\Github\Destroy\ExampleGame\DevTest\DevTest\obj\Debug\DevTest.csproj.CopyComplete

@@ -1,7 +1,6 @@
 ﻿//namespace Destroy.Test
 //{
 //    using System;
-//    using System.Collections.Concurrent;
 //    using System.Collections.Generic;
 //    using System.Net.Sockets;
 //    using System.Threading;
@@ -78,7 +77,6 @@
 //        public List<Player> Players;
 //    }
 
-//#if !Client
 //    [CreatGameObject]
 //    public class MultiplayerServer : Script
 //    {
@@ -128,7 +126,6 @@
 //                    start.Id = each.Value.Id;
 //                    start.Players = new List<Player>(players.Values);
 
-
 //                    Send(each.Key, (ushort)GameState.Room, (ushort)Room.S2C_StartSync, start);
 //                }
 //                //开始状态同步
@@ -176,11 +173,9 @@
 //            }
 //        }
 //    }
-//#endif
 
 
 
-//#if !Client
 //    [CreatGameObject]
 //    public class MultiplayerClient : Script
 //    {
@@ -312,5 +307,4 @@
 //            Send((ushort)GameState.Game, (ushort)Game.C2S_PosSync, pos);
 //        }
 //    }
-//#endif
 //}

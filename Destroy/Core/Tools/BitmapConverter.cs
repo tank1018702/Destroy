@@ -1,4 +1,4 @@
-﻿namespace Destroy.Test
+﻿namespace Destroy
 {
     using System;
     using System.Drawing;
@@ -39,7 +39,7 @@
             return result;
         }
 
-        private static void Get(Bitmap bitmap)
+        public static Pixel[] Get(Bitmap bitmap)
         {
             Pixel[] pixels = new Pixel[bitmap.Size.Width * bitmap.Size.Height];
 
@@ -48,13 +48,12 @@
             {
                 for (int y = 0; y < bitmap.Size.Height; y++)
                 {
-
-                    Color col = bitmap.GetPixel(x, y);
-
-                    pixels[i] = new Pixel(new Vector2Int(x, y), ClosestConsoleColor(col.R, col.G, col.B));
+                    Color color = bitmap.GetPixel(x, y);
+                    pixels[i] = new Pixel(new Vector2Int(x, y), ClosestConsoleColor(color.R, color.G, color.B));
                     i++;
                 }
             }
+            return pixels;
         }
     }
 }

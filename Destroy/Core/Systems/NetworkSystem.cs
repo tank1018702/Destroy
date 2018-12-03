@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    internal static class NetworkSystem
+    public static class NetworkSystem
     {
         public static NetworkRole Role
         {
@@ -20,6 +20,7 @@
         }
 
         private static NetworkServer netServer;
+
         private static NetworkClient netClient;
 
         public static void Init(NetworkServer server, NetworkClient client)

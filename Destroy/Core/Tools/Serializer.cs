@@ -10,13 +10,13 @@
 
     public static partial class Serializer
     {
-        public static byte[] ProtoSerializer<T>(T obj) where T : IMessage
+        public static byte[] ProtoSerializer<T>(T obj) where T : Google.Protobuf.IMessage
         {
             byte[] data = obj.ToByteArray();
             return data;
         }
 
-        public static T ProtoDeserializer<T>(byte[] data) where T : IMessage, new()
+        public static T ProtoDeserializer<T>(byte[] data) where T : Google.Protobuf.IMessage, new()
         {
             IMessage message = new T();
             T msg = (T)message.Descriptor.Parser.ParseFrom(data);
