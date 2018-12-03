@@ -1,4 +1,4 @@
-# Destroy DEV 2.4
+# Destroy DEV 2.4.5
 
 #### DE · Charlie Presents
 
@@ -51,11 +51,11 @@ Destroy已经从DE(原型开发)升级到了DEV(初期开发)阶段, 但依然�
 
 11. 标准化设置
 
-12. 数学库快速排序
+12. 数学库快速排序(实现)
 
 ### 已知Bug (提交bug: 1669247240@qq.com):
 
-1. NetworkClient/NetworkSystem无法检测Connected
+1. NetworkClient/NetworkSystem无法检测Connected状态
 
 2. API访问级别
 

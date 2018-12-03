@@ -103,7 +103,7 @@
                 }
             }
             //Sorting(order越小的越先调用)
-            Mathematics.InsertionSort(pairs);
+            Mathematics.QuickSort(pairs);
             foreach (KeyValuePair<uint, object> pair in pairs)
             {
                 Type type = (Type)pair.Value;
