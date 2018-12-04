@@ -1,4 +1,4 @@
-# Destroy DEV 2.5
+# Destroy DEV 2.5.5
 
 #### DE · Charlie Presents
 
@@ -11,7 +11,7 @@ Destroy是一个Windows控制台游戏框架。
 ### 目标:
 Destroy的目标是 : 提供简单实用的工具帮助你快速, 轻松地制作Windows控制台游戏或2D游戏原型。（比如：塞尔达传说荒野之息的2D游戏原型, 贪吃蛇, 俄罗斯方块, 文字冒险类游戏）
 
-### 现阶段计划:
+### 现阶段:
 
 Destroy已经从DE(原型开发)升级到了DEV(初期开发)阶段, 但依然缺乏一些核心系统的支持：
 
@@ -53,16 +53,17 @@ Destroy已经从DE(原型开发)升级到了DEV(初期开发)阶段, 但依然�
 
 12. 数学库快速排序(实现)
 
-### 已知Bug:
+### 文档:
 
-1. API访问级别
-
-### API帮助:
-null
+暂未开放
 
 ### 示例项目:
 
 https://github.com/ProcessCA/Boxhead
+
+### 已知Bug:
+
+1. API访问级别
 
 ### 提交Bug:
 

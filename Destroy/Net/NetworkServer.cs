@@ -7,24 +7,20 @@
 
     public class NetworkServer
     {
-        public delegate void CallbackEvent(Socket client, byte[] data);
+        public delegate void CallbackEvent(Socket socket, byte[] data);
 
         private sealed class Message
         {
-            private Socket client;
+            public Socket Socket;
             private byte[] data;
 
-            public Message(Socket client, byte[] data)
+            public Message(Socket socket, byte[] data)
             {
-                this.client = client;
+                Socket = socket;
                 this.data = data;
             }
 
-            public void Send(out Socket client)
-            {
-                client = this.client;
-                client.Send(data);
-            }
+            public void Send() => Socket.Send(data);
         }
 
         private sealed class Client
@@ -32,7 +28,7 @@
             public bool Connected;
             public Socket Socket;
 
-            public Client(bool connected,Socket socket)
+            public Client(bool connected, Socket socket)
             {
                 Connected = connected;
                 Socket = socket;
@@ -40,21 +36,22 @@
         }
 
         private Dictionary<int, CallbackEvent> events;
-        private Socket server;
         private Queue<Message> messages;
+        private List<Client> clients;
+        private Socket server;
+
         private bool accept;
         private IAsyncResult acceptAsync;
-        private List<Socket> clients;
 
         public NetworkServer(int port)
         {
             events = new Dictionary<int, CallbackEvent>();
+            messages = new Queue<Message>();
+            clients = new List<Client>();
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             server.Bind(new IPEndPoint(NetworkUtils.LocalIPv4, port));
-            messages = new Queue<Message>();
             accept = true;
             acceptAsync = null;
-            clients = new List<Socket>();
         }
 
         /// <summary>
@@ -81,7 +78,7 @@
             messages.Enqueue(new Message(client, data));
         }
 
-        internal void Start() => server.Listen(10); //队列长度
+        internal void Start() => server.Listen(10);
 
         internal void Handle()
         {
@@ -100,51 +97,66 @@
                 try
                 {
                     Socket client = server.EndAccept(acceptAsync);
-                    clients.Add(client);
+                    clients.Add(new Client(true, client));
                     OnConnected?.Invoke(client);
                 }
                 catch (Exception) { }
                 finally { accept = true; }
             }
 
-            //异步读取
-            List<Socket> rmSockets = new List<Socket>();
-            foreach (Socket client in clients)
+            foreach (Client client in clients)
             {
-                if (client.Available > 0) // client.Poll(1, SelectMode.SelectRead)
+                if (!client.Connected) //不接受断开连接的消息
+                    continue;
+                Socket socket = client.Socket;
+
+                if (socket.Available > 0)
                 {
                     try
                     {
-                        NetworkMessage.UnpackTCPMessage(client, out ushort cmd1, out ushort cmd2, out byte[] data);
+                        NetworkMessage.UnpackTCPMessage(socket, out ushort cmd1, out ushort cmd2, out byte[] data);
                         int key = NetworkMessage.EnumToKey(cmd1, cmd2);
 
                         if (events.ContainsKey(key))
-                            events[key](client, data);
+                            events[key](socket, data);
                     }
                     catch (Exception)
                     {
-                        client.Close();
-                        rmSockets.Add(client);
-                        OnDisconnected?.Invoke(client);
+                        socket.Close();
+                        client.Connected = false;
+                        OnDisconnected?.Invoke(socket);
                     }
                 }
             }
-            rmSockets.ForEach(socket => clients.Remove(socket)); //移除错误套接字
 
             //异步发送
             while (messages.Count > 0)
             {
                 Message message = messages.Dequeue();
-                Socket client = null;
+                Socket socket = message.Socket;
+
+                bool pass = false;
+                foreach (Client client in clients)
+                    if (client.Socket != socket || !client.Connected) //不存在该Socket或者Socket未激活
+                    {
+                        pass = true;
+                        break;
+                    }
+                if (pass)
+                    continue;
+
                 try
                 {
-                    message.Send(out client);
+                    message.Send();
                 }
                 catch (Exception)
                 {
-                    client.Close();
-                    clients.Remove(client);
-                    OnDisconnected?.Invoke(client);
+                    socket.Close();
+                    //禁用该Socket
+                    foreach (Client client in clients)
+                        if (client.Socket == socket)
+                            client.Connected = false;
+                    OnDisconnected?.Invoke(socket);
                     break;
                 }
             }
