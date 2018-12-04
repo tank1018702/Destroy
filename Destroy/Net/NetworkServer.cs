@@ -82,7 +82,7 @@
 
         internal void Handle()
         {
-            //异步接收
+            //异步接收客户端
             if (accept)
             {
                 try
@@ -104,6 +104,7 @@
                 finally { accept = true; }
             }
 
+            //异步接收消息
             foreach (Client client in clients)
             {
                 if (!client.Connected) //不接受断开连接的消息
@@ -129,7 +130,7 @@
                 }
             }
 
-            //异步发送
+            //异步发送消息
             while (messages.Count > 0)
             {
                 Message message = messages.Dequeue();
@@ -137,11 +138,13 @@
 
                 bool pass = false;
                 foreach (Client client in clients)
+                {
                     if (client.Socket != socket || !client.Connected) //不存在该Socket或者Socket未激活
                     {
                         pass = true;
                         break;
                     }
+                }
                 if (pass)
                     continue;
 

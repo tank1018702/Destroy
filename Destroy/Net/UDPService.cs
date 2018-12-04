@@ -1,75 +1,89 @@
 ﻿namespace Destroy
 {
+    using System.Collections.Generic;
     using System.Net;
     using System.Net.Sockets;
 
     public class UDPService
     {
-        private UdpClient client;
+        public delegate void CallbackEvent(byte[] data);
 
-        public UDPService(IPEndPoint iPEndPoint) => client = new UdpClient(iPEndPoint);
-
-        public void BroadCast(byte[] data, int targetPort)
+        private sealed class Message
         {
-            IPEndPoint target = new IPEndPoint(IPAddress.Broadcast, targetPort);
-            client.Send(data, data.Length, target);
+            private IPEndPoint endPoint;
+            private byte[] data;
+
+            public Message(IPEndPoint endPoint, byte[] data)
+            {
+                this.endPoint = endPoint;
+                this.data = data;
+            }
+
+            public void Send(UdpClient udp) => udp.Send(data, data.Length, endPoint);
         }
 
-        public void SendTo(byte[] data, IPEndPoint target) => client.Send(data, data.Length, target);
+        private Dictionary<int, CallbackEvent> events;
+        private UdpClient udp;
+        private Queue<Message> messages;
 
-        public byte[] ReceiveFrom(out IPEndPoint remoteEP)
+        public UDPService(string ip, int port)
         {
-            remoteEP = null;
-            byte[] data = client.Receive(ref remoteEP);
-            return data;
+            events = new Dictionary<int, CallbackEvent>();
+            udp = new UdpClient(new IPEndPoint(IPAddress.Parse(ip), port));
+            messages = new Queue<Message>();
         }
 
-        //public long Ping(IPEndPoint target, long overTime)
-        //{
-        //    Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        public void Register(ushort cmd1, ushort cmd2, CallbackEvent _event)
+        {
+            int key = NetworkMessage.EnumToKey(cmd1, cmd2);
+            if (events.ContainsKey(key))
+                return;
+            events.Add(key, _event);
+        }
 
-        //    uint IOC_IN = 0x80000000;
-        //    uint IOC_VENDOR = 0x18000000;
-        //    uint SIO_UDP_CONNRESET = IOC_IN | IOC_VENDOR | 12;
-        //    socket.IOControl((int)SIO_UDP_CONNRESET, new byte[] { Convert.ToByte(false) }, null);
+        public void Send<T>(string ip, int port, ushort cmd1, ushort cmd2, T message)
+        {
+            byte[] data = NetworkMessage.PackUDPMessage(cmd1, cmd2, message);
+            messages.Enqueue(new Message(new IPEndPoint(IPAddress.Parse(ip), port), data));
+        }
 
-        //    Stopwatch watch = Stopwatch.StartNew();
+        /// <summary>
+        /// 局域网广播
+        /// </summary>
+        public void Broadcast<T>(int targetPort, ushort cmd1, ushort cmd2, T message)
+        {
+            Send(IPAddress.Broadcast.ToString(), targetPort, cmd1, cmd2, message);
+        }
 
-        //    //发送一个字节
-        //    byte[] sendData = new byte[1] { 0 };
-        //    IAsyncResult sendAsync = socket.BeginSendTo(sendData, 0, sendData.Length, SocketFlags.None, target, null, null);
-        //    while (!sendAsync.IsCompleted)
-        //    {
-        //        //判断超时
-        //        if (watch.ElapsedMilliseconds >= overTime)
-        //            return overTime;
-        //        Thread.Sleep(0);
-        //    }
-        //    socket.EndSendTo(sendAsync);
+        /// <summary>
+        /// 局域网多播
+        /// </summary>
+        public void Multicast<T>(int targetPort, ushort cmd1, ushort cmd2, T message)
+        {
+            // TODO   
+        }
 
-        //    //接受一个字节
-        //    byte[] receiveData = new byte[1];
-        //    EndPoint iPEndPoint = new IPEndPoint(IPAddress.Any, 0);
-        //    IAsyncResult receiveAsync = socket.BeginReceiveFrom(receiveData, 0, receiveData.Length, SocketFlags.None, ref iPEndPoint, null, null);
-        //    while (!receiveAsync.IsCompleted)
-        //    {
-        //        //判断超时
-        //        if (watch.ElapsedMilliseconds >= overTime)
-        //            return overTime;
-        //        Thread.Sleep(0);
-        //    }
-        //    socket.EndReceiveFrom(receiveAsync, ref iPEndPoint);
+        internal void Handle()
+        {
+            //接收消息
+            if (udp.Available > 0)
+            {
+                IPEndPoint iPEndPoint = null;
+                byte[] data = udp.Receive(ref iPEndPoint); //Try Catch
 
-        //    //计算时间
-        //    long millis = watch.Elapsed.Milliseconds;
-        //    socket.Close();
-        //    return millis;
-        //}
+                NetworkMessage.UnpackUDPMessage(data, out ushort cmd1, out ushort cmd2, out byte[] msgData);
+                int key = NetworkMessage.EnumToKey(cmd1, cmd2);
 
-        //public void ReceivePing()
-        //{
-        //    byte[] data = Receive(out IPEndPoint remoteEP);
-        //    Send(data, remoteEP);
-        //}
+                if (events.ContainsKey(key))
+                    events[key](msgData);
+            }
+
+            //发送消息
+            while (messages.Count > 0)
+            {
+                Message message = messages.Dequeue();
+                message.Send(udp); //Try Catch
+            }
+        }
     }
 }

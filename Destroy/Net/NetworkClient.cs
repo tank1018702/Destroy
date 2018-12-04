@@ -10,8 +10,10 @@
         public delegate void CallbackEvent(byte[] data);
 
         public bool Connected { get; private set; }
+
         private readonly string serverIp;
         private readonly int serverPort;
+
         private Dictionary<int, CallbackEvent> events;
         private Socket client;
         private Queue<byte[]> messages;
@@ -54,7 +56,6 @@
         {
             //可能导致异常
             client.Connect(new IPEndPoint(IPAddress.Parse(serverIp), serverPort));
-
             Connected = true;
             OnConnected?.Invoke(client);
         }
@@ -64,7 +65,7 @@
             if (!Connected)
                 return;
             //接受消息
-            if (client.Available > 0) //client.Poll(1, SelectMode.SelectRead)
+            if (client.Available > 0)
             {
                 try
                 {

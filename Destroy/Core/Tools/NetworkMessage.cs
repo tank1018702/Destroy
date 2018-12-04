@@ -55,10 +55,12 @@
 
             using (MemoryStream memory = new MemoryStream(body))
             {
-                BinaryReader reader = new BinaryReader(memory);
-                cmd1 = reader.ReadUInt16();                     // 2bytes
-                cmd2 = reader.ReadUInt16();                     // 2bytes
-                data = reader.ReadBytes(bodyLen - 4);           // nbytes
+                using (BinaryReader reader = new BinaryReader(memory))
+                {
+                    cmd1 = reader.ReadUInt16();                     // 2bytes
+                    cmd2 = reader.ReadUInt16();                     // 2bytes
+                    data = reader.ReadBytes(bodyLen - 4);           // nbytes
+                }
             }
         }
 
@@ -84,16 +86,16 @@
         /// <summary>
         /// 解UDP包
         /// </summary>
-        public static void UnpackUDPMessage<T>(byte[] data, out ushort cmd1, out ushort cmd2, out T message)
+        public static void UnpackUDPMessage(byte[] data, out ushort cmd1, out ushort cmd2, out byte[] msgData)
         {
             using (MemoryStream stream = new MemoryStream(data))
             {
-                BinaryReader reader = new BinaryReader(stream);
-                cmd1 = reader.ReadUInt16();                         // 2bytes
-                cmd2 = reader.ReadUInt16();                         // 2bytes
-                byte[] msgData = reader.ReadBytes(data.Length - 4); // nbytes
-
-                message = Serializer.NetDeserialize<T>(msgData);    //使用Protobuf-net
+                using (BinaryReader reader = new BinaryReader(stream))
+                {
+                    cmd1 = reader.ReadUInt16();                         // 2bytes
+                    cmd2 = reader.ReadUInt16();                         // 2bytes
+                    msgData = reader.ReadBytes(data.Length - 4);        // nbytes
+                }
             }
         }
     }

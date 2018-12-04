@@ -1,6 +1,12 @@
 ﻿namespace Destroy
 {
 #if Debug
+
+    using System;
+    using System.Net;
+    using System.Collections.Generic;
+    using ProtoBuf;
+
     public class Program
     {
         private static void Main()

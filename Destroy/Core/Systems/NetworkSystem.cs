@@ -23,10 +23,13 @@
 
         private static NetworkClient netClient;
 
-        public static void Init(NetworkServer server, NetworkClient client)
+        private static List<UDPService> udps;
+
+        public static void Init(NetworkServer server, NetworkClient client, List<UDPService> udps)
         {
             netServer = server;
             netClient = client;
+            NetworkSystem.udps = udps;
 
             netServer?.Start();
             netClient?.Start();
@@ -36,7 +39,9 @@
         {
             netServer?.Handle();
             netClient?.Handle();
-            
+            foreach (var udp in udps)
+                udp.Handle();
+
             //foreach (GameObject gameObject in gameObjects)
             //{
             //    if (!gameObject.Active)
