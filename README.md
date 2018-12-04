@@ -1,4 +1,4 @@
-# Destroy DEV 2.4.5
+# Destroy DEV 2.5
 
 #### DE · Charlie Presents
 
@@ -53,11 +53,9 @@ Destroy已经从DE(原型开发)升级到了DEV(初期开发)阶段, 但依然�
 
 12. 数学库快速排序(实现)
 
-### 已知Bug (提交bug: 1669247240@qq.com):
+### 已知Bug:
 
-1. NetworkClient/NetworkSystem无法检测Connected状态
-
-2. API访问级别
+1. API访问级别
 
 ### API帮助:
 null
@@ -65,6 +63,10 @@ null
 ### 示例项目:
 
 https://github.com/ProcessCA/Boxhead
+
+### 提交Bug:
+
+1669247240@qq.com
 
 ### 特别感谢 & 参考(排名不分先后):
 

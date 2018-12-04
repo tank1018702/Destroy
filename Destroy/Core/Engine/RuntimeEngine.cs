@@ -8,9 +8,9 @@
 
     public class RuntimeEngine
     {
-        public static Action<GameObject> Manage;
-
         public Thread GameThread { get; private set; }
+
+        internal static Action<GameObject> Manage;
 
         private readonly List<GameObject> gameObjects;
 
@@ -18,12 +18,12 @@
 
         public RuntimeEngine(RuntimeDebugger debugger = null)
         {
+            GameThread = null;
             //Register Method
             Manage += gameObject => gameObjects.Add(gameObject);
             //Initial
             gameObjects = new List<GameObject>();
             this.debugger = debugger;
-            GameThread = null;
 
             //创建静态GameObject
             GameObject tempGo = new GameObject();
@@ -31,24 +31,20 @@
             //创建静态Object
             Object tempObj = new Object();
             RuntimeReflector.SetPrivateStaticField(tempObj, "gameObjects", gameObjects);
+            //销毁temp
             tempObj = null;
             Object.Destroy(tempGo);
         }
 
         public void Run(int tickPerSecond, bool allowMultiple = true)
         {
-            //Singleton Check
-            if (!allowMultiple)
+            if (!allowMultiple) //Singleton Check
             {
                 Mutex mutex = new Mutex(true, Process.GetCurrentProcess().ProcessName, out bool nonexsitent);
                 if (!nonexsitent)
-                {
-                    Debug.Error("该游戏不允许多个实例同时运行!");
-                    Thread.Sleep(2000);
                     Environment.Exit(0);
-                }
             }
-
+            
             GameThread = Thread.CurrentThread;
             GameThread.Name = "GameThread";
 
@@ -134,7 +130,7 @@
             RendererSystem.Update(gameObjects);             //渲染物体
         }
 
-        public static void CallScriptMethod(List<GameObject> gameObjects, string methodName, bool start = false, params object[] parameters)
+        internal static void CallScriptMethod(List<GameObject> gameObjects, string methodName, bool start = false, params object[] parameters)
         {
             for (int i = 0; i < gameObjects.Count; i++)
             {
@@ -171,7 +167,7 @@
             }
         }
 
-        public static void CallScriptMethod(GameObject gameObject, string methodName, bool start = false, params object[] parameters)
+        internal static void CallScriptMethod(GameObject gameObject, string methodName, bool start = false, params object[] parameters)
         {
             List<GameObject> gameObjects = new List<GameObject> { gameObject };
             CallScriptMethod(gameObjects, methodName, start, parameters);

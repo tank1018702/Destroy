@@ -5,6 +5,7 @@
     internal static class RuntimeReflector
     {
         private static Assembly assembly;
+
         public static Assembly GetAssembly
         {
             get

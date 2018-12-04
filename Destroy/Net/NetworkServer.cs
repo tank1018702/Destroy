@@ -20,20 +20,29 @@
                 this.data = data;
             }
 
-            public bool SafeSend(out Socket client)
+            public void Send(out Socket client)
             {
                 client = this.client;
-                if (client == null || !client.Connected)
-                    return false;
                 client.Send(data);
-                return true;
+            }
+        }
+
+        private sealed class Client
+        {
+            public bool Connected;
+            public Socket Socket;
+
+            public Client(bool connected,Socket socket)
+            {
+                Connected = connected;
+                Socket = socket;
             }
         }
 
         private Dictionary<int, CallbackEvent> events;
         private Socket server;
         private Queue<Message> messages;
-        private bool ready;
+        private bool accept;
         private IAsyncResult acceptAsync;
         private List<Socket> clients;
 
@@ -43,13 +52,19 @@
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             server.Bind(new IPEndPoint(NetworkUtils.LocalIPv4, port));
             messages = new Queue<Message>();
-            ready = true;
+            accept = true;
             acceptAsync = null;
             clients = new List<Socket>();
         }
 
+        /// <summary>
+        /// 收到客户端连接
+        /// </summary>
         public event Action<Socket> OnConnected;
 
+        /// <summary>
+        /// 客户端断开连接
+        /// </summary>
         public event Action<Socket> OnDisconnected;
 
         public void Register(ushort cmd1, ushort cmd2, CallbackEvent _event)
@@ -66,57 +81,73 @@
             messages.Enqueue(new Message(client, data));
         }
 
-        internal void Start()
-        {
-            server.Listen(10); //队列长度
-        }
+        internal void Start() => server.Listen(10); //队列长度
 
         internal void Handle()
         {
-            if (ready) //异步连接
+            //异步接收
+            if (accept)
             {
-                acceptAsync = server.BeginAccept(null, null);
-                ready = false;
+                try
+                {
+                    acceptAsync = server.BeginAccept(null, null);
+                    accept = false;
+                }
+                catch (Exception) { }
             }
             if (acceptAsync.IsCompleted)
             {
-                Socket client = server.EndAccept(acceptAsync); // Try Catch
-                clients.Add(client);
-                OnConnected?.Invoke(client); //执行回调
-                ready = true;
+                try
+                {
+                    Socket client = server.EndAccept(acceptAsync);
+                    clients.Add(client);
+                    OnConnected?.Invoke(client);
+                }
+                catch (Exception) { }
+                finally { accept = true; }
             }
 
-            for (int i = 0; i < clients.Count; i++) //异步读取
+            //异步读取
+            List<Socket> rmSockets = new List<Socket>();
+            foreach (Socket client in clients)
             {
-                Socket client = clients[i];
-                if (!client.Connected)
+                if (client.Available > 0) // client.Poll(1, SelectMode.SelectRead)
                 {
-                    client.Close();
-                    clients.Remove(client);
-                    OnDisconnected?.Invoke(client); //执行回调
-                }
-                else
-                {
-                    if (client.Available > 0) // client.Poll(1, SelectMode.SelectRead)
+                    try
                     {
-                        //Receive
                         NetworkMessage.UnpackTCPMessage(client, out ushort cmd1, out ushort cmd2, out byte[] data);
                         int key = NetworkMessage.EnumToKey(cmd1, cmd2);
 
                         if (events.ContainsKey(key))
-                            events[key](client, data); //执行回调
+                            events[key](client, data);
+                    }
+                    catch (Exception)
+                    {
+                        client.Close();
+                        rmSockets.Add(client);
+                        OnDisconnected?.Invoke(client);
                     }
                 }
             }
+            rmSockets.ForEach(socket => clients.Remove(socket)); //移除错误套接字
 
             //异步发送
             while (messages.Count > 0)
-                if (!messages.Dequeue().SafeSend(out Socket client)) //发送失败
+            {
+                Message message = messages.Dequeue();
+                Socket client = null;
+                try
+                {
+                    message.Send(out client);
+                }
+                catch (Exception)
                 {
                     client.Close();
                     clients.Remove(client);
-                    OnDisconnected?.Invoke(client); //执行回调
+                    OnDisconnected?.Invoke(client);
+                    break;
                 }
+            }
         }
     }
 }
