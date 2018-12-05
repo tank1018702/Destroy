@@ -16,12 +16,12 @@
         /// <summary>
         /// 游戏物体
         /// </summary>
-        public GameObject gameObject;
+        public GameObject gameObject { get; private set; }
 
         /// <summary>
         /// Transform组件
         /// </summary>
-        public Transform transform;
+        public Transform transform { get; private set; }
 
         /// <summary>
         /// 创建一个游戏物体

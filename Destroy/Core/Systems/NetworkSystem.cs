@@ -23,19 +23,19 @@
 
         private static NetworkClient netClient;
 
-        private static List<UDPService> udps;
+        private static List<UDPService> udps = new List<UDPService>();
 
         public static void Init(NetworkServer server, NetworkClient client, List<UDPService> udps)
         {
             netServer = server;
             netClient = client;
-            NetworkSystem.udps = udps;
-
+            NetworkSystem.udps = udps ?? new List<UDPService>();
+            
             netServer?.Start();
             netClient?.Start();
         }
 
-        public static void Update(List<GameObject> gameObjects)
+        internal static void Update(List<GameObject> gameObjects)
         {
             netServer?.Handle();
             netClient?.Handle();

@@ -262,7 +262,6 @@
             return inputKey;
         }
 
-
         /// <summary>
         /// 上一次按下的标准键
         /// </summary>
@@ -364,7 +363,6 @@
             }
             return inputKey;
         }
-
 
         /// <summary>
         /// 获取输入的字符

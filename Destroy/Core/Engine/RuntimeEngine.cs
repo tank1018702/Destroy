@@ -156,7 +156,7 @@
                         continue;
 
                     Script script = (Script)component;
-                    if (!start && !script.Started) //中途创建, 等待下一个生命周期
+                    if (!start && !script.Started) //Start之后创建, 等待下一个生命周期Start
                         continue;
                     if (start && script.Started)   //每个脚本的Start只能调用一次
                         continue;

@@ -45,7 +45,7 @@
             Console.BufferWidth = (width + 1) * charWidth;
         }
 
-        public static void Update(List<GameObject> gameObjects)
+        internal static void Update(List<GameObject> gameObjects)
         {
             if (!camera || !camera.Active)
                 return;

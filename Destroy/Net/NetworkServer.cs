@@ -35,6 +35,8 @@
             }
         }
 
+        public int ClientCount => clients.Count;
+
         private Dictionary<int, CallbackEvent> events;
         private Queue<Message> messages;
         private List<Client> clients;
@@ -96,9 +98,9 @@
             {
                 try
                 {
-                    Socket client = server.EndAccept(acceptAsync);
-                    clients.Add(new Client(true, client));
-                    OnConnected?.Invoke(client);
+                    Socket socket = server.EndAccept(acceptAsync);
+                    clients.Add(new Client(true, socket));
+                    OnConnected?.Invoke(socket);
                 }
                 catch (Exception) { }
                 finally { accept = true; }
@@ -139,15 +141,15 @@
                 bool pass = false;
                 foreach (Client client in clients)
                 {
-                    if (client.Socket != socket || !client.Connected) //不存在该Socket或者Socket未激活
+                    if(client.Socket == socket && client.Connected) //存在该客户端并且该客户端激活
                     {
                         pass = true;
                         break;
                     }
                 }
-                if (pass)
+                if (!pass)
                     continue;
-
+                
                 try
                 {
                     message.Send();

@@ -1,4 +1,4 @@
-# Destroy DEV 2.6
+# Destroy DEV 2.6.1
 
 #### DE · Charlie Presents
 
@@ -28,6 +28,8 @@ Destroy已经从DE(原型开发)升级到了DEV(初期开发)阶段, 但依然�
 欢迎提交分支!
 
 ### TODO:
+
+0. 优化核心代码
 
 1. 场景树
 

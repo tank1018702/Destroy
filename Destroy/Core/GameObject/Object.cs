@@ -43,9 +43,10 @@
             if (type.IsSubclassOf(typeof(Component)))
             {
                 Component component = (Component)obj;
+
                 List<Component> components = (List<Component>)RuntimeReflector.GetPrivateInstanceField
                     (component.gameObject, "components");
-
+                
                 //获取调用该方法的方法
                 StackTrace stackTrace = new StackTrace(true);
                 MethodBase method = stackTrace.GetFrame(1).GetMethod();
@@ -56,6 +57,8 @@
                     component.Active = false;
                     return;
                 }
+
+                //移除该组件
                 components.Remove(component);
             }
             //销毁游戏物体

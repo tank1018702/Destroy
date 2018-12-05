@@ -8,12 +8,12 @@
         /// <summary>
         /// 游戏物体
         /// </summary>
-        public GameObject gameObject;
+        public GameObject gameObject { get; internal set; }
 
         /// <summary>
         /// Transform组件
         /// </summary>
-        public Transform transform;
+        public Transform transform { get; internal set; }
 
         /// <summary>
         /// 添加指定组件
