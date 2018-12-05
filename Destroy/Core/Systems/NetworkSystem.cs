@@ -4,29 +4,30 @@
 
     public static class NetworkSystem
     {
-        private static NetworkServer netServer;
+        private static NetworkServer server;
 
-        private static NetworkClient netClient;
+        private static NetworkClient client;
 
         private static List<UDPService> udps = new List<UDPService>();
 
         public static void Init(NetworkServer server, NetworkClient client, List<UDPService> udps)
         {
-            netServer = server;
-            netClient = client;
+            NetworkSystem.server = server;
+            NetworkSystem.client = client;
             NetworkSystem.udps = udps ?? new List<UDPService>();
-            
-            netServer?.Start();
-            netClient?.Start();
+
+            NetworkSystem.server?.Start();
+            NetworkSystem.client?.Start();
         }
 
         internal static void Update(List<GameObject> gameObjects)
         {
-            netServer?.Handle();
-            netClient?.Handle();
+            server?.Handle();
+            client?.Handle();
             foreach (var udp in udps)
                 udp.Handle();
 
+            
             //foreach (GameObject gameObject in gameObjects)
             //{
             //    if (!gameObject.Active)
