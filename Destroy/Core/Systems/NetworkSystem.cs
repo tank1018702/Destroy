@@ -4,21 +4,6 @@
 
     public static class NetworkSystem
     {
-        public static NetworkRole Role
-        {
-            get
-            {
-                if (netClient != null && netServer != null)
-                    return NetworkRole.Host;
-                else if (netClient != null)
-                    return NetworkRole.Client;
-                else if (netServer != null)
-                    return NetworkRole.Server;
-                else
-                    return NetworkRole.None;
-            }
-        }
-
         private static NetworkServer netServer;
 
         private static NetworkClient netClient;
