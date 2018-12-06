@@ -22,12 +22,12 @@
         /// <summary>
         /// 获取指定的类型及其子类
         /// </summary>
-        public T GetComponent<T>() where T : Component => gameObject.GetComponent<T>();
+        public T GetComponent<T>() where T : Component, new() => gameObject.GetComponent<T>();
 
         /// <summary>
         /// 获取所有指定的类型及其子类
         /// </summary>
-        public List<T> GetComponents<T>() where T : Component => gameObject.GetComponents<T>();
+        public List<T> GetComponents<T>() where T : Component, new() => gameObject.GetComponents<T>();
 
         /// <summary>
         /// 获取组件个数

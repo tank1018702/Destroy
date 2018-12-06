@@ -4,6 +4,12 @@
 
     public class Room
     {
+        public enum GameState
+        {
+            Room,
+            Game,
+        }
+
         public readonly int RoomId;
         public readonly int MaxPlayerAmount;
         public readonly List<__Player> Players;

@@ -9,6 +9,37 @@
         internal List<Component> Components;
 
         /// <summary>
+        /// 添加指定组件
+        /// </summary>
+        internal Component AddComponent(Type type)
+        {
+            foreach (var each in Components)
+                if (each.GetType() == type)
+                    return null;
+            Assembly assembly = RuntimeReflector.GetAssembly;
+
+            Component component = (Component)assembly.CreateInstance($"{type.Namespace}.{type.Name}");
+            component.Name = type.Name;
+            component.Active = true;
+            component.gameObject = this;
+            component.transform = transform;
+            Components.Add(component);
+
+            return component;
+        }
+
+        /// <summary>
+        /// 获取指定组件
+        /// </summary>
+        internal Component GetComponent(Type type)
+        {
+            foreach (var each in Components)
+                if (each.GetType() == type)
+                    return each;
+            return null;
+        }
+
+        /// <summary>
         /// 标签
         /// </summary>
         public string Tag;
@@ -48,7 +79,6 @@
             Components = new List<Component>();
             Tag = "None";
             gameObject = this;
-            
             transform = AddComponent<Transform>(); //添加默认组件
             transform.transform = transform;
             RuntimeEngine.Manage(this); //进入托管模式
@@ -76,7 +106,7 @@
         /// <summary>
         /// 获取指定的类型及其子类
         /// </summary>
-        public T GetComponent<T>() where T : Component
+        public T GetComponent<T>() where T : Component, new()
         {
             Type t = typeof(T);
             foreach (var component in Components)
@@ -91,7 +121,7 @@
         /// <summary>
         /// 获取所有指定的类型及其子类
         /// </summary>
-        public List<T> GetComponents<T>() where T : Component
+        public List<T> GetComponents<T>() where T : Component, new()
         {
             List<T> list = new List<T>();
             foreach (var component in Components)
@@ -109,26 +139,6 @@
         /// 获取组件个数
         /// </summary>
         public int ComponentCount => Components.Count;
-
-        /// <summary>
-        /// 添加指定组件
-        /// </summary>
-        internal Component AddComponent(Type type)
-        {
-            foreach (var each in Components)
-                if (each.GetType() == type)
-                    return null;
-            Assembly assembly = RuntimeReflector.GetAssembly;
-
-            Component component = (Component)assembly.CreateInstance($"{type.Namespace}.{type.Name}");
-            component.Name = type.Name;
-            component.Active = true;
-            component.gameObject = this;
-            component.transform = transform;
-            Components.Add(component);
-
-            return component;
-        }
 
         /// <summary>
         /// 根据名字寻找游戏物体, 若有多个同名物体也只返回一个。
@@ -157,6 +167,9 @@
             return list.ToArray();
         }
 
+        /// <summary>
+        /// 克隆一个游戏物体
+        /// </summary>
         public static GameObject Clone(GameObject gameObject)
         {
             ///// <summary>

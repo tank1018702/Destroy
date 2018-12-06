@@ -89,7 +89,6 @@
     <Compile Include="Test\Messages\Position.cs" />
     <Compile Include="Test\Messages\RoomInfo.cs" />
     <Compile Include="Net\NetworkClient.cs" />
-    <Compile Include="Test\NetworkEnums.cs" />
     <Compile Include="Core\Systems\InvokeSystem.cs" />
     <Compile Include="Net\NetworkServer.cs" />
     <Compile Include="Test\Player.cs" />

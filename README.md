@@ -1,4 +1,4 @@
-# Destroy DEV 2.7
+# Destroy DEV 2.8
 
 #### DE · Charlie Presents
 
@@ -61,11 +61,7 @@ https://github.com/ProcessCA/Boxhead
 
 ### 已知Bug:
 
-1. API访问级别
-
-2. 渲染字体时出现问题
-
-3. GameObject.Clone, Object.Active, Object.Destroy方法相互作用时出现问题。
+1. 渲染字体时出现问题
 
 ### 提交Bug:
 

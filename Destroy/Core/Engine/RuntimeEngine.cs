@@ -10,15 +10,13 @@
     {
         public Thread GameThread { get; private set; }
 
-        internal static Action<GameObject> Manage;
-
         private readonly List<GameObject> gameObjects;
 
         public RuntimeEngine()
         {
             GameThread = null;
-            Manage += gameObject => gameObjects.Add(gameObject);
             gameObjects = new List<GameObject>();
+            Manage += gameObject => gameObjects.Add(gameObject);
             Object.GameObjects = gameObjects;
         }
 
@@ -102,6 +100,8 @@
             RendererSystem.Update(gameObjects);             //渲染物体
         }
 
+        internal static Action<GameObject> Manage;
+
         internal static void CallScriptMethod(List<GameObject> gameObjects, string methodName, bool start = false, params object[] parameters)
         {
             for (int i = 0; i < gameObjects.Count; i++)
@@ -112,16 +112,16 @@
                 for (int j = 0; j < components.Count; j++)
                 {
                     Component component = components[j];
-                    //游戏物体未激活停止执行后续Script
+                    //游戏物体未激活停止执行后续脚本
                     if (!gameObject.Active)
                         break;
-                    //游戏物体被销毁停止执行后续Script
+                    //游戏物体被销毁停止执行后续脚本
                     if (!gameObjects.Contains(gameObject))
                         break;
-                    //保证组件激活
+                    //保证脚本未激活继续执行后续脚本
                     if (!component.Active)
                         continue;
-                    //筛选继承Script的组件
+                    //筛选继承Script的脚本
                     if (!component.GetType().IsSubclassOf(typeof(Script)))
                         continue;
 
@@ -133,6 +133,17 @@
                     if (start)                     //调用Start
                         script.Started = true;
                     RuntimeReflector.InvokePublicInstanceMethod(script, methodName, parameters);
+
+                    if (Object.DestroyedComponent)
+                    {
+                        j--;
+                        Object.DestroyedComponent = false;
+                    }
+                    if (Object.DestroyedGameObject)
+                    {
+                        i--;
+                        Object.DestroyedGameObject = false;
+                    }
                 }
             }
         }
