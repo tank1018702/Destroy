@@ -6,7 +6,7 @@
 
     public sealed class GameObject : Object
     {
-        private List<Component> components;
+        internal List<Component> Components;
 
         /// <summary>
         /// 标签
@@ -30,14 +30,12 @@
         {
             Name = "GameObject";
             Active = true;
+            Components = new List<Component>();
             Tag = "None";
             gameObject = this;
-            components = new List<Component>();
-            //添加默认组件
-            transform = AddComponent<Transform>();
+            transform = AddComponent<Transform>(); //添加默认组件
             transform.transform = transform;
-            //进入托管模式
-            RuntimeEngine.Manage(this);
+            RuntimeEngine.Manage(this); //进入托管模式
         }
 
         /// <summary>
@@ -47,14 +45,13 @@
         {
             Name = name;
             Active = true;
+            Components = new List<Component>();
             Tag = "None";
             gameObject = this;
-            components = new List<Component>();
-            //添加默认组件
-            transform = AddComponent<Transform>();
+            
+            transform = AddComponent<Transform>(); //添加默认组件
             transform.transform = transform;
-            //进入托管模式
-            RuntimeEngine.Manage(this);
+            RuntimeEngine.Manage(this); //进入托管模式
         }
 
         /// <summary>
@@ -62,7 +59,7 @@
         /// </summary>
         public T AddComponent<T>() where T : Component, new()
         {
-            foreach (var component in components)
+            foreach (var component in Components)
                 if (typeof(T) == component.GetType())
                     return null;
 
@@ -71,29 +68,9 @@
             instance.Active = true;
             instance.gameObject = this;
             instance.transform = transform;
-            components.Add(instance);
+            Components.Add(instance);
 
             return instance;
-        }
-
-        /// <summary>
-        /// 添加指定组件
-        /// </summary>
-        public Component AddComponent(Type type)
-        {
-            foreach (var each in components)
-                if (each.GetType() == type)
-                    return null;
-            Assembly assembly = RuntimeReflector.GetAssembly;
-
-            Component component = (Component)assembly.CreateInstance($"{type.Namespace}.{type.Name}");
-            component.Name = type.Name;
-            component.Active = true;
-            component.gameObject = this;
-            component.transform = transform;
-            components.Add(component);
-
-            return component;
         }
 
         /// <summary>
@@ -102,7 +79,7 @@
         public T GetComponent<T>() where T : Component
         {
             Type t = typeof(T);
-            foreach (var component in components)
+            foreach (var component in Components)
             {
                 //返回同类型或子类
                 if (component.GetType() == t || component.GetType().IsSubclassOf(t))
@@ -117,7 +94,7 @@
         public List<T> GetComponents<T>() where T : Component
         {
             List<T> list = new List<T>();
-            foreach (var component in components)
+            foreach (var component in Components)
             {
                 var type = typeof(T);
                 var comType = component.GetType();
@@ -131,51 +108,34 @@
         /// <summary>
         /// 获取组件个数
         /// </summary>
-        public int ComponentCount => components.Count;
+        public int ComponentCount => Components.Count;
 
         /// <summary>
-        /// 克隆接口, 继承Script的类不会被复制而会被重新实例化
+        /// 添加指定组件
         /// </summary>
-        public GameObject Clone()
+        internal Component AddComponent(Type type)
         {
-            GameObject cloneGameObject = new GameObject
-            {
-                Name = Name,
-                Active = Active,
-                Tag = Tag
-            };
-            //获取引用
-            List<Component> list = RuntimeReflector.GetPrivateInstanceField(cloneGameObject, "components") as List<Component>;
-            foreach (var component in components)
-            {
-                if (component.Name == "Transform") //不添加重复组件
-                    continue;
+            foreach (var each in Components)
+                if (each.GetType() == type)
+                    return null;
+            Assembly assembly = RuntimeReflector.GetAssembly;
 
-                Type type = component.GetType();
-                if (type.IsSubclassOf(typeof(Script)))
-                {
-                    cloneGameObject.AddComponent(type); //脚本实例化
-                }
-                else
-                {
-                    Component clone = component.Clone();
-                    clone.gameObject = cloneGameObject;
-                    clone.transform = cloneGameObject.transform;
-                    list.Add(clone);
-                }
-            }
-            return cloneGameObject;
+            Component component = (Component)assembly.CreateInstance($"{type.Namespace}.{type.Name}");
+            component.Name = type.Name;
+            component.Active = true;
+            component.gameObject = this;
+            component.transform = transform;
+            Components.Add(component);
+
+            return component;
         }
-
-
-        private static List<GameObject> gameObjects = new List<GameObject>();
 
         /// <summary>
         /// 根据名字寻找游戏物体, 若有多个同名物体也只返回一个。
         /// </summary>
         public static GameObject Find(string name)
         {
-            foreach (var gameObject in gameObjects)
+            foreach (var gameObject in GameObjects)
             {
                 if (gameObject.Name == name)
                     return gameObject;
@@ -189,7 +149,7 @@
         public static GameObject[] FindWithTag(string tag)
         {
             List<GameObject> list = new List<GameObject>();
-            foreach (var gameObject in gameObjects)
+            foreach (var gameObject in GameObjects)
             {
                 if (gameObject.Tag == tag)
                     list.Add(gameObject);
@@ -197,9 +157,47 @@
             return list.ToArray();
         }
 
+        public static GameObject Clone(GameObject gameObject)
+        {
+            ///// <summary>
+            ///// 克隆接口, 继承Script的类不会被复制而会被重新实例化
+            ///// </summary>
+            //public GameObject Clone()
+            //{
+            //    GameObject cloneGameObject = new GameObject
+            //    {
+            //        Name = Name,
+            //        Active = Active,
+            //        Tag = Tag
+            //    };
+            //    //获取引用
+            //    List<Component> list = RuntimeReflector.GetPrivateInstanceField(cloneGameObject, "components") as List<Component>;
+            //    foreach (var component in components)
+            //    {
+            //        if (component.Name == "Transform") //不添加重复组件
+            //            continue;
+
+            //        Type type = component.GetType();
+            //        if (type.IsSubclassOf(typeof(Script)))
+            //        {
+            //            cloneGameObject.AddComponent(type); //脚本实例化
+            //        }
+            //        else
+            //        {
+            //            Component clone = component.Clone();
+            //            clone.gameObject = cloneGameObject;
+            //            clone.transform = cloneGameObject.transform;
+            //            list.Add(clone);
+            //        }
+            //    }
+            //    return cloneGameObject;
+            //}
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 获取游戏物体个数
         /// </summary>
-        public static int Count => gameObjects.Count;
+        public static int Count => GameObjects.Count;
     }
 }

@@ -9,7 +9,6 @@ namespace Destroy
     /// <summary>
     /// TODO
     /// </summary>
-    [CreatGameObject]
     public class Server : Script
     {
         public override void Start()

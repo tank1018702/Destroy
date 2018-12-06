@@ -14,26 +14,12 @@
 
         private readonly List<GameObject> gameObjects;
 
-        private readonly RuntimeDebugger debugger;
-
-        public RuntimeEngine(RuntimeDebugger debugger = null)
+        public RuntimeEngine()
         {
             GameThread = null;
-            //Register Method
             Manage += gameObject => gameObjects.Add(gameObject);
-            //Initial
             gameObjects = new List<GameObject>();
-            this.debugger = debugger;
-
-            //创建静态GameObject
-            GameObject tempGo = new GameObject();
-            RuntimeReflector.SetPrivateStaticField(tempGo, "gameObjects", gameObjects);
-            //创建静态Object
-            Object tempObj = new Object();
-            RuntimeReflector.SetPrivateStaticField(tempObj, "gameObjects", gameObjects);
-            //销毁temp
-            tempObj = null;
-            Object.Destroy(tempGo);
+            Object.GameObjects = gameObjects;
         }
 
         public void Run(int tickPerSecond, bool allowMultiple = true)
@@ -51,7 +37,6 @@
             CreateGameObjects();
 
             Stopwatch stopwatch = new Stopwatch();
-            Time time = new Time();
             int tickTime = 1000 / tickPerSecond < 1 ? 1 : 1000 / tickPerSecond; //每帧因该花的时间(最少应为1毫秒)
             float deltaTime = 0; //这一帧距离上一帧的时间
             float totalTime = 0; //总执行时间
@@ -61,13 +46,11 @@
                 //开始计时
                 stopwatch.Restart();
                 //设置Time类属性
-                RuntimeReflector.SetPublicStaticProperty(time, "DeltaTime", deltaTime);
                 totalTime += deltaTime;
-                RuntimeReflector.SetPublicStaticProperty(time, "TotalTime", totalTime);
+                Time.DeltaTime = deltaTime;
+                Time.TotalTime = totalTime;
 
-                UpdateGameObjects();    //更新所有游戏物体
-                if (debugger != null)   //更新调试器
-                    debugger.Watch();
+                UpdateGameObjects();
 
                 //计算应该休眠的时间, 保证每秒运行相应Tick次数
                 int runTime = (int)stopwatch.ElapsedMilliseconds;
@@ -77,7 +60,6 @@
                     deltaTime = (float)tickTime / 1000;
                     Thread.Sleep(delayTime); //不是高精度计时器, 只能起到模拟的效果
                 }
-                //代码运行时间超过Tick一秒应该花的时间
                 else
                     deltaTime = (float)runTime / 1000;
             }
@@ -88,34 +70,24 @@
             Assembly assembly = RuntimeReflector.GetAssembly;
 
             List<KeyValuePair<uint, object>> pairs = new List<KeyValuePair<uint, object>>();
-            //获取游戏物体上的脚本
+            
             foreach (var type in assembly.GetTypes())
             {
                 CreatGameObject creatGameObject = type.GetCustomAttribute<CreatGameObject>();
-                //是否继承Script并且创建游戏物体
+                //继承Script并且使用特性[CreatGameObject]
                 if (type.IsSubclassOf(typeof(Script)) && creatGameObject != null)
-                {
                     pairs.Add(new KeyValuePair<uint, object>(creatGameObject.CreatOrder, type));
-                }
             }
-            //Sorting(order越小的越先调用)
+
             Mathematics.QuickSort(pairs);
+
             foreach (KeyValuePair<uint, object> pair in pairs)
             {
                 Type type = (Type)pair.Value;
                 CreatGameObject creatGameObject = type.GetCustomAttribute<CreatGameObject>();
 
-                //调用构造方法
-                GameObject gameObject = new GameObject(creatGameObject.Name);
-                //添加脚本组件(脚本必须包含public无参构造方法, 并且这里会调用一次构造)
-                gameObject.AddComponent(type);
-                //添加required组件
-                foreach (Type each in creatGameObject.RequiredComponents)
-                {
-                    //如果继承Component类型(必须包含public无参构造方法)
-                    if (each.IsSubclassOf(typeof(Component)))
-                        gameObject.AddComponent(each);
-                }
+                GameObject gameObject = new GameObject(creatGameObject.Name); //调用构造方法
+                gameObject.AddComponent(type); //添加脚本组件(脚本必须包含public无参构造方法, 并且这里会调用一次构造)
             }
         }
 
@@ -135,9 +107,7 @@
             for (int i = 0; i < gameObjects.Count; i++)
             {
                 GameObject gameObject = gameObjects[i];
-                
-                //反射获取components引用实现动态遍历components
-                List<Component> components = (List<Component>)RuntimeReflector.GetPrivateInstanceField(gameObject, "components");
+                List<Component> components = gameObject.Components;
 
                 for (int j = 0; j < components.Count; j++)
                 {

@@ -37,10 +37,5 @@
         {
             return InvokeSystem.IsInvoking(this, methodName);
         }
-
-        public override Component Clone()
-        {
-            throw new NotImplementedException("不要调用该方法!");
-        }
     }
 }

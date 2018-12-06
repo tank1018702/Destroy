@@ -11,7 +11,7 @@
     {
         private static void Main()
         {
-            RuntimeEngine runtimeEngine = new RuntimeEngine(new RuntimeDebugger());
+            RuntimeEngine runtimeEngine = new RuntimeEngine();
             runtimeEngine.Run(20);
         }
     }

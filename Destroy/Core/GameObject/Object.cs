@@ -7,28 +7,34 @@
 
     public class Object
     {
+        private string name;
         private bool active;
 
         /// <summary>
         /// 名字
         /// </summary>
-        public string Name;
+        public string Name
+        {
+            get => name;
+            set => name = value;
+        }
 
         /// <summary>
-        /// 是否激活
+        /// 激活
         /// </summary>
         public bool Active
         {
             get => active;
             set
             {
-                if (Name == "Transform" && value == false) //不能禁用Transform
+                //不能禁用继承IPersistent接口的对象
+                if (typeof(IPersistent).IsAssignableFrom(GetType()) && value == false) 
                     return;
                 active = value;
             }
         }
 
-        private static List<GameObject> gameObjects = new List<GameObject>();
+        internal static List<GameObject> GameObjects = new List<GameObject>();
 
         /// <summary>
         /// 销毁一个物体
@@ -36,17 +42,16 @@
         public static void Destroy(Object obj)
         {
             Type type = obj.GetType();
-            //不能销毁Transform组件
-            if (type == typeof(Transform))
+            //不能销毁继承IPersistent接口的对象
+            if (typeof(IPersistent).IsAssignableFrom(type))
                 return;
+
             //销毁组件
             if (type.IsSubclassOf(typeof(Component)))
             {
                 Component component = (Component)obj;
+                List<Component> components = component.gameObject.Components;
 
-                List<Component> components = (List<Component>)RuntimeReflector.GetPrivateInstanceField
-                    (component.gameObject, "components");
-                
                 //获取调用该方法的方法
                 StackTrace stackTrace = new StackTrace(true);
                 MethodBase method = stackTrace.GetFrame(1).GetMethod();
@@ -65,7 +70,7 @@
             else
             {
                 GameObject gameObject = (GameObject)obj;
-                gameObjects.Remove(gameObject);
+                GameObjects.Remove(gameObject);
             }
         }
 
