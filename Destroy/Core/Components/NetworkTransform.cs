@@ -2,14 +2,8 @@
 {
     public class NetworkTransform : Component
     {
-        public NetworkTransform() { }
+        public int SendRate;
 
-        public override Component Clone()
-        {
-            NetworkTransform netTransform = new NetworkTransform();
-            netTransform.Name = Name;
-            netTransform.Active = Active;
-            return netTransform;
-        }
+        public NetworkTransform() => SendRate = 20;
     }
 }

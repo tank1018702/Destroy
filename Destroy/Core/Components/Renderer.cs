@@ -19,17 +19,5 @@
             BackColor = ConsoleColor.Black;
             Depth = uint.MaxValue;
         }
-
-        public override Component Clone()
-        {
-            Renderer renderer = new Renderer();
-            renderer.Name = Name;
-            renderer.Active = Active;
-            renderer.Str = Str;
-            renderer.ForeColor = ForeColor;
-            renderer.BackColor = BackColor;
-            renderer.Depth = Depth;
-            return renderer;
-        }
     }
 }

@@ -5,30 +5,41 @@
     using System.Reflection;
     using System.Diagnostics;
 
+    //Don't modify this
     public class Object
     {
+        private string name;
         private bool active;
 
         /// <summary>
         /// 名字
         /// </summary>
-        public string Name;
+        public string Name
+        {
+            get => name;
+            set => name = value;
+        }
 
         /// <summary>
-        /// 是否激活
+        /// 激活
         /// </summary>
         public bool Active
         {
             get => active;
             set
             {
-                if (Name == "Transform" && value == false) //不能禁用Transform
+                //不能禁用继承IPersistent接口的对象
+                if (typeof(IPersistent).IsAssignableFrom(GetType()) && value == false)
                     return;
                 active = value;
             }
         }
 
-        private static List<GameObject> gameObjects = new List<GameObject>();
+        internal static List<GameObject> GameObjects = new List<GameObject>();
+
+        internal static bool DestroyedComponent;
+
+        internal static bool DestroyedGameObject;
 
         /// <summary>
         /// 销毁一个物体
@@ -36,36 +47,39 @@
         public static void Destroy(Object obj)
         {
             Type type = obj.GetType();
-            //不能销毁Transform组件
-            if (type == typeof(Transform))
+            //不能销毁继承IPersistent接口的对象
+            if (typeof(IPersistent).IsAssignableFrom(type))
                 return;
+
+            //获取调用该方法的类
+            StackTrace stackTrace = new StackTrace(true);
+            Type scriptType = stackTrace.GetFrame(1).GetMethod().DeclaringType;
+
             //销毁组件
             if (type.IsSubclassOf(typeof(Component)))
             {
                 Component component = (Component)obj;
-
-                List<Component> components = (List<Component>)RuntimeReflector.GetPrivateInstanceField
-                    (component.gameObject, "components");
-                
-                //获取调用该方法的方法
-                StackTrace stackTrace = new StackTrace(true);
-                MethodBase method = stackTrace.GetFrame(1).GetMethod();
-                string name = method.DeclaringType.Name;
-                //不能移除调用方法的脚本, 只禁用
-                if (name == component.Name)
-                {
-                    component.Active = false;
-                    return;
-                }
+                GameObject gameObject = component.gameObject;
+                //自己销毁自己脚本
+                bool SelfComponent = gameObject.GetComponent(scriptType) != null;
+                if (SelfComponent)
+                    DestroyedComponent = true;
 
                 //移除该组件
+                List<Component> components = gameObject.Components;
                 components.Remove(component);
             }
             //销毁游戏物体
             else
             {
                 GameObject gameObject = (GameObject)obj;
-                gameObjects.Remove(gameObject);
+                //自己销毁自己游戏物体
+                bool selfGameObject = gameObject.GetComponent(scriptType) != null;
+                if (selfGameObject)
+                    DestroyedGameObject = true;
+
+                //移除该游戏物体
+                GameObjects.Remove(gameObject);
             }
         }
 

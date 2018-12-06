@@ -1,7 +1,6 @@
 ﻿namespace Destroy
 {
 #if Debug
-
     using System;
     using System.Net;
     using System.Collections.Generic;
@@ -11,7 +10,7 @@
     {
         private static void Main()
         {
-            RuntimeEngine runtimeEngine = new RuntimeEngine(new RuntimeDebugger());
+            RuntimeEngine runtimeEngine = new RuntimeEngine();
             runtimeEngine.Run(20);
         }
     }

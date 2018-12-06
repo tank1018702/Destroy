@@ -73,26 +73,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Components\Camera.cs" />
+    <Compile Include="Core\Components\NetworkSpawner.cs" />
     <Compile Include="Core\Components\NetworkTransform.cs" />
     <Compile Include="Core\Components\Transform.cs" />
     <Compile Include="Core\Engine\LowLevelAPI.cs" />
-    <Compile Include="Core\Engine\RuntimeDebugger.cs" />
+    <Compile Include="Core\GameObject\IPersistent.cs" />
+    <Compile Include="Test\RuntimeDebugger.cs" />
     <Compile Include="Core\Engine\RuntimeReflactor.cs" />
     <Compile Include="Core\GameObject\Object.cs" />
     <Compile Include="Core\Math\Matrix.cs" />
-    <Compile Include="Core\Tools\ObjectPool.cs" />
+    <Compile Include="Test\ObjectPool.cs" />
     <Compile Include="Core\Tools\Singleton.cs" />
-    <Compile Include="Net\Messages\PlayerInfo.cs" />
-    <Compile Include="Net\Messages\Position.cs" />
-    <Compile Include="Net\Messages\RoomInfo.cs" />
+    <Compile Include="Test\CharacterController.cs" />
+    <Compile Include="Test\Messages\PlayerInfo.cs" />
+    <Compile Include="Test\Messages\Position.cs" />
+    <Compile Include="Test\Messages\RoomInfo.cs" />
     <Compile Include="Net\NetworkClient.cs" />
-    <Compile Include="Net\NetworkEnums.cs" />
     <Compile Include="Core\Systems\InvokeSystem.cs" />
     <Compile Include="Net\NetworkServer.cs" />
-    <Compile Include="Net\Player.cs" />
-    <Compile Include="Net\Room.cs" />
-    <Compile Include="Net\RoomClient.cs" />
-    <Compile Include="Net\RoomServer.cs" />
+    <Compile Include="Test\Player.cs" />
+    <Compile Include="Test\Room.cs" />
+    <Compile Include="Test\RoomClient.cs" />
+    <Compile Include="Test\RoomServer.cs" />
     <Compile Include="Core\Systems\NetworkSystem.cs" />
     <Compile Include="Core\Systems\RendererSystem.cs" />
     <Compile Include="Core\Tools\Audio.cs" />
@@ -121,6 +123,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Tools\Print.cs" />
     <Compile Include="Core\Tools\Serializer.cs" />
+    <Compile Include="Test\Network.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
