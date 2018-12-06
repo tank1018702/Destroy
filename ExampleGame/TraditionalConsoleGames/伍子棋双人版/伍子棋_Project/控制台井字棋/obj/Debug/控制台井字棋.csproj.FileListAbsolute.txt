@@ -1,6 +1,0 @@
-F:\MyCode\练习\控制台井字棋\bin\Debug\控制台井字棋.exe.config
-F:\MyCode\练习\控制台井字棋\bin\Debug\控制台井字棋.exe
-F:\MyCode\练习\控制台井字棋\bin\Debug\控制台井字棋.pdb
-F:\MyCode\练习\控制台井字棋\obj\Debug\控制台井字棋.csprojResolveAssemblyReference.cache
-F:\MyCode\练习\控制台井字棋\obj\Debug\控制台井字棋.exe
-F:\MyCode\练习\控制台井字棋\obj\Debug\控制台井字棋.pdb

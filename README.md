@@ -1,7 +1,6 @@
-# Destroy DEV 2.8.1
+# Destroy DEV 2.8.5
 
-#### DE · Charlie Presents
-#### DE · kyasever Presents
+#### DE · Charlie & kyasever Presents
 
 ### 介绍:
 Destroy是一个Windows控制台游戏框架。
@@ -68,13 +67,17 @@ https://github.com/ProcessCA/Boxhead
 
 1669247240@qq.com
 
-### test by kyasever
-
 ### 特别感谢 & 参考(排名不分先后):
 
 https://unity3d.com
 
 https://github.com/ollelogdahl/ConsoleGameEngine
+
+https://github.com/LitJSON/litjson
+
+https://github.com/tomakita/Colorful.Console
+
+https://github.com/mgravell/protobuf-net
 
 https://github.com/Easycker/ConsoleGameFramework
 

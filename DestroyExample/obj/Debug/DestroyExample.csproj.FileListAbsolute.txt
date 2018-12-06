@@ -1,0 +1,7 @@
+C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\bin\Debug\DestroyExample.exe.config
+C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\bin\Debug\DestroyExample.exe
+C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\bin\Debug\DestroyExample.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\obj\Debug\DestroyExample.csprojAssemblyReference.cache
+C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\obj\Debug\DestroyExample.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\obj\Debug\DestroyExample.exe
+C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\obj\Debug\DestroyExample.pdb
