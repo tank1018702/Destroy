@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Destroy
+﻿namespace Destroy.Test
 {
+    using System.Collections.Generic;
+
     public class Template
     {
         public string Id;

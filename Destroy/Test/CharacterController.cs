@@ -1,4 +1,4 @@
-﻿namespace Destroy
+﻿namespace Destroy.Test
 {
     using System;
 
@@ -6,6 +6,12 @@
     {
         public int Speed;
         public bool UseLegacy;
+
+        public CharacterController()
+        {
+            Speed = 10;
+            UseLegacy = false;
+        }
 
         private float timer = 0;
         private float _x = 0, _y = 0;

@@ -1,6 +1,5 @@
 ﻿namespace Destroy
 {
-#if Debug
     using System;
     using System.Net;
     using System.Collections.Generic;
@@ -14,5 +13,4 @@
             runtimeEngine.Run(20);
         }
     }
-#endif
 }

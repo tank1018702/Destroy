@@ -1,6 +1,7 @@
-# Destroy DEV 2.8
+# Destroy DEV 2.8.1
 
 #### DE · Charlie Presents
+#### DE · kyasever Presents
 
 ### 介绍:
 Destroy是一个Windows控制台游戏框架。
