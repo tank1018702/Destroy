@@ -82,7 +82,7 @@
     <Compile Include="Core\GameObject\Object.cs" />
     <Compile Include="Core\Math\Matrix.cs" />
     <Compile Include="Standard\ObjectPool.cs" />
-    <Compile Include="Core\Tools\Singleton.cs" />
+    <Compile Include="Standard\Singleton.cs" />
     <Compile Include="Test\CharacterController.cs" />
     <Compile Include="Test\Messages\PlayerInfo.cs" />
     <Compile Include="Test\Messages\Position.cs" />

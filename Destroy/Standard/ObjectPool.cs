@@ -8,6 +8,9 @@
     /// </summary>
     public delegate GameObject Instantiate();
 
+    /// <summary>
+    /// 对象池
+    /// </summary>
     public class ObjectPool
     {
         private Instantiate instantiate;
