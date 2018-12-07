@@ -2,23 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Reflection;
     using System.Diagnostics;
 
-    //Don't modify this
     public class Object
     {
-        private string name;
         private bool active;
 
         /// <summary>
         /// 名字
         /// </summary>
-        public string Name
-        {
-            get => name;
-            set => name = value;
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// 激活
