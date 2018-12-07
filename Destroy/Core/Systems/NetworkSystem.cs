@@ -1,5 +1,6 @@
 ﻿namespace Destroy
 {
+    using System;
     using System.Collections.Generic;
 
     public static class NetworkSystem
@@ -20,14 +21,43 @@
             NetworkSystem.client?.Start();
         }
 
+        static bool choose = false;
+
         internal static void Update(List<GameObject> gameObjects)
         {
+            //if (!choose)
+            //{
+            //    choose = true;
+            //    Print.DrawLine("1.client, 2.server", ConsoleColor.White);
+            //    int input = int.Parse(Console.ReadLine());
+            //    switch (input)
+            //    {
+            //        case 1:
+            //            {
+            //                Print.DrawLine("1.client, 2.server", ConsoleColor.White);
+                            
+            //            }
+            //            break;
+            //        case 2:
+            //            {
+
+            //            }
+            //            break;
+            //        default:
+            //            {
+            //                throw new Exception();
+            //            }
+            //    }
+            //    Console.Clear();
+            //}
+
+
             server?.Handle();
             client?.Handle();
             foreach (var udp in udps)
                 udp.Handle();
 
-            
+
             //foreach (GameObject gameObject in gameObjects)
             //{
             //    if (!gameObject.Active)

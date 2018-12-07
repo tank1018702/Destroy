@@ -13,7 +13,6 @@
             UseLegacy = false;
         }
 
-        private float timer = 0;
         private float _x = 0, _y = 0;
 
         public override void Update()

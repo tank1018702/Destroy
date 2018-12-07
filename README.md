@@ -1,4 +1,4 @@
-# Destroy DEV 2.8.5
+# Destroy DEV 2.9
 
 #### DE · Charlie & kyasever Presents
 
@@ -29,27 +29,23 @@ Destroy已经从DE(原型开发)升级到了DEV(初期开发)阶段, 但依然�
 
 ### TODO:
 
-0. 优化核心代码
+1. UI系统, 标准UI组件与对话框
 
-1. 场景树
+2. 可视化调试器
 
-2. UI系统, 标准UI组件与对话框
+3. 使用C++API的渲染系统
 
-3. 可视化调试器
+4. 标准网络代码与局域网房间系统
 
-4. 使用C++API的渲染系统
+5. AI寻路系统
 
-5. 标准网络代码与局域网房间系统
+6. 扩展物理组件
 
-6. AI寻路系统
-
-7. 扩展物理组件(物理碰撞集群)
+7. 扩展渲染组件
 
 8. 部分功能组件化
 
-9. 外部工具整合(Porsche, protobuf tool)
-
-10. 标准化设置
+9. 标准化设置
 
 ### 文档:
 
@@ -62,6 +58,8 @@ https://github.com/ProcessCA/Boxhead
 ### 已知Bug:
 
 1. 渲染字体时出现问题
+
+2. InvokeSystem
 
 ### 提交Bug:
 
@@ -78,11 +76,3 @@ https://github.com/LitJSON/litjson
 https://github.com/tomakita/Colorful.Console
 
 https://github.com/mgravell/protobuf-net
-
-https://github.com/Easycker/ConsoleGameFramework
-
-https://github.com/KristianBalaj/2d-console-game-engine
-
-https://github.com/MaxMls/WindowsConsoleGame
-
-https://github.com/jilleJr/YummyConsole

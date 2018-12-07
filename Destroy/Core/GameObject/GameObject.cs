@@ -16,7 +16,7 @@
             foreach (var each in Components)
                 if (each.GetType() == type)
                     return null;
-            Assembly assembly = RuntimeReflector.GetAssembly;
+            Assembly assembly = RuntimeEngine.GetAssembly;
 
             Component component = (Component)assembly.CreateInstance($"{type.Namespace}.{type.Name}");
             component.Name = type.Name;
@@ -61,9 +61,9 @@
         {
             Name = "GameObject";
             Active = true;
-            Components = new List<Component>();
             Tag = "None";
             gameObject = this;
+            Components = new List<Component>();
             transform = AddComponent<Transform>(); //添加默认组件
             transform.transform = transform;
             RuntimeEngine.Manage(this); //进入托管模式
@@ -76,9 +76,9 @@
         {
             Name = name;
             Active = true;
-            Components = new List<Component>();
             Tag = "None";
             gameObject = this;
+            Components = new List<Component>();
             transform = AddComponent<Transform>(); //添加默认组件
             transform.transform = transform;
             RuntimeEngine.Manage(this); //进入托管模式
@@ -168,43 +168,33 @@
         }
 
         /// <summary>
-        /// 克隆一个游戏物体
+        /// 获取该游戏物体的预制体
         /// </summary>
-        public static GameObject Clone(GameObject gameObject)
+        public static GameObject GetPrefab(GameObject gameObject)
         {
-            ///// <summary>
-            ///// 克隆接口, 继承Script的类不会被复制而会被重新实例化
-            ///// </summary>
-            //public GameObject Clone()
-            //{
-            //    GameObject cloneGameObject = new GameObject
-            //    {
-            //        Name = Name,
-            //        Active = Active,
-            //        Tag = Tag
-            //    };
-            //    //获取引用
-            //    List<Component> list = RuntimeReflector.GetPrivateInstanceField(cloneGameObject, "components") as List<Component>;
-            //    foreach (var component in components)
-            //    {
-            //        if (component.Name == "Transform") //不添加重复组件
-            //            continue;
+            GameObject prefab = new GameObject();
+            prefab.Name = gameObject.Name;
+            prefab.Active = gameObject.Active;
+            prefab.Tag = gameObject.Tag;
+            GameObjects.Remove(prefab); //从场景中移除
+            //复制gameObject的组件
+            foreach (var component in gameObject.Components)
+            {
+                Type type = component.GetType();
+                //不添加持久性组件
+                if (typeof(IPersistent).IsAssignableFrom(type))
+                    continue;
+                //添加组件
+                Component prefabComponent = prefab.AddComponent(type);
+                //修改值
+                FieldInfo[] fields = type.GetFields();
+                foreach (var field in fields)
+                {
+                    object value = field.GetValue(component);
+                    field.SetValue(prefabComponent, value);
+                }
+            }
 
-            //        Type type = component.GetType();
-            //        if (type.IsSubclassOf(typeof(Script)))
-            //        {
-            //            cloneGameObject.AddComponent(type); //脚本实例化
-            //        }
-            //        else
-            //        {
-            //            Component clone = component.Clone();
-            //            clone.gameObject = cloneGameObject;
-            //            clone.transform = cloneGameObject.transform;
-            //            list.Add(clone);
-            //        }
-            //    }
-            //    return cloneGameObject;
-            //}
             throw new NotImplementedException();
         }
 
