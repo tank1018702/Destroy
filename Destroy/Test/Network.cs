@@ -7,12 +7,7 @@
     {
         public override void Start()
         {
-            NetworkServer server = new NetworkServer(8848);
-            
-
-            NetworkSystem.Init(server, null, null);
 
         }
-
     }
 }

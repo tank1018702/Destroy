@@ -53,7 +53,7 @@ Destroy已经从DE(原型开发)升级到了DEV(初期开发)阶段, 但依然�
 
 ### 示例项目:
 
-https://github.com/ProcessCA/Boxhead
+https://github.com/ProcessCA/Destroy/tree/master/DestroyExample
 
 ### 已知Bug:
 
