@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Reflection;
 
-    public sealed class GameObject : Object
+    public class GameObject : Object
     {
         internal List<Component> Components;
 
@@ -47,41 +47,25 @@
         /// <summary>
         /// 游戏物体
         /// </summary>
-        public GameObject gameObject { get; private set; }
+        public GameObject gameObject { get; protected set; }
 
         /// <summary>
         /// Transform组件
         /// </summary>
-        public Transform transform { get; private set; }
+        public Transform transform { get; protected set; }
 
         /// <summary>
         /// 创建一个游戏物体
         /// </summary>
-        public GameObject()
-        {
-            Name = "GameObject";
-            Active = true;
-            Tag = "None";
-            gameObject = this;
-            Components = new List<Component>();
-            transform = AddComponent<Transform>(); //添加默认组件
-            transform.transform = transform;
-            RuntimeEngine.Manage(this); //进入托管模式
-        }
+        public GameObject() => Init();
 
         /// <summary>
         /// 创建一个游戏物体
         /// </summary>
         public GameObject(string name)
         {
+            Init();
             Name = name;
-            Active = true;
-            Tag = "None";
-            gameObject = this;
-            Components = new List<Component>();
-            transform = AddComponent<Transform>(); //添加默认组件
-            transform.transform = transform;
-            RuntimeEngine.Manage(this); //进入托管模式
         }
 
         /// <summary>
@@ -141,6 +125,21 @@
         public int ComponentCount => Components.Count;
 
         /// <summary>
+        /// 初始化
+        /// </summary>
+        private void Init()
+        {
+            Name = "GameObject";
+            Active = true;
+            Tag = "None";
+            gameObject = this;
+            Components = new List<Component>();
+            transform = AddComponent<Transform>(); //添加默认组件
+            transform.transform = transform;
+            RuntimeEngine.Manage(this); //进入托管模式
+        }
+
+        /// <summary>
         /// 根据名字寻找游戏物体, 若有多个同名物体也只返回一个。
         /// </summary>
         public static GameObject Find(string name)
@@ -165,37 +164,6 @@
                     list.Add(gameObject);
             }
             return list.ToArray();
-        }
-
-        /// <summary>
-        /// 获取该游戏物体的预制体
-        /// </summary>
-        public static GameObject GetPrefab(GameObject gameObject)
-        {
-            GameObject prefab = new GameObject();
-            prefab.Name = gameObject.Name;
-            prefab.Active = gameObject.Active;
-            prefab.Tag = gameObject.Tag;
-            GameObjects.Remove(prefab); //从场景中移除
-            //复制gameObject的组件
-            foreach (var component in gameObject.Components)
-            {
-                Type type = component.GetType();
-                //不添加持久性组件
-                if (typeof(IPersistent).IsAssignableFrom(type))
-                    continue;
-                //添加组件
-                Component prefabComponent = prefab.AddComponent(type);
-                //修改值
-                FieldInfo[] fields = type.GetFields();
-                foreach (var field in fields)
-                {
-                    object value = field.GetValue(component);
-                    field.SetValue(prefabComponent, value);
-                }
-            }
-
-            throw new NotImplementedException();
         }
 
         /// <summary>

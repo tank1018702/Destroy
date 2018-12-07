@@ -4,8 +4,16 @@
     using Destroy;
     using Destroy.Test;
 
-    [CreatGameObject]
-    internal class ExampleGame: Script
+    [CreatGameObject(0)]
+    internal class Test : Script
+    {
+        public override void Start()
+        {
+        }
+    }
+
+    //[CreatGameObject]
+    internal class ExampleGame : Script
     {
         public override void Start()
         {
