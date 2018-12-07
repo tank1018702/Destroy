@@ -4,15 +4,19 @@
     using Destroy;
     using Destroy.Test;
 
-    [CreatGameObject(0)]
+    //[CreatGameObject(0)]
     internal class Test : Script
     {
         public override void Start()
         {
+
+
+
+
         }
     }
 
-    //[CreatGameObject]
+    [CreatGameObject]
     internal class ExampleGame : Script
     {
         public override void Start()
@@ -24,16 +28,28 @@
             camera.Width = 20;
             RendererSystem.Init(go);
 
-            Renderer renderer = AddComponent<Renderer>();
-            renderer.Str = "吊";
-            AddComponent<Collider>();
-            AddComponent<CharacterController>();
+            //Renderer renderer = AddComponent<Renderer>();
+            //renderer.Str = "吊";
+            //AddComponent<Collider>();
+            //AddComponent<CharacterController>();
 
-            GameObject wall = new GameObject();
-            Renderer r = wall.AddComponent<Renderer>();
-            r.Str = "墙";
-            wall.transform.Position = new Vector2Int(5, 0);
-            Collider c = wall.AddComponent<Collider>();
+            //GameObject wall = new GameObject();
+            //Renderer r = wall.AddComponent<Renderer>();
+            //r.Str = "墙";
+            //wall.transform.Position = new Vector2Int(5, 0);
+            //Collider c = wall.AddComponent<Collider>();
+
+            NetworkSystem.CreatSelf += () =>
+            {
+                return gameObject;
+            };
+            NetworkSystem.CreatOther += () =>
+            {
+                GameObject other = new GameObject();
+                Renderer r = other.AddComponent<Renderer>();
+                r.Str = "牛";
+                return other;
+            };
         }
 
         public override void OnCollision(Collider collision)

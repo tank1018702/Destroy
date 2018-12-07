@@ -1,12 +1,16 @@
 ﻿namespace Destroy
 {
     using System;
+    using Destroy.Standard;
     using ProtoBuf;
     using System.Collections.Generic;
     using System.Net.Sockets;
 
     public static class NetworkSystem
     {
+        public static Instantiate CreatSelf;
+        public static Instantiate CreatOther;
+
         private static bool choose = false;
         private static Server server;
         private static Client client;
@@ -23,7 +27,7 @@
                 {
                     case 1:
                         {
-                            client = new Client(NetworkUtils.LocalIPv4Str, 8848);
+                            client = new Client(CreatSelf, CreatOther, NetworkUtils.LocalIPv4Str, 8848);
                         }
                         break;
                     case 2:
@@ -46,9 +50,7 @@
                 server?.Broadcast();
 
             if (clientTimer >= 0.01f)
-            {
-
-            }
+                client?.Sync();
 
             //foreach (GameObject gameObject in gameObjects)
             //{
@@ -130,23 +132,29 @@
 
     public class Client
     {
+        bool start;
+        Instantiate creatSelf;
+        Instantiate creatOther;
         int id;
         int frame;
         GameObject self;
-        List<Position> positions;
         List<GameObject> objects;
+        List<Position> positions;
         NetworkClient client;
 
-        public Client(string ip, int port)
+        public Client(Instantiate creatSelf, Instantiate creatOther, string ip, int port)
         {
+            start = false;
+            this.creatSelf = creatSelf;
+            this.creatOther = creatOther;
             id = 0;
             frame = 0;
             self = null;
-            positions = new List<Position>();
             objects = new List<GameObject>();
+            positions = new List<Position>();
             client = new NetworkClient(ip, port);
-
             client.Register((ushort)Role.Server, (ushort)Command.StartSync, StartSync);
+            client.Register((ushort)Role.Server, (ushort)Command.PosSync, PosSync);
         }
 
         private void StartSync(byte[] data)
@@ -155,8 +163,48 @@
             id = startSync.YourId;
             frame = startSync.Frame;
             positions = startSync.Positions;
+            //创建self
+            foreach (Position position in positions)
+            {
+                if (position.Id == id) //创建自己
+                {
+                    self = creatSelf();
+                    self.transform.Position = new Vector2Int(position.X, position.Y);
+                }
+                else
+                {
+                    GameObject other = creatOther();
+                    other.transform.Position = new Vector2Int(position.X, position.Y);
+                    objects.Add(other);
+                }
+            }
+            start = true;
+        }
 
+        private void PosSync(byte[] data)
+        {
+            S2C_PosSync posSync = Serializer.NetDeserialize<S2C_PosSync>(data);
+            //更新位置
+            frame = posSync.Frame;
+            positions = posSync.Positions;
 
+            foreach (var item in positions)
+            {
+                if (item.Id == id) //同步别人
+                    continue;
+                objects[item.Id].transform.Position = new Vector2Int(item.X, item.Y);
+            }
+        }
+
+        public void Sync()
+        {
+            if (!start)
+                return;
+            C2S_PosSync posSync = new C2S_PosSync();
+            posSync.Frame = frame;
+            posSync.Position = new Position(id, self.transform.Position.X, self.transform.Position.Y);
+            //同步自己坐标
+            client.Send((ushort)Role.Client, (ushort)Command.PosSync, posSync);
         }
     }
 
