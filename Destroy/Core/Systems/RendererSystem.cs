@@ -4,11 +4,18 @@
     using System.Collections.Generic;
     using System.Text;
 
+    /*
+     * 12/7 by Kyasever
+     * 新增了复杂渲染系统,暂时使用了清空刷新,当检测到变动时,无条件先输出一行空格清空,然后再输入改动后的内容
+     * 之后版本要重新优化
+     * TODO: 
+     * 新建render类 作为贴图静态数据 renderer是渲染器,用来容纳render
+     * 代码比较混乱,需要重构
+     */
     public static class RendererSystem
     {
         public static ConsoleColor DefaultColorFore = ConsoleColor.Gray;
         public static ConsoleColor DefaultColorBack = ConsoleColor.Black;
-
         private static GameObject camera;
         private static Matrix world2camera; //顺时针旋转坐标系90度
         private static int charWidth;
@@ -86,27 +93,15 @@
                 {
                     continue;
                 }
-                //如果是组渲染器,那么包含一系列的点.如果是点渲染器或者字符串渲染器,则只包含一个点
-                if (renderer.GetType() == typeof(GroupRenderer))
+
+                Transform transform = gameObject.GetComponent<Transform>();
+                if (IsInCamera(transform.Position))
                 {
-                    GroupRenderer gr = renderer as GroupRenderer;
-                    foreach (KeyValuePair<Renderer, Vector2Int> v in gr.list)
-                    {
-                        Transform transform = gameObject.GetComponent<Transform>();
-                        if (IsInCamera(v.Value + transform.Position))
-                        {
-                            pairs.Add(new KeyValuePair<uint, object>(renderer.Depth, v.Key));
-                        }
-                    }
+                    pairs.Add(new KeyValuePair<uint, object>(renderer.Depth, renderer));
                 }
-                else
-                {
-                    Transform transform = gameObject.GetComponent<Transform>();
-                    if (IsInCamera(transform.Position))
-                    {
-                        pairs.Add(new KeyValuePair<uint, object>(renderer.Depth, renderer));
-                    }
-                }
+
+
+
             }
             //pairs.Sort();
             Mathematics.QuickSort(pairs);
@@ -116,11 +111,29 @@
             {
                 Renderer renderer = (Renderer)pair.Value;
 
-                Transform transform = renderer.GetComponent<Transform>();
+                //如果是组渲染器,那么包含一系列的点.如果是点渲染器或者字符串渲染器,则只包含一个点
+                if (renderer.GetType() == typeof(GroupRenderer))
+                {
+                    GroupRenderer gr = renderer as GroupRenderer;
+                    foreach (KeyValuePair<Renderer, Vector2Int> v in gr.list)
+                    {
+                        Transform transform = renderer.GetComponent<Transform>();
+                        Vector2Int vector = transform.Position + v.Value - cameraPos;
+                        vector *= world2camera;     //获得该点在摄像机坐标系中的位置
+                        if(vector.X>0&&vector.X<width&&vector.Y>0&&vector.Y<height)
+                            renderers[vector.X, vector.Y] = v.Key;
+                    }
+                }
+                else
+                {
+                    Transform transform = renderer.GetComponent<Transform>();
 
-                Vector2Int vector = transform.Position - cameraPos;
-                vector *= world2camera;     //获得该点在摄像机坐标系中的位置
-                renderers[vector.X, vector.Y] = renderer;
+                    Vector2Int vector = transform.Position - cameraPos;
+                    vector *= world2camera;     //获得该点在摄像机坐标系中的位置
+                    renderers[vector.X, vector.Y] = renderer;
+                }
+
+
             }
 
             DisplayGameObjects();
@@ -158,56 +171,12 @@
                     Renderer renderer = renderers[i, j];
                     Renderer bufferRenderer = rendererBuffers[i, j];
                     //Diff
-                    if (renderer == null && bufferRenderer != null)
-                    {
-                        Console.SetCursorPosition(j * charWidth, i);
-                        if (bufferRenderer.GetType() == typeof(PosRenderer))
-                        {
-                            //如果是点贴图,插入一个字符宽度的空格
-                            StringBuilder builder = new StringBuilder();
-                            for (int k = 0; k < charWidth; k++)
-                            {
-                                builder.Append(" ");
-                            }
-
-                            string space = builder.ToString();
-                            Print.Draw(space, DefaultColorFore, DefaultColorBack);
-                        }
-                        else if (bufferRenderer.GetType() == typeof(StringRenderer))
-                        {
-                            int length = ((StringRenderer)bufferRenderer).length;
-
-                            //i表示是横排的第j个格子,总数量为renderers.GetLength(1)
-                            //表示剩余几个格子到头
-                            int releaseLength = (renderers.GetLength(1) - j) * charWidth;
-
-                            //如果是字符串贴图,插入一个字符宽度的空格
-                            StringBuilder builder = new StringBuilder();
-                            for (int k = 0; k < Math.Min(length, releaseLength); k++)
-                            {
-                                builder.Append(" ");
-                            }
-
-                            string space = builder.ToString();
-                            Print.Draw(space, DefaultColorFore, DefaultColorBack);
-                        }
-                    }
-                }
-            }
-            //再写入新的字符串对象
-            for (int i = 0; i < renderers.GetLength(0); i++)
-            {
-                for (int j = 0; j < renderers.GetLength(1); j++)
-                {
-                    Renderer renderer = renderers[i, j];
-                    Renderer bufferRenderer = rendererBuffers[i, j];
                     //Diff
                     if (renderer != bufferRenderer)
                     {
                         Console.SetCursorPosition(j * charWidth, i);
-                        if (renderer == null && bufferRenderer != null)
+                        if (bufferRenderer != null)
                         {
-                            /*
                             if (bufferRenderer.GetType() == typeof(PosRenderer))
                             {
                                 //如果是点贴图,插入一个字符宽度的空格
@@ -234,14 +203,25 @@
                                 {
                                     builder.Append(" ");
                                 }
-
                                 string space = builder.ToString();
                                 Print.Draw(space, DefaultColorFore, DefaultColorBack);
                             }
-                            */
                         }
-                        //renderer更新为新字符
-                        else
+                    }
+                }
+            }
+            //再写入新的字符串对象
+            for (int i = 0; i < renderers.GetLength(0); i++)
+            {
+                for (int j = 0; j < renderers.GetLength(1); j++)
+                {
+                    Renderer renderer = renderers[i, j];
+                    Renderer bufferRenderer = rendererBuffers[i, j];
+                    //Diff
+                    if (renderer != bufferRenderer)
+                    {
+                        Console.SetCursorPosition(j * charWidth, i);
+                        if (renderer != null)
                         {
                             if (renderer.GetType() == typeof(PosRenderer))
                             {

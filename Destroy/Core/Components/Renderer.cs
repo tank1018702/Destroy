@@ -4,7 +4,13 @@
     using System.Collections.Generic;
     using System.Text;
 
-    //BlockRenderer
+    /*
+     * 12/7 by Kyasever
+     * Renderer通过继承分为了三个组件:
+     * StringRenderer 用于渲染一句字符串
+     * PosRenderer 
+     * 之后版本要重新优化
+     */
 
     public class Renderer : Component
     {
@@ -54,6 +60,15 @@
         }
         //保存着这个字符串的长度
         public int length;
+
+        public StringRenderer(string s)
+        {
+            Str = s;
+            ForeColor = ConsoleColor.Gray;
+            BackColor = ConsoleColor.Black;
+            Depth = uint.MaxValue;
+        }
+
         public StringRenderer()
         {
             Str = "";

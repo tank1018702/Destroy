@@ -20,6 +20,20 @@
     }
 
     [CreatGameObject]
+    public class Player3 : Script
+    {
+        public override void Start()
+        {
+            transform.Translate(new Vector2Int(6, -6));
+            //PosRenderer sr = AddComponent<PosRenderer>();
+            StringRenderer sr = AddComponent<StringRenderer>();
+            sr.Str = "12345678912123123123123123";
+            AddComponent<CharacterController>();
+            Console.CursorVisible = false;
+        }
+    }
+
+    [CreatGameObject]
     public class Player2 : Script
     { 
         public override void Start()
@@ -27,10 +41,9 @@
             transform.Translate(new Vector2Int(10, -10));
             //PosRenderer sr = AddComponent<PosRenderer>();
             GroupRenderer sr = AddComponent<GroupRenderer>();
-            sr.list.Add(new KeyValuePair<Renderer, Vector2Int>(new PosRenderer("吊人人"), new Vector2Int(0, 0)));
-            sr.list.Add(new KeyValuePair<Renderer, Vector2Int>(new PosRenderer("人吊人"), new Vector2Int(0, -1)));
-            sr.list.Add(new KeyValuePair<Renderer, Vector2Int>(new PosRenderer("人人吊"), new Vector2Int(0, -2)));
-
+            sr.list.Add(new KeyValuePair<Renderer, Vector2Int>(new StringRenderer("吊人人"), new Vector2Int(-1, 1)));
+            sr.list.Add(new KeyValuePair<Renderer, Vector2Int>(new PosRenderer("吊"), new Vector2Int(0, 0)));
+            sr.list.Add(new KeyValuePair<Renderer, Vector2Int>(new StringRenderer("人人吊"), new Vector2Int(-1, -1)));
             AddComponent<CharacterController>();
         }
     }
