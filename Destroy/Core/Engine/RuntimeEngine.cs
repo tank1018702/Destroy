@@ -30,6 +30,7 @@
             gameObjects = new List<GameObject>();
             Manage += gameObject => gameObjects.Add(gameObject);
             Object.GameObjects = gameObjects;
+
         }
 
         public void Run(int tickPerSecond, bool allowMultiple = true)
