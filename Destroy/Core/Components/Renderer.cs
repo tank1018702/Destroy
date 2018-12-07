@@ -12,7 +12,7 @@
      * 之后版本要重新优化
      */
 
-    public class Renderer : Component
+    public abstract class Renderer : Component
     {
         /// <summary>
         /// 为0时脚本显示优先级最高(最后被渲染), 然后向着数轴正方向递减。

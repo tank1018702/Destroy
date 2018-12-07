@@ -90,7 +90,7 @@
         /// <summary>
         /// 获取指定的类型及其子类
         /// </summary>
-        public T GetComponent<T>() where T : Component, new()
+        public T GetComponent<T>() where T : Component
         {
             Type t = typeof(T);
             foreach (var component in Components)
@@ -105,7 +105,7 @@
         /// <summary>
         /// 获取所有指定的类型及其子类
         /// </summary>
-        public List<T> GetComponents<T>() where T : Component, new()
+        public List<T> GetComponents<T>() where T : Component
         {
             List<T> list = new List<T>();
             foreach (var component in Components)

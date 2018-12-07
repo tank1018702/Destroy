@@ -19,6 +19,8 @@
 
         internal static void Update(List<GameObject> gameObjects)
         {
+            return;
+
             if (!choose)
             {
                 choose = true;
