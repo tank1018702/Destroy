@@ -1,32 +1,45 @@
 ﻿namespace Destroy.Test
 {
     using System.Collections.Generic;
+    using System.Linq;
 
-    public class Template
+    public class ObjectPool
     {
-        public string Id;
-        public GameObject Go;
-        public int Size;
+        private GameObject prefab;
 
-        public Template(string id, GameObject go, int size)
+        private readonly List<GameObject> pool;
+
+        public ObjectPool(GameObject prefab)
         {
-            Id = id;
-            Go = go;
-            Size = size;
+            this.prefab = prefab;
+            pool = new List<GameObject>();
         }
-    }
 
-    /// <summary>
-    /// TODO
-    /// </summary>
-    public static class ObjectPool
-    {
-        private static readonly Dictionary<string, List<GameObject>> pools = new Dictionary<string, List<GameObject>>();
-
-        public static void Init(Template template)
+        public void PreAllocate(int count)
         {
-            if (pools.ContainsKey(template.Id))
-                return;
+            for (int i = 0; i < count; i++)
+            {
+                GameObject instance = new GameObject(); //TODO Copy Prefab
+                ReturnInstance(instance);
+            }
+        }
+
+        public GameObject GetInstance()
+        {
+            if (pool.Any())
+            {
+                GameObject instance = pool.First();
+                pool.Remove(instance);
+                instance.Active = true;
+                return instance;
+            }
+            return new GameObject(); //TODO Copy Prefab
+        }
+
+        public void ReturnInstance(GameObject instance)
+        {
+            instance.Active = false;
+            pool.Add(instance);
         }
     }
 }

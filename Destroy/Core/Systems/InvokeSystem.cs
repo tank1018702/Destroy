@@ -101,8 +101,10 @@
         public static void Update()
         {
             List<InvokeRequest> removeRequests = new List<InvokeRequest>();
-            foreach (InvokeRequest request in requests)
+            for (int i = 0; i < requests.Count; i++)
             {
+                InvokeRequest request = requests[i];
+
                 request.DelayTime -= Time.DeltaTime;
                 if (request.DelayTime > 0)
                     continue;
@@ -118,15 +120,17 @@
                 requests.Remove(request);
 
             List<DelayAction> removeActions = new List<DelayAction>();
-            foreach (DelayAction delayAction in delayActions)
+            for (int i = 0; i < delayActions.Count; i++)
             {
+                DelayAction delayAction = delayActions[i];
+
                 delayAction.DelayTime -= Time.DeltaTime;
                 if (delayAction.DelayTime > 0)
                     continue;
                 removeActions.Add(delayAction); //准备移除
                 if (delayAction.Action == null)
                     continue;
-                delayAction.Action(); //调用
+                delayAction.Action();           //调用
             }
             //移除
             foreach (DelayAction delayAction in removeActions)

@@ -1,7 +1,5 @@
 ﻿namespace Destroy
 {
-    using System;
-
     public abstract class Script : Component
     {
         public bool Started;
@@ -36,6 +34,30 @@
         public bool IsInvoking(string methodName)
         {
             return InvokeSystem.IsInvoking(this, methodName);
+        }
+
+        [System.Obsolete("Dont use this for now")]
+        /// 重复延迟调用一个方法(该方法必须为实例无参public方法)
+        public void InvokeRepeating(string methodName, float delayTime, float repeatTime)
+        {
+            Invoke(methodName, delayTime);
+
+            InvokeSystem.AddDelayAction(() =>
+            {
+                Invoke(methodName, repeatTime);
+
+                void Repeat()
+                {
+                    Invoke(methodName, repeatTime);
+                    InvokeSystem.AddDelayAction(Repeat, repeatTime);
+                }
+
+                InvokeSystem.AddDelayAction(() =>
+                {
+                    Repeat();
+                }, repeatTime);
+
+            }, delayTime);
         }
     }
 }

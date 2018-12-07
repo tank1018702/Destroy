@@ -1,5 +1,6 @@
 ﻿namespace DestroyExample
 {
+    using System;
     using Destroy;
     using Destroy.Test;
 
@@ -20,11 +21,11 @@
             AddComponent<Collider>();
             AddComponent<CharacterController>();
 
-            GameObject collider = new GameObject();
-            Renderer r = collider.AddComponent<Renderer>();
+            GameObject wall = new GameObject();
+            Renderer r = wall.AddComponent<Renderer>();
             r.Str = "墙";
-            collider.transform.Position = new Vector2Int(5, 0);
-            Collider c = collider.AddComponent<Collider>();
+            wall.transform.Position = new Vector2Int(5, 0);
+            Collider c = wall.AddComponent<Collider>();
         }
 
         public override void OnCollision(Collider collision)

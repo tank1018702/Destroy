@@ -10,6 +10,18 @@
     {
         public Thread GameThread { get; private set; }
 
+        private static Assembly assembly;
+
+        internal static Assembly GetAssembly
+        {
+            get
+            {
+                if (assembly == null)
+                    assembly = Assembly.GetEntryAssembly();
+                return assembly;
+            }
+        }
+
         private readonly List<GameObject> gameObjects;
 
         public RuntimeEngine()
@@ -28,7 +40,7 @@
                 if (!nonexsitent)
                     Environment.Exit(0);
             }
-            
+
             GameThread = Thread.CurrentThread;
             GameThread.Name = "GameThread";
 
@@ -65,10 +77,10 @@
 
         private void CreateGameObjects()
         {
-            Assembly assembly = RuntimeReflector.GetAssembly;
+            Assembly assembly = RuntimeEngine.GetAssembly;
 
             List<KeyValuePair<uint, object>> pairs = new List<KeyValuePair<uint, object>>();
-            
+
             foreach (var type in assembly.GetTypes())
             {
                 CreatGameObject creatGameObject = type.GetCustomAttribute<CreatGameObject>();
@@ -132,8 +144,10 @@
                         continue;
                     if (start)                     //调用Start
                         script.Started = true;
-                    RuntimeReflector.InvokePublicInstanceMethod(script, methodName, parameters);
-
+                    //调用该方法
+                    script.GetType().GetMethod(methodName).
+                        Invoke(script, BindingFlags.Public | BindingFlags.Instance, null, parameters, null);
+                    //保证执行顺序不会出现问题
                     if (Object.DestroyedComponent)
                     {
                         j--;
