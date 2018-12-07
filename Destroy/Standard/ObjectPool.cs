@@ -1,17 +1,22 @@
-﻿namespace Destroy.Test
+﻿namespace Destroy.Standard
 {
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    /// 使用该方法创建一个游戏物体
+    /// </summary>
+    public delegate GameObject Instantiate();
+
     public class ObjectPool
     {
-        private GameObject prefab;
+        private Instantiate instantiate;
 
         private readonly List<GameObject> pool;
 
-        public ObjectPool(GameObject prefab)
+        public ObjectPool(Instantiate instantiate)
         {
-            this.prefab = prefab;
+            this.instantiate = instantiate;
             pool = new List<GameObject>();
         }
 
@@ -19,7 +24,7 @@
         {
             for (int i = 0; i < count; i++)
             {
-                GameObject instance = new GameObject(); //TODO Copy Prefab
+                GameObject instance = instantiate();
                 ReturnInstance(instance);
             }
         }
@@ -33,7 +38,7 @@
                 instance.Active = true;
                 return instance;
             }
-            return new GameObject(); //TODO Copy Prefab
+            return instantiate();
         }
 
         public void ReturnInstance(GameObject instance)

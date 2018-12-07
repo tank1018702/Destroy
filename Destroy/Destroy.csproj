@@ -81,7 +81,7 @@
     <Compile Include="Test\RuntimeDebugger.cs" />
     <Compile Include="Core\GameObject\Object.cs" />
     <Compile Include="Core\Math\Matrix.cs" />
-    <Compile Include="Test\ObjectPool.cs" />
+    <Compile Include="Standard\ObjectPool.cs" />
     <Compile Include="Core\Tools\Singleton.cs" />
     <Compile Include="Test\CharacterController.cs" />
     <Compile Include="Test\Messages\PlayerInfo.cs" />
@@ -118,7 +118,6 @@
     <Compile Include="Core\Math\Vector2Int.cs" />
     <Compile Include="Core\Tools\NetworkUtils.cs" />
     <Compile Include="Core\Net\UDPService.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Tools\Print.cs" />
     <Compile Include="Core\Tools\Serializer.cs" />
