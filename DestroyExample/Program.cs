@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DestroyExample
+﻿namespace DestroyExample
 {
+    using Destroy;
+
     internal class Program
     {
         private static void Main()
         {
-
-
+            RuntimeEngine runtimeEngine = new RuntimeEngine();
+            runtimeEngine.Run(20);
         }
     }
 }

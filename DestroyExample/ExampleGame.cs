@@ -1,9 +1,10 @@
-﻿namespace Destroy.Example
+﻿namespace DestroyExample
 {
+    using Destroy;
     using Destroy.Test;
 
     [CreatGameObject]
-    public class Game : Script
+    internal class ExampleGame: Script
     {
         public override void Start()
         {
@@ -29,10 +30,10 @@
         public override void OnCollision(Collider collision)
         {
             gameObject.Active = false;
-            Invoke("S", 0.5f);
+            Invoke("Hide", 0.5f);
         }
 
-        public void S()
+        public void Hide()
         {
             gameObject.Active = true;
             transform.Position = new Vector2Int(0, 0);

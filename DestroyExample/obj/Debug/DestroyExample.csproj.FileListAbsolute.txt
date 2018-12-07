@@ -5,3 +5,10 @@ C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\obj\Debug\DestroyEx
 C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\obj\Debug\DestroyExample.csproj.CoreCompileInputs.cache
 C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\obj\Debug\DestroyExample.exe
 C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\obj\Debug\DestroyExample.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\bin\Debug\Destroy.dll
+C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\bin\Debug\protobuf-net.dll
+C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\bin\Debug\LitJSON.dll
+C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\bin\Debug\Destroy.pdb
+C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\bin\Debug\Destroy.dll.config
+C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\bin\Debug\protobuf-net.xml
+C:\Users\Administrator\Desktop\Github\Destroy\DestroyExample\obj\Debug\DestroyExample.csproj.CopyComplete
