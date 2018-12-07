@@ -39,5 +39,21 @@
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.BackgroundColor = ConsoleColor.Black;
         }
+
+        /// <summary>
+        /// 返回一个字符的宽度 待优化
+        /// </summary>
+        public static int CharWide(char c)
+        {
+            //只要不低于127都算chinese算了
+            if (c >= 0x4e00 && c <= 0x9fbb)
+            {
+                return 2;
+            }
+            else
+            {
+                return 1;
+            }
+        }
     }
 }
