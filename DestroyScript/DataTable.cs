@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Porsche
+﻿namespace Destroy.Script
 {
+    using System;
+    using System.Collections.Generic;
+
     /// <summary>
     /// 数据表
     /// </summary>
