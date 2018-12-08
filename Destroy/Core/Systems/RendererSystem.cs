@@ -122,7 +122,7 @@
                         Transform transform = renderer.GetComponent<Transform>();
                         Vector2Int vector = transform.Position + v.Value - cameraPos;
                         vector *= world2camera;     //获得该点在摄像机坐标系中的位置
-                        if(vector.X>0&&vector.X<width&&vector.Y>0&&vector.Y<height)
+                        if (vector.X > 0 && vector.X < width && vector.Y > 0 && vector.Y < height)
                             renderers[vector.X, vector.Y] = v.Key;
                     }
                 }
@@ -140,6 +140,7 @@
 
             DisplayGameObjects();
         }
+
         /// <summary>
         /// 判断是否位于摄像机内,待定
         /// </summary>

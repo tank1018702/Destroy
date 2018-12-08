@@ -83,11 +83,11 @@
             }
             return data;
         }
-        public static T NetDeserialize<T>(byte[] data)
+        public static T NetDeserialize<T>(byte[] data) where T : new()
         {
             using (Stream stream = new MemoryStream(data))
             {
-                T t = ProtoBuf.Serializer.Deserialize<T>(stream);
+                T t = ProtoBuf.Serializer.Deserialize<T>(stream); //反序列化时必须保证类型拥有无参构造
                 return t;
             }
         }
