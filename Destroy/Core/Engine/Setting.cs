@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Destroy
+﻿namespace Destroy
 {
+    using System.IO;
+    
+
     internal static class Setting
     {
         public static void LoadSetting()
         {
+            string path = Path.Combine(Application.ProgramDirectory, "Setting.txt");
 
         }
     }

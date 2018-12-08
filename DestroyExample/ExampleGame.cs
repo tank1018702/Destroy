@@ -1,9 +1,9 @@
-﻿namespace DestroyExample
+﻿namespace Destroy.Example
 {
     using System;
     using System.Collections.Generic;
     using Destroy;
-    using Destroy.Test;
+    using Destroy.Testing;
 
     [CreatGameObject(0)]
     public class Player : Script

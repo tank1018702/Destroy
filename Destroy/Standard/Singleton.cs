@@ -1,4 +1,4 @@
-﻿namespace Destroy
+﻿namespace Destroy.Standard
 {
     /// <summary>
     /// 继承该类获得单例

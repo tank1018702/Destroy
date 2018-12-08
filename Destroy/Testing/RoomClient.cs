@@ -1,9 +1,9 @@
-﻿namespace Destroy.Test
+﻿namespace Destroy.Testing
 {
     /// <summary>
     /// TODO
     /// </summary>
-    public class RoomServer
+    public class RoomClient
     {
     }
 }
