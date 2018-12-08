@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B4703BB7-DEE9-4B32-8720-8BAC054192C0}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Porsche</RootNamespace>
-    <AssemblyName>Porsche</AssemblyName>
+    <RootNamespace>DestroyScript</RootNamespace>
+    <AssemblyName>DestroyScript</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -22,7 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Porsche.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\DestroyScript.xml</DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">

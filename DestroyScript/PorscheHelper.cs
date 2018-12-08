@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
-
-namespace Porsche
+﻿namespace Destroy.Script
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Reflection;
+    using System.Text;
+
     /// <summary>
     /// Porsche助手 <see langword="static"/>
     /// </summary>
