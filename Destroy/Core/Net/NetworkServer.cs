@@ -7,8 +7,6 @@
 
     public class NetworkServer
     {
-        public delegate void CallbackEvent(Socket socket, byte[] data);
-
         private sealed class Message
         {
             public Socket Socket;
@@ -35,13 +33,14 @@
             }
         }
 
+        public delegate void CallbackEvent(Socket socket, byte[] data);
+
         public int ClientCount => clients.Count;
 
         private Dictionary<int, CallbackEvent> events;
         private Queue<Message> messages;
         private List<Client> clients;
         private Socket server;
-
         private bool accept;
         private IAsyncResult acceptAsync;
 
@@ -64,7 +63,7 @@
         /// <summary>
         /// 客户端断开连接
         /// </summary>
-        public event Action<Socket> OnDisconnected;
+        public event Action<string, Socket> OnDisconnected;
 
         public void Register(ushort cmd1, ushort cmd2, CallbackEvent _event)
         {
@@ -80,9 +79,9 @@
             messages.Enqueue(new Message(client, data));
         }
 
-        internal void Start() => server.Listen(10);
+        public void Start() => server.Listen(10);
 
-        internal void Handle()
+        public void Update()
         {
             //异步接收客户端
             if (accept)
@@ -123,11 +122,11 @@
                         if (events.ContainsKey(key))
                             events[key](socket, data);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         socket.Close();
                         client.Connected = false;
-                        OnDisconnected?.Invoke(socket);
+                        OnDisconnected?.Invoke(ex.Message, socket);
                     }
                 }
             }
@@ -141,7 +140,7 @@
                 bool pass = false;
                 foreach (Client client in clients)
                 {
-                    if(client.Socket == socket && client.Connected) //存在该客户端并且该客户端激活
+                    if (client.Socket == socket && client.Connected) //存在该客户端并且该客户端激活
                     {
                         pass = true;
                         break;
@@ -149,19 +148,19 @@
                 }
                 if (!pass)
                     continue;
-                
+
                 try
                 {
                     message.Send();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     socket.Close();
                     //禁用该Socket
                     foreach (Client client in clients)
                         if (client.Socket == socket)
                             client.Connected = false;
-                    OnDisconnected?.Invoke(socket);
+                    OnDisconnected?.Invoke(ex.Message, socket);
                     break;
                 }
             }

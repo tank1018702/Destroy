@@ -78,7 +78,7 @@
 
         private void CreateGameObjects()
         {
-            Assembly assembly = RuntimeEngine.GetAssembly;
+            Assembly assembly = GetAssembly;
 
             List<KeyValuePair<uint, object>> pairs = new List<KeyValuePair<uint, object>>();
 
