@@ -2,7 +2,7 @@
 {
     public abstract class Script : Component
     {
-        public bool Started;
+        internal bool Started;
 
         public Script() => Started = false;
 

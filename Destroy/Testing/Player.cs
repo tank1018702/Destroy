@@ -1,4 +1,4 @@
-﻿namespace Destroy.Test
+﻿namespace Destroy.Testing
 {
     public class __Player
     {

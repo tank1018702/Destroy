@@ -1,4 +1,4 @@
-﻿namespace Destroy.Script
+﻿namespace Destroy.Scripting
 {
     using System;
     using System.Collections.Generic;

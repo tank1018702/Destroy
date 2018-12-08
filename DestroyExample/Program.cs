@@ -1,4 +1,4 @@
-﻿namespace DestroyExample
+﻿namespace Destroy.Example
 {
     using Destroy;
 

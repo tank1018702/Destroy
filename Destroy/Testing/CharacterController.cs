@@ -1,4 +1,4 @@
-﻿namespace Destroy.Test
+﻿namespace Destroy.Testing
 {
     using System;
 

@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B4703BB7-DEE9-4B32-8720-8BAC054192C0}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>DestroyScript</RootNamespace>
+    <RootNamespace>Destroy.Scripting</RootNamespace>
     <AssemblyName>DestroyScript</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
