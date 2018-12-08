@@ -23,6 +23,8 @@
         private static int width;
         private static Renderer[,] renderers;
         private static Renderer[,] rendererBuffers;
+        //可能需要一组staticRenderer 先把static渲染到Renderer中.然后再改动renderer,这样就可以减少一定的渲染工作量
+
 
         public static void Init(GameObject camera)
         {

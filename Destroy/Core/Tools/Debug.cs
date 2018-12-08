@@ -8,16 +8,18 @@
 
         public static void Warning(object msg)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(msg);
-            Console.ForegroundColor = ConsoleColor.Gray;
+            //Console.ForegroundColor = ConsoleColor.Yellow;
+            //Console.WriteLine(msg);
+            //Console.ForegroundColor = ConsoleColor.Gray;
+            System.Diagnostics.Debug.WriteLine(msg);
         }
 
         public static void Error(object msg)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(msg);
-            Console.ForegroundColor = ConsoleColor.Gray;
+            //Console.ForegroundColor = ConsoleColor.Red;
+            //Console.WriteLine(msg);
+            //Console.ForegroundColor = ConsoleColor.Gray;
+            System.Diagnostics.Debug.WriteLine(msg);
         }
     }
 }

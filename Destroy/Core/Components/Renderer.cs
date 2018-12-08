@@ -8,7 +8,8 @@
      * 12/7 by Kyasever
      * Renderer通过继承分为了三个组件:
      * StringRenderer 用于渲染一句字符串
-     * PosRenderer 
+     * PosRenderer 用于渲染一个点
+     * GroupRenderer 用于渲染一组图形
      * 之后版本要重新优化
      */
 
