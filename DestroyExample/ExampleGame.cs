@@ -3,9 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Destroy;
-    using ProtoBuf;
     using Destroy.Testing;
-    using Serializer = Destroy.Serializer;
 
     //[CreatGameObject(0)]
     //public class Player : Script
@@ -130,41 +128,8 @@
     //    }
     //}
 
-    ////[CreatGameObject]
-    //internal class ExampleGame : Script
-    //{
-    //    public override void Start()
-    //    {
-    //        Factory.CreatCamera();
-
-    //        NetworkSystem.CreatSelf += () =>
-    //        {
-    //            return gameObject;
-    //        };
-    //        NetworkSystem.CreatOther += () =>
-    //        {
-    //            GameObject other = new GameObject();
-    //            PosRenderer r = other.AddComponent<PosRenderer>();
-    //            r.Str = "牛";
-    //            return other;
-    //        };
-    //    }
-
-    //    public override void OnCollision(Collider collision)
-    //    {
-    //        gameObject.Active = false;
-    //        Invoke("Hide", 0.5f);
-    //    }
-
-    //    public void Hide()
-    //    {
-    //        gameObject.Active = true;
-    //        transform.Position = new Vector2Int(0, 0);
-    //    }
-    //}
-
     [CreatGameObject]
-    internal class A : Script
+    internal class Test : Script
     {
         public override void Start()
         {

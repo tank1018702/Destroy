@@ -46,20 +46,17 @@
   <PropertyGroup />
   <ItemGroup>
     <Reference Include="Colorful.Console">
-      <HintPath>..\Plugins\Colorful.Console.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\DestroyPlugins\Colorful.Console.dll</HintPath>
     </Reference>
     <Reference Include="DestroyScript, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DestroyPlugins\DestroyScript.dll</HintPath>
     </Reference>
     <Reference Include="LitJSON">
-      <HintPath>..\Plugins\LitJSON.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\DestroyPlugins\LitJSON.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>..\Plugins\protobuf-net.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\DestroyPlugins\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
