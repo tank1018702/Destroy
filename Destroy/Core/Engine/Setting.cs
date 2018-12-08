@@ -3,7 +3,7 @@
     using System.IO;
     
 
-    internal static class Setting
+    public static class Setting
     {
         public static void LoadSetting()
         {
