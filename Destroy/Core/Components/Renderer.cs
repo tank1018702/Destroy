@@ -18,17 +18,15 @@
         /// <summary>
         /// 为0时脚本显示优先级最高(最后被渲染), 然后向着数轴正方向递减。
         /// </summary>
-        public uint Depth;
+        public int Depth;
         public ConsoleColor ForeColor;
         public ConsoleColor BackColor;
-
-
 
         public Renderer()
         {
             ForeColor = ConsoleColor.Gray;
             BackColor = ConsoleColor.Black;
-            Depth = uint.MaxValue;
+            Depth = int.MaxValue;
         }
 
         public virtual string GetStr()
@@ -67,7 +65,7 @@
             Str = s;
             ForeColor = ConsoleColor.Gray;
             BackColor = ConsoleColor.Black;
-            Depth = uint.MaxValue;
+            Depth = int.MaxValue;
         }
 
         public StringRenderer()
@@ -75,7 +73,7 @@
             Str = "";
             ForeColor = ConsoleColor.Gray;
             BackColor = ConsoleColor.Black;
-            Depth = uint.MaxValue;
+            Depth = int.MaxValue;
         }
 
         public override string GetStr()
@@ -119,7 +117,7 @@
             Str = s;
             ForeColor = ConsoleColor.Gray;
             BackColor = ConsoleColor.Black;
-            Depth = uint.MaxValue;
+            Depth = int.MaxValue;
         }
 
         public PosRenderer()
@@ -127,53 +125,12 @@
             Str = "";
             ForeColor = ConsoleColor.Gray;
             BackColor = ConsoleColor.Black;
-            Depth = uint.MaxValue;
+            Depth = int.MaxValue;
         }
 
         public override string GetStr()
         {
             return str;
-        }
-    }
-
-    /// <summary>
-    /// 偏移渲染器 用于渲染一个点,其中有一个偏移值表示渲染的偏移
-    /// </summary>
-    internal class DeviationRenderer : Renderer
-    {
-        private string str;
-        public string Str
-        {
-            get => str;
-            set
-            {
-                StringBuilder builder = new StringBuilder();
-                int sum = 0;
-                foreach (char v in value)
-                {
-                    sum += Print.CharWide(v);
-                    //强制截断长度一个标准Renderer单位的字符
-                    if (sum > Camera.main.CharWidth)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        builder.Append(v);
-                    }
-                }
-                str = builder.ToString();
-            }
-        }
-        public Vector2Int deviation;
-
-        public DeviationRenderer()
-        {
-            Str = "";
-            ForeColor = ConsoleColor.Gray;
-            BackColor = ConsoleColor.Black;
-            Depth = uint.MaxValue;
-            deviation = new Vector2Int(0, 0);
         }
     }
 
@@ -188,7 +145,21 @@
         {
             list = new List<KeyValuePair<Renderer, Vector2Int>>();
         }
+
+        public void AddRenderer(Renderer renderer,Vector2Int vector)
+        {
+            list.Add(new KeyValuePair<Renderer, Vector2Int>(renderer, vector));
+        }
+
+        public void AddRenderer(Renderer renderer, int x,int y)
+        {
+            list.Add(new KeyValuePair<Renderer, Vector2Int>(renderer, new Vector2Int(x,y)));
+        }
+
     }
+
+
+
 
 
 }

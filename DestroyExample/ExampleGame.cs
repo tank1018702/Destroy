@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using Destroy;
     using Destroy.Testing;
-
+    using Destroy.Core.Tools;
     [CreatGameObject(0)]
     public class Player : Script
     {
@@ -41,19 +41,7 @@
         }
     }
 
-    //[CreatGameObject]
-    //public class Player3 : Script
-    //{
-    //    public override void Start()
-    //    {
-    //        transform.Translate(new Vector2Int(6, -6));
-    //        StringRenderer sr = AddComponent<StringRenderer>();
-    //        sr.Str = "12345678912123123123123123";
-    //        AddComponent<CharacterController>();
-    //        Console.CursorVisible = false;
-    //    }
-    //}
-
+    /*
     [CreatGameObject]
     public class Wall : Script
     { 
@@ -92,6 +80,7 @@
 
         }
     }
+    */
 
     [CreatGameObject]
     public class Box:Script
@@ -110,6 +99,15 @@
             MeshCollider mc = AddComponent<MeshCollider>();
             mc.Init();
 
+        }
+    }
+
+    [CreatGameObject]
+    public class GameMode:Script
+    {
+        public override void Start()
+        {
+            UI.CreateTextBox("UIBox",new Vector2Int(10,-10), 10, 5);
         }
     }
 

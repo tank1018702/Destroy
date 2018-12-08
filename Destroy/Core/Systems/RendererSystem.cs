@@ -23,7 +23,6 @@
         private static int width;
         private static Renderer[,] renderers;
         private static Renderer[,] rendererBuffers;
-        //可能需要一组staticRenderer 先把static渲染到Renderer中.然后再改动renderer,这样就可以减少一定的渲染工作量
 
 
         public static void Init(GameObject camera)
@@ -81,7 +80,7 @@
             int minY = cameraPos.Y - height + 1;
             int maxY = cameraPos.Y;
 
-            List<KeyValuePair<uint, object>> pairs = new List<KeyValuePair<uint, object>>();
+            List<KeyValuePair<int, object>> pairs = new List<KeyValuePair<int, object>>();
 
             foreach (GameObject gameObject in gameObjects)
             {
@@ -99,7 +98,7 @@
                 Transform transform = gameObject.GetComponent<Transform>();
                 if (IsInCamera(transform.Position))
                 {
-                    pairs.Add(new KeyValuePair<uint, object>(renderer.Depth, renderer));
+                    pairs.Add(new KeyValuePair<int, object>(renderer.Depth, renderer));
                 }
 
 
@@ -109,7 +108,7 @@
             Mathematics.QuickSort(pairs);
             pairs.Reverse(); //排序(从大到小)
 
-            foreach (KeyValuePair<uint, object> pair in pairs)
+            foreach (KeyValuePair<int, object> pair in pairs)
             {
                 Renderer renderer = (Renderer)pair.Value;
 
@@ -126,6 +125,9 @@
                             renderers[vector.X, vector.Y] = v.Key;
                     }
                 }
+                //如果是UI渲染器 那么从UIRenderer获取整条的StrRenderer
+                //else if(renderer.GetType() == )
+
                 else
                 {
                     Transform transform = renderer.GetComponent<Transform>();
@@ -172,7 +174,6 @@
                 {
                     Renderer renderer = renderers[i, j];
                     Renderer bufferRenderer = rendererBuffers[i, j];
-                    //Diff
                     //Diff
                     if (renderer != bufferRenderer)
                     {

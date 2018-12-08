@@ -1,6 +1,7 @@
 ﻿namespace Destroy
 {
     using System;
+    using System.Text;
 
     public static class Print
     {
@@ -54,6 +55,56 @@
             {
                 return 1;
             }
+        }
+
+        /// <summary>
+        /// 返回一个字符串的长度
+        /// </summary>
+        public static int StrWide(string str)
+        {
+            int sum = 0;
+            foreach(var v in str)
+            {
+                sum += CharWide(v);
+            }
+            return sum;
+        }
+
+        /// <summary>
+        /// 按照标准长度截断字符串,不足用空格补上,超出截断
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="wide"></param>
+        /// <returns></returns>
+        public static string SubStr(string str,int wide)
+        {
+            StringBuilder builder = new StringBuilder();
+            int sum = 0;
+            foreach (var v in str)
+            {
+                sum += Print.CharWide(v);
+                //当超出时返回
+                if (sum>wide)
+                {
+                    return builder.ToString();
+                }
+                else
+                {
+                    builder.Append(v);
+                }
+            }
+            if(sum == wide)
+            {
+                return builder.ToString();
+            }
+            if(sum < wide)
+            {
+                for(int i = 0;i<wide-sum;i++)
+                {
+                    builder.Append(' ');
+                }
+            }
+            return builder.ToString();
         }
     }
 }
