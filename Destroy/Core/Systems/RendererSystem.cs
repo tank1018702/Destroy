@@ -11,6 +11,8 @@
      * TODO: 
      * 新建render类 作为贴图静态数据 renderer是渲染器,用来容纳render
      * 代码比较混乱,需要重构
+     * 
+     * 明天重构,GG 不写了..
      */
     public static class RendererSystem
     {
@@ -100,9 +102,6 @@
                 {
                     pairs.Add(new KeyValuePair<int, object>(renderer.Depth, renderer));
                 }
-
-
-
             }
             //pairs.Sort();
             Mathematics.QuickSort(pairs);
@@ -121,17 +120,46 @@
                         Transform transform = renderer.GetComponent<Transform>();
                         Vector2Int vector = transform.Position + v.Value - cameraPos;
                         vector *= world2camera;     //获得该点在摄像机坐标系中的位置
-                        if(vector.X>0&&vector.X<width&&vector.Y>0&&vector.Y<height)
+
+                        if (vector.X > 0 && vector.X < width && vector.Y > 0 && vector.Y < height)
                             renderers[vector.X, vector.Y] = v.Key;
+                        /*
+                        if (v.Key.GetType() == typeof(StringRenderer))
+                        {
+                            int l = (v.Key as StringRenderer).length;
+                            for (int i = 0; i < l / charWidth; i++)
+                            {
+                                vector = vector+ new Vector2Int(i, 0);
+                                vector *= world2camera;     //获得该点在摄像机坐标系中的位置
+                                if (vector.X > 0 && vector.X < width && vector.Y > 0 && vector.Y < height)
+                                    renderers[vector.X, vector.Y] = renderer;
+                            }
+                        }
+                        else
+                        {
+                            if (vector.X > 0 && vector.X < width && vector.Y > 0 && vector.Y < height)
+                                renderers[vector.X, vector.Y] = v.Key;
+                        }
+                        */
+
                     }
                 }
                 //如果是UI渲染器 那么从UIRenderer获取整条的StrRenderer
-                //else if(renderer.GetType() == )
+                //else if(renderer.GetType() == typeof(StringRenderer))
+                //{
+                //    int l = (renderer as StringRenderer).length;
+                //    for(int i = 0;i<l/charWidth;i++)
+                //    {
+                //        Transform transform = renderer.GetComponent<Transform>();
+                //        Vector2Int vector = transform.Position - cameraPos + new Vector2Int(i,0);
+                //        vector *= world2camera;     //获得该点在摄像机坐标系中的位置
+                //        renderers[vector.X, vector.Y] = renderer;
+                //    }
+                //}
 
                 else
                 {
                     Transform transform = renderer.GetComponent<Transform>();
-
                     Vector2Int vector = transform.Position - cameraPos;
                     vector *= world2camera;     //获得该点在摄像机坐标系中的位置
                     renderers[vector.X, vector.Y] = renderer;

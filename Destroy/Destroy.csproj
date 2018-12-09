@@ -76,6 +76,7 @@
     <Compile Include="Core\Components\NetworkSpawner.cs" />
     <Compile Include="Core\Components\NetworkTransform.cs" />
     <Compile Include="Core\Components\Transform.cs" />
+    <Compile Include="Core\Engine\DrawSpully.cs" />
     <Compile Include="Core\Engine\LowLevelAPI.cs" />
     <Compile Include="Core\Engine\Setting.cs" />
     <Compile Include="Core\GameObject\IPersistent.cs" />
