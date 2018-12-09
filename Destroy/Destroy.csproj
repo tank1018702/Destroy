@@ -76,7 +76,7 @@
     <Compile Include="Core\Engine\LowLevelAPI.cs" />
     <Compile Include="Core\Engine\Setting.cs" />
     <Compile Include="Core\GameObject\IPersistent.cs" />
-    <Compile Include="Core\GameObject\Scene.cs" />
+    <Compile Include="Testing\Scene.cs" />
     <Compile Include="Testing\RuntimeDebugger.cs" />
     <Compile Include="Core\GameObject\Object.cs" />
     <Compile Include="Core\Math\Matrix.cs" />

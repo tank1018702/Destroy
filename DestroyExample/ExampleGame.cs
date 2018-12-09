@@ -114,25 +114,37 @@
     //}
 
 
-    //static class Factory
-    //{
-    //    public static GameObject CreatCamera(int charWidth = 2, int height = 30, int width = 30)
-    //    {
-    //        GameObject go = new GameObject("Camera");
-    //        Camera camera = go.AddComponent<Camera>();
-    //        camera.CharWidth = charWidth;
-    //        camera.Height = height;
-    //        camera.Width = width;
-    //        RendererSystem.Init(go);
-    //        return go;
-    //    }
-    //}
+    static class Factory
+    {
+        public static GameObject CreatCamera(int charWidth = 2, int height = 30, int width = 30)
+        {
+            GameObject go = new GameObject("Camera");
+            Camera camera = go.AddComponent<Camera>();
+            camera.CharWidth = charWidth;
+            camera.Height = height;
+            camera.Width = width;
+            RendererSystem.Init(go);
+            return go;
+        }
+    }
 
     [CreatGameObject]
     internal class Test : Script
     {
+        public GameObject CreatPlayer()
+        {
+            GameObject player = new GameObject();
+            player.AddComponent<CharacterController>();
+            PosRenderer posRenderer = player.AddComponent<PosRenderer>();
+            posRenderer.Str = "打";
+            return player;
+        }
+
         public override void Start()
         {
+            Factory.CreatCamera();
+
+            NetworkSystem.Init(new Dictionary<int, Instantiate>() { { 1, CreatPlayer } });
         }
     }
 }

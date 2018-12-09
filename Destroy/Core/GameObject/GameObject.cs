@@ -4,6 +4,11 @@
     using System.Collections.Generic;
     using System.Reflection;
 
+    /// <summary>
+    /// 使用该方法创建一个游戏物体
+    /// </summary>
+    public delegate GameObject Instantiate();
+
     public class GameObject : Object
     {
         internal List<Component> Components;
@@ -55,12 +60,12 @@
         public Transform transform { get; protected set; }
 
         /// <summary>
-        /// 创建一个游戏物体
+        /// 创建一个游戏物体 (相当于在当前场景中实例化)
         /// </summary>
         public GameObject() => Init();
 
         /// <summary>
-        /// 创建一个游戏物体
+        /// 创建一个游戏物体 (相当于在当前场景中实例化)
         /// </summary>
         public GameObject(string name)
         {
@@ -140,7 +145,7 @@
         }
 
         /// <summary>
-        /// 根据名字寻找游戏物体, 若有多个同名物体也只返回一个。
+        /// 在当前场景中根据名字寻找游戏物体, 若有多个同名物体也只返回一个。
         /// </summary>
         public static GameObject Find(string name)
         {
@@ -153,7 +158,7 @@
         }
 
         /// <summary>
-        /// 根据标签寻找游戏物体, 若有多个则返回多个。
+        /// 在当前场景中根据标签寻找游戏物体, 若有多个则返回多个。
         /// </summary>
         public static GameObject[] FindWithTag(string tag)
         {
@@ -167,7 +172,7 @@
         }
 
         /// <summary>
-        /// 获取游戏物体个数
+        /// 获取当前场景中游戏物体的个数
         /// </summary>
         public static int Count => GameObjects.Count;
     }
