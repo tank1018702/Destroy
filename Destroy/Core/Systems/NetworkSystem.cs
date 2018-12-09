@@ -7,47 +7,52 @@
 
     public static class NetworkSystem
     {
-        private static Dictionary<int, GameObject> netPrefabs;
-        private static List<NetworkTransform> networkTransforms;
+        //public static void Init()
+        //{
+        //    //    private static List<NetworkTransform> networkTransforms;
+        //    //networkTransforms = new List<NetworkTransform>();
+        //    //foreach (GameObject gameObject in gameObjects)
+        //    //{
+        //    //    if (!gameObject.Active)
+        //    //        continue;
+        //    //    NetworkTransform networkTransform = gameObject.GetComponent<NetworkTransform>();
+        //    //    if (!networkTransform || !networkTransform.Active)
+        //    //        continue;
 
-        public static void Init(Dictionary<int, GameObject> netPrefabs)
+        //    //    if (!networkTransforms.Contains(networkTransform))
+        //    //        networkTransforms.Add(networkTransform);
+        //    //}
+        //}
+
+        public static Client Client;
+        private static Dictionary<int, Instantiate> prefabs;
+
+        public static void Init(Dictionary<int, Instantiate> prefabs)
         {
-            NetworkSystem.netPrefabs = netPrefabs;
-            networkTransforms = new List<NetworkTransform>();
-            //foreach (GameObject gameObject in gameObjects)
-            //{
-            //    if (!gameObject.Active)
-            //        continue;
-            //    NetworkTransform networkTransform = gameObject.GetComponent<NetworkTransform>();
-            //    if (!networkTransform || !networkTransform.Active)
-            //        continue;
-
-            //    if (!networkTransforms.Contains(networkTransform))
-            //        networkTransforms.Add(networkTransform);
-            //}
+            NetworkSystem.prefabs = prefabs;
         }
 
         private static bool choose = false;
         private static Server server;
-        private static Client client;
         private static float serverTimer;
         private static float clientTimer;
 
         internal static void Update(List<GameObject> gameObjects)
         {
-            return;
+            //return;
             if (!choose)
             {
                 choose = true;
                 Print.DrawLine("1.client, 2.server", ConsoleColor.White);
+                //Get Input
                 switch (int.Parse(Console.ReadLine()))
                 {
                     case 1:
-                        client = new Client(NetworkUtils.LocalIPv4Str, 8848);
-                        client.Start();
+                        Client = new Client(NetworkUtils.LocalIPv4Str, 8848, prefabs);
+                        Client.Start();
                         break;
                     case 2:
-                        server = new Server(8848);
+                        server = new Server(8848, prefabs);
                         server.Start();
                         break;
                     default:
@@ -55,95 +60,76 @@
                 }
                 Console.Clear();
             }
+
             if (server != null)
             {
                 serverTimer += Time.DeltaTime;
                 server.Update();         //服务器每帧刷新
-                if (serverTimer >= 0.1f) //服务器1秒广播10次
-                {
-                    server.Broadcast();
-                    serverTimer = 0;
-                }
             }
-            if (client != null)
+
+            if (Client != null)
             {
                 clientTimer += Time.DeltaTime;
-                client.Update();          //客户端每帧刷新
-                if (clientTimer >= 0.05f) //客户端1秒同步20次
-                {
-                    client.Sync(1, 1);
-                    clientTimer = 0;
-                }
+                Client.Update();          //客户端每帧刷新
             }
         }
     }
 
     public class Server : NetworkServer
     {
-        private int id;
+        private Dictionary<int, Instantiate> prefabs;
+        private int incrementalId;
         private int frame;
-        Dictionary<Socket, Position> positions;
+        private List<Socket> clients;
 
-        public Server(int port) : base(port)
+        public Server(int port, Dictionary<int, Instantiate> prefabs) : base(port)
         {
-            id = 0;
+            this.prefabs = prefabs;
+            incrementalId = 0;
             frame = 0;
-            positions = new Dictionary<Socket, Position>();
+            clients = new List<Socket>();
             base.OnConnected += OnConnected;
             base.OnDisconnected += OnDisconnected;
-            Register((ushort)Role.Client, (ushort)Command.PosSync, PosSync);
+            Register((ushort)Role.Client, (ushort)Cmd.Instantiate, OnInstantiate);
+            Register((ushort)Role.Client, (ushort)Cmd.Destroy, OnDestroy);
         }
 
         private new void OnConnected(Socket socket)
         {
+            clients.Add(socket);
             Console.WriteLine("客户端连接");
-
-            //初始化
-            Position position = new Position(id, 0, 0);
-            id++;
-            positions.Add(socket, position);
-
-            S2C_StartSync startSync = new S2C_StartSync();
-            startSync.Frame = frame;
-            startSync.YourId = position.Id;
-            startSync.Positions = new List<Position>();
-            foreach (var each in positions.Values)
-                startSync.Positions.Add(each);
-
-            //初始化
-            Send(socket, (ushort)Role.Server, (ushort)Command.StartSync, startSync);
         }
 
         private new void OnDisconnected(string msg, Socket socket)
         {
-            Console.WriteLine(msg);
-            positions.Remove(socket);
+            clients.Remove(socket);
+            Console.WriteLine($"客户端断开连接{msg}");
         }
 
-        private void PosSync(Socket socket, byte[] data)
+        private void OnInstantiate(Socket socket, byte[] data)
         {
-            C2S_PosSync posSync = Serializer.NetDeserialize<C2S_PosSync>(data);
-            positions[socket] = posSync.Position; //修改数据
+            Cmd_Instantiate instantiate = Serializer.NetDeserialize<Cmd_Instantiate>(data);
 
-            Console.WriteLine(positions[socket].Id + " " + positions[socket].X);
-        }
-
-        public void Broadcast()
-        {
-            bool send = false;
-            foreach (var each in positions)
+            foreach (var client in clients)
             {
-                S2C_PosSync posSync = new S2C_PosSync();
-                posSync.Frame = frame;
-                posSync.Positions = new List<Position>();
-                foreach (var pos in positions.Values)
-                    posSync.Positions.Add(pos);
-
-                Send(each.Key, (ushort)Role.Server, (ushort)Command.PosSync, posSync);
-                send = true;
+                if (client == socket) //不发送自己
+                    continue;
+                //发送 (需要优化, 去除序列化)
+                Send(client, (ushort)Role.Server, (ushort)Cmd.Instantiate, instantiate);
             }
-            if (send)
-                Console.WriteLine("广播");
+        }
+
+        private void OnDestroy(Socket socket, byte[] data)
+        {
+            Cmd_Destroy destroy = Serializer.NetDeserialize<Cmd_Destroy>(data);
+
+            foreach (var client in clients)
+            {
+                if (client == socket) //不发送自己
+                    continue;
+                //发送 (需要优化, 去除序列化)
+                Send(client, (ushort)Role.Server, (ushort)Cmd.Destroy, destroy);
+            }
         }
     }
 
@@ -152,64 +138,130 @@
         private bool start;
         private int id;
         private int frame;
-        private List<Position> positions;
+        private Dictionary<int, Instantiate> prefabs;        //ObjId, Prefab
+        private Dictionary<int, List<GameObject>> instances; //ObjId, List<GameObject>
 
-        public Client(string serverIp, int serverPort) : base(serverIp, serverPort)
+        public Client(string serverIp, int serverPort, Dictionary<int, Instantiate> prefabs) :
+            base(serverIp, serverPort)
         {
             start = false;
             id = -1;
             frame = -1;
-            positions = new List<Position>();
-            OnConnected += socket => { Console.WriteLine("连接成功"); };
-            OnDisConnected += (msg, socket) => { Console.WriteLine("掉线" + msg); };
-            Register((ushort)Role.Server, (ushort)Command.StartSync, StartSync);
-            Register((ushort)Role.Server, (ushort)Command.PosSync, PosSync);
+            this.prefabs = prefabs;
+            //Init Instances
+            instances = new Dictionary<int, List<GameObject>>();
+            foreach (var prefab in prefabs)
+                instances.Add(prefab.Key, new List<GameObject>());
+            //注册回调
+            base.OnConnected += OnConnected;
+            Register((ushort)Role.Server, (ushort)Cmd.Instantiate, OnInstantiate);
+            Register((ushort)Role.Server, (ushort)Cmd.Destroy, OnDestroy);
         }
 
-        private void StartSync(byte[] data)
+        private new void OnConnected(Socket socket)
         {
-            S2C_StartSync startSync = Serializer.NetDeserialize<S2C_StartSync>(data);
-            id = startSync.YourId;
-            frame = startSync.Frame;
-            positions = startSync.Positions;
-            start = true;
+            Instantiate(1);
         }
 
-        private void PosSync(byte[] data)
+        public void Instantiate(int objId)
         {
-            Console.WriteLine("客户端posSync回调");
-
-            S2C_PosSync posSync = Serializer.NetDeserialize<S2C_PosSync>(data);
-            //更新位置
-            frame = posSync.Frame;
-            positions = posSync.Positions;
-
-            foreach (var pos in positions)
-            {
-                Console.WriteLine(pos.X + " " + pos.Y);
-            }
-        }
-
-        public void Sync(int x, int y)
-        {
-            if (!start)
+            if (!prefabs.ContainsKey(objId)) //不存在该Id
                 return;
-            C2S_PosSync posSync = new C2S_PosSync();
-            posSync.Frame = frame;
-            posSync.Position = new Position(id, x, y);
-            //同步自己坐标
-            Send((ushort)Role.Client, (ushort)Command.PosSync, posSync);
+            //创建本地场景实例
+            GameObject localInstance = prefabs[objId]();
+            //添加进列表
+            instances[objId].Add(localInstance);
+            //同步实例
+            Cmd_Instantiate instantiate = new Cmd_Instantiate();
+            instantiate.Frame = frame;
+            instantiate.ObjId = objId;
+            Send((ushort)Role.Client, (ushort)Cmd.Instantiate, instantiate);
+        }
+
+        public void Destroy(int objId, string objName)
+        {
+            if (!prefabs.ContainsKey(objId)) //不存在该Id
+                return;
+            List<GameObject> list = instances[objId];
+            for (int i = 0; i < list.Count; i++)
+            {
+                GameObject gameObject = list[i];
+                if (gameObject.Name == objName)
+                {
+                    Object.Destroy(gameObject); //从场景中删除
+                    list.Remove(gameObject);    //从列表中删除
+                    break;
+                }
+            }
+            //同步销毁
+            Cmd_Destroy destroy = new Cmd_Destroy();
+            destroy.Frame = frame;
+            destroy.ObjId = objId;
+            destroy.ObjName = objName;
+            Send((ushort)Role.Client, (ushort)Cmd.Destroy, destroy);
+        }
+
+        private void OnInstantiate(byte[] data)
+        {
+            Cmd_Instantiate instantiate = Serializer.NetDeserialize<Cmd_Instantiate>(data);
+            Instantiate method = prefabs[instantiate.ObjId];
+            //在场景中创建该游戏物体
+            GameObject instance = method();
+            //添加进列表
+            instances[instantiate.ObjId].Add(instance);
+        }
+
+        private void OnDestroy(byte[] data)
+        {
+            Cmd_Destroy destroy = Serializer.NetDeserialize<Cmd_Destroy>(data);
+            List<GameObject> list = instances[destroy.ObjId];
+            for (int i = 0; i < list.Count; i++)
+            {
+                GameObject gameObject = list[i];
+                if (gameObject.Name == destroy.ObjName)
+                {
+                    Object.Destroy(gameObject); //从场景中删除
+                    list.Remove(gameObject);    //从列表中删除
+                    break;
+                }
+            }
         }
     }
 
+    [ProtoContract]
+    public struct Cmd_Instantiate
+    {
+        [ProtoMember(1)]
+        public int Frame;
+        [ProtoMember(2)]
+        public int ObjId;
+    }
 
-
+    [ProtoContract]
+    public struct Cmd_Destroy
+    {
+        [ProtoMember(1)]
+        public int Frame;
+        [ProtoMember(2)]
+        public int ObjId;
+        [ProtoMember(3)]
+        public string ObjName;
+    }
 
     public enum Role
     {
         Client,
         Server
     }
+
+    public enum Cmd
+    {
+        Instantiate,
+        Destroy,
+    }
+
+
+
 
     public enum Command
     {
