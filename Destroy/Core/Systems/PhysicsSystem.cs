@@ -1,6 +1,11 @@
-﻿namespace Destroy
+﻿/*
+ * TODO: 加入Mesh旋转功能.Rotate 然后就可以做一个俄罗斯方块了.使用全物理模拟
+ */
+
+namespace Destroy
 {
     using System.Collections.Generic;
+
 
     internal static class PhysicsSystem
     {
@@ -16,7 +21,7 @@
                 StaticCollider staticCollider = v.GetComponent<StaticCollider>();
                 if (staticCollider != null)
                 {
-                    foreach(Vector2Int dis in staticCollider.posList)
+                    foreach(Vector2Int dis in staticCollider.ColliderList)
                     {
                         Vector2Int vi = staticCollider.transform.Position + dis;
                         if (!staticColliders.ContainsKey(vi))
@@ -47,7 +52,7 @@
                 MeshCollider mc  = gameObject.GetComponent<MeshCollider>();
                 if (mc!=null)
                 {
-                    foreach(Vector2Int dis in mc.posList)
+                    foreach(Vector2Int dis in mc.ColliderList)
                     {
                         Vector2Int vi = gameObject.transform.Position + dis;
                         if (!colliders.ContainsKey(vi))
@@ -82,7 +87,7 @@
                     {
                         Collider otherCollider = colliders[to];
                         //如果这个是自己,那么正常移动并返回
-                        if (otherCollider == rigid.GetComponent<MeshCollider>())
+                        if (otherCollider == rigid.GetComponent<Collider>())
                         {
                             rigid.transform.Translate(dis);
                             return;
@@ -129,37 +134,6 @@
                     }
                 }
             }
-            /*
-            for (int i = 0; i < gameObjects.Count; i++)
-            {
-                GameObject gameObject = gameObjects[i];
-                if (!gameObject.Active)
-                    continue;
-                Collider collider = gameObject.GetComponent<Collider>();
-                if (!collider || !collider.Active)
-                    continue;
-
-                //遍历其他所有游戏物体进行检测
-                for (int j = 0; j < gameObjects.Count; j++)
-                {
-                    GameObject other = gameObjects[j];
-                    //不与自己发生碰撞
-                    if (gameObject == other)
-                        continue;
-                    if (!other.Active)
-                        continue;
-                    Collider otherCollider = other.GetComponent<Collider>();
-                    if (!otherCollider || !otherCollider.Active)
-                        continue;
-
-                    Transform transform = gameObject.GetComponent<Transform>();
-                    Transform otherTransform = other.GetComponent<Transform>();
-                    //发生碰撞
-                    if (transform.Position == otherTransform.Position)
-                        RuntimeEngine.CallScriptMethod(gameObject, "OnCollision", false, otherCollider);
-                }
-            }
-            */
         }
     }
 }

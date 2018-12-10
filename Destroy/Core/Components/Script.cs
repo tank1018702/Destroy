@@ -10,7 +10,7 @@
 
         public virtual void Update() { }
 
-        public virtual void OnCollision(Collider collision) { }
+        public virtual void OnCollision(MeshCollider collision) { }
 
         /// <summary>
         /// 延迟调用一个方法(该方法必须为实例无参public方法)

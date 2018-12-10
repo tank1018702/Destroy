@@ -29,7 +29,6 @@
             {
                 GetComponent<RigidBody>().FPosition = input.Normalized * 0.5f;
                 GetComponent<RigidBody>().SetSpeed(input * Speed);
-                Debug.Warning("start");
             }
             else
             {

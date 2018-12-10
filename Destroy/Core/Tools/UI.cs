@@ -4,59 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Destroy.Core.Tools
+namespace Destroy
 {
-    public class TextBox : Script
-    {
-        private GroupRenderer groupRenderer;
-        public Vector2Int Position;
-        public int Width;
-        public int Height;
-
-        public void Init(Vector2Int position, int w, int h)
-        {
-            this.Position = position;
-            groupRenderer = GetComponent<GroupRenderer>();
-        }
-
-        public override void Update()
-        {
-            transform.Position = Camera.main.transform.Position + Position;
-        }
-    }
-
-    public static class UI
-    {
-        /// <summary>
-        /// 创建一个TextBox
-        /// </summary>
-        public static GameObject CreateTextBox(string name,Vector2Int pos,int w,int height)
-        {
-            int width = w * Camera.main.CharWidth;
-            if(width < 4 || height < 3)
-            {
-                Debug.Error("创建TextBox需要更大的空间");
-                return null;
-            }
-
-            GameObject gameObject = new GameObject("TextBox");
-            //添加默认的Renderer组件
-            GroupRenderer groupRenderer = gameObject.AddComponent<GroupRenderer>();
-            groupRenderer.AddRenderer(new StringRenderer(BoxDrawingSupply.GetFirstLine(width)), 0, 0);
-            for(int i = 1;i<height-1;i++)
-            {
-                groupRenderer.AddRenderer(new StringRenderer(BoxDrawingSupply.GetMiddleLine(width)), 0, -i);
-            }
-            groupRenderer.AddRenderer(new StringRenderer(BoxDrawingSupply.GetLastLine(width)), 0, -height+1);
-            groupRenderer.Depth = -1;
-
-            //添加TextBox组件
-            TextBox textBox = gameObject.AddComponent<TextBox>();
-            textBox.Init(pos,width,height);
-
-            return gameObject;
-        }
-    }
     /// <summary>
     /// 用于制表符加法运算的一个辅助类
     /// </summary>

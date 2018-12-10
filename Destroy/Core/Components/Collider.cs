@@ -10,135 +10,134 @@ namespace Destroy
     * Static 初始化的时候就存在. 只要标记为static,就永远都在
     * 之后版本要重新优化
     */
-    public abstract class Collider : Component
-    {
-        public Collider() { }
-    }
 
     /// <summary>
-    /// 静态碰撞体,包含这个组件的对象只能在游戏开始的时候创建
-    /// 会进行缓冲处理,提升系统性能.
+    /// Mesh组件 默认生成单点Mesh
     /// </summary>
-    public class StaticCollider: Collider
+    public class Mesh:Component
     {
-        public List<Vector2Int> posList;
-        public StaticCollider()
+        //使用一个标识符标识这个是不是一个单点Mesh,从而进行优化.
+        public bool isSingleMesh = true;
+        internal List<Vector2Int> posList { get; private set; }
+        public Mesh()
         {
+            //默认生成一个单点Mesh,只包含原点
+            isSingleMesh = true;
             posList = new List<Vector2Int>();
             posList.Add(new Vector2Int(0, 0));
         }
-        /// <summary>
-        /// 直接初始化Collider
-        /// </summary>
-        public void Init(List<Vector2Int> l)
+
+        public void Sort()
         {
-            posList = l;
+            //使用HashSet去重复. 之后排序
+            HashSet<Vector2Int> set = new HashSet<Vector2Int>();
+            foreach(var v in posList)
+            {
+                set.Add(v);
+            }
+            List<Vector2Int> newList = new List<Vector2Int>();
+            foreach(var v in set)
+            {
+                newList.Add(v);
+            }
+            newList.Sort();
+            posList = newList;
         }
         /// <summary>
-        /// 通过Renderer初始化Collider
+        /// 进行多点初始化
         /// </summary>
-        public void InitWithRenderer(Renderer r)
+        public bool Init(List<Vector2Int> list)
         {
-            //添加当前点
-            if (r.GetType() == typeof(PosRenderer))
+            //如果只有一个点,相当于没指定
+            if(list.Count == 1)
             {
-                posList.Add(new Vector2Int(0, 0));
-            }
-            //添加一排碰撞体
-            else if (r.GetType() == typeof(StringRenderer))
-            {
-                int n = 0;
-                for (int i = 0; i < ((StringRenderer)r).length; i += Camera.main.CharWidth)
+                if(list[0] == Vector2Int.Zero)
                 {
-                    posList.Add(new Vector2Int(n, 0));
-                    n++;
+                    isSingleMesh = true;
+                    posList = list;
+                    Debug.Warning("单点Mesh不需要执行Init操作");
+                    return true;
+                }
+                else
+                {
+                    Debug.Error("初始化失败,锚点必须包含原点");
+                    return false;
                 }
             }
-            //添加组碰撞体
-            else if (r.GetType() == typeof(GroupRenderer))
+            //检测是否包含原点,如果包含那么初始化成功
+            foreach(var v in list)
             {
-                GroupRenderer gr = r as GroupRenderer;
-                foreach (var v in gr.list)
+                if(v == Vector2Int.Zero)
                 {
-                    if (v.Key.GetType() == typeof(PosRenderer))
-                    {
-                        posList.Add(v.Value);
-                    }
-                    else if(v.Key.GetType() == typeof(StringRenderer))
-                    {
-                        int n = 0;
-                        for (int i = 0; i < ((StringRenderer)v.Key).length; i += Camera.main.CharWidth)
-                        {
-                            posList.Add(new Vector2Int(n, 0) + v.Value);
-                            n++;
-                        }
-                    }
+                    //如果有零点
+                    isSingleMesh = false;
+                    posList = list;
+                    //更改Mesh的时候进行重新排序
+                    Sort();
+                    return true;
                 }
             }
+            Debug.Error("初始化失败,锚点必须包含原点");
+            return false;
         }
     }
 
+    public abstract class Collider : Component
+    {
+
+    }
+
     /// <summary>
-    /// 拟合碰撞体,自动根据身上的Mesh组件生成对应的Collier
+    /// 碰撞体组件,一般来说默认按着Mesh来
     /// </summary>
     public class MeshCollider : Collider
     {
-        /// <summary>
-        /// 保存着碰撞体信息,初始化之后可以选择再进行更改,暂时不支持其他种类的Collider;
-        /// </summary>
-        public List<Vector2Int> posList;
-        public bool Init()
-        {
-            Renderer r = GetComponent<Renderer>();
-            if (r == null)
-            {
-                Debug.Warning(gameObject.Name + "对象没有Renderer组件");
-                return false;
-            }
-            posList = new List<Vector2Int>();
-            //添加当前点
-            if (r.GetType() == typeof(PosRenderer))
-            {
-                posList.Add(new Vector2Int(0, 0));
-            }
-            //添加一排碰撞体
-            else if (r.GetType() == typeof(StringRenderer))
-            {
-                int n = 0;
-                for (int i = 0; i < ((StringRenderer)r).length; i += Camera.main.CharWidth)
-                {
-                    posList.Add(new Vector2Int(n, 0));
-                    n++;
-                }
-            }
-            //添加组碰撞体
-            else if (r.GetType() == typeof(GroupRenderer))
-            {
-                GroupRenderer gr = r as GroupRenderer;
-                foreach (var v in gr.list)
-                {
-                    if (v.Key.GetType() == typeof(PosRenderer))
-                    {
-                        posList.Add(v.Value);
-                    }
-                    else if (v.Key.GetType() == typeof(StringRenderer))
-                    {
-                        int n = 0;
-                        for (int i = 0; i < ((StringRenderer)v.Key).length; i += Camera.main.CharWidth)
-                        {
-                            posList.Add(new Vector2Int(n, 0) + v.Value);
-                            n++;
-                        }
-                    }
-                }
-            }
-            return true;
-        }
+        public List<Vector2Int> ColliderList { get; private set; }
         public MeshCollider()
         {
-            
+           
+        }
+        public void Init()
+        {
+            Mesh mesh = GetComponent<Mesh>();
+            if (mesh == null)
+            {
+                mesh = AddComponent<Mesh>();
+                Debug.Warning("没有Mesh组件,自动生成一个点Mesh");
+            }
+            //将对象复制到此组件内. 更改Mesh中的list同样会更改这个
+            ColliderList = mesh.posList;
+            return;
         }
 
+        public void Change(List<Vector2Int> list)
+        {
+            Debug.Warning("将修改Collider,使其与Mesh不等,此操作不保证稳定性");
+            ColliderList = list;
+        }
+    }
+
+    public class StaticCollider : Collider
+    {
+        public List<Vector2Int> ColliderList { get; private set; }
+        public StaticCollider()
+        { 
+            Mesh mesh = GetComponent<Mesh>();
+            if (mesh == null)
+            {
+                mesh = AddComponent<Mesh>();
+                Debug.Warning("没有Mesh组件,自动生成一个点Mesh");
+            }
+            //将对象复制到此组件内. 更改Mesh中的list同样会更改这个
+            ColliderList = mesh.posList;
+            return;
+        }
+
+        public void Change(List<Vector2Int> list)
+        {
+            Debug.Warning("将修改Collider,使其与Mesh不等,此操作不保证稳定性");
+            ColliderList = list;
+        }
     }
 
     public class RigidBody : Component
