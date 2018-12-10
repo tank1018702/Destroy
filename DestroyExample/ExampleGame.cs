@@ -113,7 +113,7 @@
     //    }
     //}
 
-
+    
     static class Factory
     {
         public static GameObject CreatCamera(int charWidth = 2, int height = 30, int width = 30)
@@ -143,7 +143,6 @@
         public override void Start()
         {
             Factory.CreatCamera();
-
             NetworkSystem.Init(new Dictionary<int, Instantiate>() { { 1, CreatPlayer } });
         }
     }
