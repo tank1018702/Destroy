@@ -73,6 +73,12 @@
             events.Add(key, _event);
         }
 
+        public void Send(Socket client, ushort cmd1, ushort cmd2, byte[] data)
+        {
+            byte[] packData = NetworkMessage.PackSimpleTCPMessage(cmd1, cmd2, data);
+            messages.Enqueue(new Message(client, packData));
+        }
+
         public void Send<T>(Socket client, ushort cmd1, ushort cmd2, T message)
         {
             byte[] data = NetworkMessage.PackTCPMessage(cmd1, cmd2, message);

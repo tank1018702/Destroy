@@ -35,7 +35,7 @@
         /// <summary>
         /// 连接断开
         /// </summary>
-        public event Action<string, Socket> OnDisConnected;
+        public event Action<string, Socket> OnDisconnected;
 
         public void Register(ushort cmd1, ushort cmd2, CallbackEvent _event)
         {
@@ -43,6 +43,12 @@
             if (events.ContainsKey(key))
                 return;
             events.Add(key, _event);
+        }
+
+        public void Send(ushort cmd1, ushort cmd2, byte[] data)
+        {
+            byte[] packData = NetworkMessage.PackSimpleTCPMessage(cmd1, cmd2, data);
+            messages.Enqueue(packData);
         }
 
         public void Send<T>(ushort cmd1, ushort cmd2, T message)
@@ -78,7 +84,7 @@
                 {
                     client.Close();
                     Connected = false;
-                    OnDisConnected?.Invoke(ex.Message, client);
+                    OnDisconnected?.Invoke(ex.Message, client);
                     return;
                 }
             }
@@ -95,7 +101,7 @@
                 {
                     client.Close();
                     Connected = false;
-                    OnDisConnected?.Invoke(ex.Message, client);
+                    OnDisconnected?.Invoke(ex.Message, client);
                     return;
                 }
             }
