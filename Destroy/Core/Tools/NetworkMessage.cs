@@ -18,23 +18,44 @@
         }
 
         /// <summary>
+        /// 打简单TCP包
+        /// </summary>
+        public static byte[] PackSimpleTCPMessage(ushort cmd1, ushort cmd2, byte[] data)
+        {
+            List<byte> datas = new List<byte>();
+
+            byte[] data1 = BitConverter.GetBytes(cmd1);
+            byte[] data2 = BitConverter.GetBytes(cmd2);
+            byte[] bodyLen = BitConverter.GetBytes((ushort)(data1.Length + data2.Length + data.Length));
+
+            //packet head
+            datas.AddRange(bodyLen); // 2bytes (the length of the packet body)
+            //packet body
+            datas.AddRange(data1);   // 2bytes
+            datas.AddRange(data2);   // 2bytes
+            datas.AddRange(data);    // nbytes
+
+            return datas.ToArray();
+        }
+
+        /// <summary>
         /// 打TCP包
         /// </summary>
         public static byte[] PackTCPMessage<T>(ushort cmd1, ushort cmd2, T message)
         {
             List<byte> datas = new List<byte>();
 
-            byte[] senderData = BitConverter.GetBytes(cmd1);
-            byte[] typeData = BitConverter.GetBytes(cmd2);
+            byte[] data1 = BitConverter.GetBytes(cmd1);
+            byte[] data2 = BitConverter.GetBytes(cmd2);
             //使用Protobuf-net
             byte[] data = Serializer.NetSerialize(message);
-            byte[] bodyLen = BitConverter.GetBytes((ushort)(senderData.Length + typeData.Length + data.Length));
+            byte[] bodyLen = BitConverter.GetBytes((ushort)(data1.Length + data2.Length + data.Length));
 
             //packet head
             datas.AddRange(bodyLen);     // 2bytes (the length of the packet body)
             //packet body
-            datas.AddRange(senderData);  // 2bytes
-            datas.AddRange(typeData);    // 2bytes
+            datas.AddRange(data1);       // 2bytes
+            datas.AddRange(data2);       // 2bytes
             datas.AddRange(data);        // nbytes
 
             return datas.ToArray();
@@ -49,7 +70,7 @@
             byte[] head = new byte[2];
             socket.Receive(head);
 
-            bodyLen = BitConverter.ToUInt16(head, 0);           // 2bytes (the length of the packet body)
+            bodyLen = BitConverter.ToUInt16(head, 0);     // 2bytes (the length of the packet body)
             byte[] body = new byte[bodyLen];
             socket.Receive(body);
 
@@ -57,9 +78,9 @@
             {
                 using (BinaryReader reader = new BinaryReader(memory))
                 {
-                    cmd1 = reader.ReadUInt16();                     // 2bytes
-                    cmd2 = reader.ReadUInt16();                     // 2bytes
-                    data = reader.ReadBytes(bodyLen - 4);           // nbytes
+                    cmd1 = reader.ReadUInt16();           // 2bytes
+                    cmd2 = reader.ReadUInt16();           // 2bytes
+                    data = reader.ReadBytes(bodyLen - 4); // nbytes
                 }
             }
         }
@@ -71,13 +92,13 @@
         {
             List<byte> datas = new List<byte>();
 
-            byte[] senderData = BitConverter.GetBytes(cmd1);
-            byte[] typeData = BitConverter.GetBytes(cmd2);
+            byte[] data1 = BitConverter.GetBytes(cmd1);
+            byte[] data2 = BitConverter.GetBytes(cmd2);
             byte[] data = Serializer.NetSerialize(message); //使用Protobuf-net
 
             //packet
-            datas.AddRange(senderData); // 2bytes
-            datas.AddRange(typeData);   // 2bytes
+            datas.AddRange(data1);      // 2bytes
+            datas.AddRange(data2);      // 2bytes
             datas.AddRange(data);       // nbytes
 
             return datas.ToArray();
