@@ -16,8 +16,8 @@ namespace Destroy
             Console.BackgroundColor = call.BackColor.ToConsoleColor();
             Console.Write(call.Str);
 
-            ConsoleOutPutStandard.num = num + 1;
-            Debug.Log(num.ToString()+call.ToString());
+            //ConsoleOutPutStandard.num = num + 1;
+            //Debug.Log(num.ToString()+call.ToString());
         }
     }
 }

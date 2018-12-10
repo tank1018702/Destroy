@@ -1,5 +1,4 @@
-﻿/*
-namespace Destroy.Example
+﻿namespace Destroy.Example
 {
     using System;
     using System.Collections.Generic;
@@ -50,13 +49,13 @@ namespace Destroy.Example
             transform.Translate(new Vector2Int(10, -10));
 
             Mesh mesh = AddComponent<Mesh>();
-            mesh.Init(new List<Vector2Int>() { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0,- 1) });
+            mesh.Init(new List<Vector2Int>() { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, -1) });
 
             MeshCollider mc = AddComponent<MeshCollider>();
             mc.Init();
 
             Renderer renderer = AddComponent<Renderer>();
-            renderer.Init("一二三四五",10,EngineColor.Green,EngineColor.Yellow);
+            renderer.Init("一二三四五", 10, EngineColor.Green, EngineColor.Yellow);
 
             RigidBody rigidBody = AddComponent<RigidBody>();
             rigidBody.Mass = 1f;
@@ -70,7 +69,7 @@ namespace Destroy.Example
 
 
     [CreatGameObject]
-    public class GameMode:Script
+    public class GameMode : Script
     {
         public override void Start()
         {
@@ -95,4 +94,3 @@ namespace Destroy.Example
     }
 
 }
-*/

@@ -39,7 +39,7 @@
 
         internal static void Update(List<GameObject> gameObjects)
         {
-            //return;
+            return;
             if (!choose)
             {
                 choose = true;

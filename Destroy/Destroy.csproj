@@ -77,7 +77,6 @@
     <Compile Include="Core\Engine\Setting.cs" />
     <Compile Include="Core\GameObject\IPersistent.cs" />
     <Compile Include="Core\Tools\UI.cs" />
-    <Compile Include="Testing\Messages.cs" />
     <Compile Include="Testing\Scene.cs" />
     <Compile Include="Testing\RuntimeDebugger.cs" />
     <Compile Include="Core\GameObject\Object.cs" />
