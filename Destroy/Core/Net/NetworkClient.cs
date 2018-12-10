@@ -13,7 +13,6 @@
 
         private readonly string serverIp;
         private readonly int serverPort;
-
         private Dictionary<int, CallbackEvent> events;
         private Socket client;
         private Queue<byte[]> messages;
@@ -36,7 +35,7 @@
         /// <summary>
         /// 连接断开
         /// </summary>
-        public event Action<Socket> OnDisConnected;
+        public event Action<string, Socket> OnDisconnected;
 
         public void Register(ushort cmd1, ushort cmd2, CallbackEvent _event)
         {
@@ -46,13 +45,19 @@
             events.Add(key, _event);
         }
 
+        public void Send(ushort cmd1, ushort cmd2, byte[] data)
+        {
+            byte[] packData = NetworkMessage.PackSimpleTCPMessage(cmd1, cmd2, data);
+            messages.Enqueue(packData);
+        }
+
         public void Send<T>(ushort cmd1, ushort cmd2, T message)
         {
             byte[] data = NetworkMessage.PackTCPMessage(cmd1, cmd2, message);
             messages.Enqueue(data);
         }
 
-        internal void Start()
+        public void Start()
         {
             //可能导致异常
             client.Connect(new IPEndPoint(IPAddress.Parse(serverIp), serverPort));
@@ -60,7 +65,7 @@
             OnConnected?.Invoke(client);
         }
 
-        internal void Handle()
+        public void Update()
         {
             if (!Connected)
                 return;
@@ -75,11 +80,11 @@
                     if (events.ContainsKey(key))
                         events[key](data);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     client.Close();
                     Connected = false;
-                    OnDisConnected?.Invoke(client);
+                    OnDisconnected?.Invoke(ex.Message, client);
                     return;
                 }
             }
@@ -92,11 +97,11 @@
                 {
                     client.Send(data);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     client.Close();
                     Connected = false;
-                    OnDisConnected?.Invoke(client);
+                    OnDisconnected?.Invoke(ex.Message, client);
                     return;
                 }
             }

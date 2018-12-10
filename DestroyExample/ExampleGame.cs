@@ -30,8 +30,8 @@
             RigidBody rigidBody = AddComponent<RigidBody>();
             rigidBody.Mass = 1000f;
 
-            Console.CursorVisible = false;
-        }
+    //        Console.CursorVisible = false;
+    //    }
 
         public override void OnCollision(MeshCollider collision)
         {
@@ -50,8 +50,11 @@
             Mesh mesh = AddComponent<Mesh>();
             mesh.Init(new List<Vector2Int>() { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0,- 1) });
 
-            MeshCollider mc = AddComponent<MeshCollider>();
-            mc.Init();
+    //        transform.Translate(new Vector2Int(20, -18));
+    //        GroupRenderer sr = AddComponent<GroupRenderer>();
+    //        sr.list.Add(new KeyValuePair<Renderer, Vector2Int>(new StringRenderer("墙吊墙墙墙"), new Vector2Int(-1, 1)));
+    //        sr.list.Add(new KeyValuePair<Renderer, Vector2Int>(new PosRenderer("墙吊墙墙墙"), new Vector2Int(0, 0)));
+    //        sr.list.Add(new KeyValuePair<Renderer, Vector2Int>(new StringRenderer("墙吊墙墙墙墙吊墙墙墙"), new Vector2Int(-1, -1)));
 
             Renderer renderer = AddComponent<Renderer>();
             renderer.Init("一二三四五",10,EngineColor.Green,EngineColor.Yellow);
@@ -74,9 +77,12 @@
     {
         public override void Start()
         {
-            
+
         }
     }
+
+    //    }
+    //}
 
 
     static class Factory
@@ -93,10 +99,10 @@
         }
     }
 
-    //[CreatGameObject]
-    internal class ExampleGame : Script
+    [CreatGameObject]
+    internal class Test : Script
     {
-        public override void Start()
+        public GameObject CreatPlayer()
         {
             Factory.CreatCamera();
 
@@ -123,8 +129,8 @@
 
         public void Hide()
         {
-            gameObject.Active = true;
-            transform.Position = new Vector2Int(0, 0);
+            Factory.CreatCamera();
+            NetworkSystem.Init(new Dictionary<int, Instantiate>() { { 1, CreatPlayer } });
         }
     }
 }

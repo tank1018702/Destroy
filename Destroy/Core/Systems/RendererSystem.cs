@@ -8,46 +8,46 @@
      * 12/7 by Kyasever
      * 新增了复杂渲染系统,暂时使用了清空刷新,当检测到变动时,无条件先输出一行空格清空,然后再输入改动后的内容
      * 之后版本要重新优化
-     * 
-     * TODO: 
-     * Mesh 
+     *
+     * TODO:
+     * Mesh
      * 所有东西都是从Mesh组件上引申出来的,Mesh是自动生成挂上去的.
      * 内部存储格式 Vector2Int List 必须包含(0,0) 表示点集合与中心点的相对位置
      * PosMesh或者属性表示,表示这个是否是一个单点Mesh.其他组件判断的时候也单独处理
-     * 
-     * 
+     *
+     *
      * MeshCollider 这里面的Vector2Int就是直接获取Mesh就行了
      * 当然也可以作死编辑,无所谓...
-     * 
-     * 
+     *
+     *
      * RigidBody先检测这个东西是不是单点Mesh,如果不是
      * 检测它的MeshCollider,并按着MeshCollier挨个判断过去
-     * 
-     * 
+     *
+     *
      * Material 本质上是Model,Material,Texture的结合体,表现上是一个字符串,可以通过包含换行符来进行多行显示.
      *      对对对,要进行Textures和Material分离,Texture表现上是一个字符串,包含换行符,没了.
      *      Material本质上是对字符串的颜色和格式处理.
-     * 例如: 
-     * ColorfulMaterial [green,red,green,blue,black] 
-     * Texture "一二三四五" 
+     * 例如:
+     * ColorfulMaterial [green,red,green,blue,black]
+     * Texture "一二三四五"
      * Renderer结果 彩色的 一二三四五
-     * 
+     *
      * BlockMaterial [1,2,3,4,5],[6,7,8,9,10]
      * Texture "一二三四\n六七八九十"
-     * Renderer结果: 一二三四[]  
+     * Renderer结果: 一二三四[]
      *               六七八九十
-     * 
+     *
      * Mesh [1,2,3,4],[6]
      * BlockMaterial [绿,蓝,红,白,绿],[青,青,绿,蓝,红]
      * Texture "一二三四五六"
      * Renderer 一二三四
      *          五
-     * 
+     *
      * 总结: \n会进行强制换行,总是会按照矩阵顺序来进行渲染.如果Material比Mesh大,那么截断不需要的部分,如果Material比Mesh小,那么用默认颜色补充
-     * 
+     *
      * MeshRenderer 通过Material来渲染Texture. 改变Mesh,Material或者Texture时都会重新计算
      *     内部存储格式 RenderPoint和Vector2Int list保存
-     * 
+     *
      */
 
      /*
@@ -100,7 +100,7 @@
                 return left;
             }
 
-            //如果左方是UI 
+            //如果左方是UI
             if (left.Depth < 0)
             {
                 //如果右方也是UI,那么进行制表符运算和UI标记运算
@@ -119,7 +119,7 @@
             {
                 return right;
             }
-            
+
             if(left.Depth < right.Depth)
             {
                 //如果优先级高的东西的背景色是默认颜色,那么背景色取另一侧的
@@ -297,7 +297,7 @@
                     //如果这个渲染位置没有越界
                     if (vector.X >= 0 && vector.X < width && vector.Y >= 0 && vector.Y < height)
                     {
-                       
+
                         //使用特定的加法运算,将点的渲染叠加到原点上面去.
                         renderers[vector.X, vector.Y] = renderers[vector.X, vector.Y] + v.Value;
                     }

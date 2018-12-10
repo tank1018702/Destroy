@@ -1,4 +1,4 @@
-﻿namespace Destroy.Example
+﻿namespace RedDeadBoxheadRedemption
 {
     using Destroy;
 
@@ -7,7 +7,7 @@
         private static void Main()
         {
             RuntimeEngine runtimeEngine = new RuntimeEngine();
-            runtimeEngine.Run(100);
+            runtimeEngine.Run(20);
         }
     }
 }

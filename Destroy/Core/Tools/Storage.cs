@@ -10,7 +10,7 @@
             {
                 byte[] data = Serializer.JsonSerialize(obj);
                 //清空之前文件
-                stream.SetLength(0); //???
+                stream.SetLength(0);
                 stream.Write(data, 0, data.Length);
             }
         }

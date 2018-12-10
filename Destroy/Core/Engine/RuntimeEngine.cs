@@ -8,8 +8,6 @@
 
     public class RuntimeEngine
     {
-        public Thread GameThread { get; private set; }
-
         private static Assembly assembly;
 
         internal static Assembly GetAssembly
@@ -22,6 +20,8 @@
             }
         }
 
+        public Thread GameThread { get; private set; }
+
         private readonly List<GameObject> gameObjects;
 
         public RuntimeEngine()
@@ -30,7 +30,6 @@
             gameObjects = new List<GameObject>();
             Manage += gameObject => gameObjects.Add(gameObject);
             Object.GameObjects = gameObjects;
-
         }
 
         public void Run(int tickPerSecond, bool allowMultiple = true)
@@ -78,7 +77,7 @@
 
         private void CreateGameObjects()
         {
-            Assembly assembly = RuntimeEngine.GetAssembly;
+            Assembly assembly = GetAssembly;
 
             List<KeyValuePair<uint, object>> pairs = new List<KeyValuePair<uint, object>>();
 
