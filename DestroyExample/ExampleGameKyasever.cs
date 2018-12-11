@@ -20,6 +20,7 @@
             transform.Translate(new Vector2Int(5, -5));
 
             AddComponent<Mesh>();
+
             MeshCollider mc = AddComponent<MeshCollider>();
             mc.Init();
 

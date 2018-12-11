@@ -15,48 +15,32 @@
      * 内部存储格式 Vector2Int List 必须包含(0,0) 表示点集合与中心点的相对位置
      * PosMesh或者属性表示,表示这个是否是一个单点Mesh.其他组件判断的时候也单独处理
      *
-     *
      * MeshCollider 这里面的Vector2Int就是直接获取Mesh就行了
      * 当然也可以作死编辑,无所谓...
      *
-     *
      * RigidBody先检测这个东西是不是单点Mesh,如果不是
      * 检测它的MeshCollider,并按着MeshCollier挨个判断过去
-     *
      *
      * Material 本质上是Model,Material,Texture的结合体,表现上是一个字符串,可以通过包含换行符来进行多行显示.
      *      对对对,要进行Textures和Material分离,Texture表现上是一个字符串,包含换行符,没了.
      *      Material本质上是对字符串的颜色和格式处理.
      * 例如:
-     * ColorfulMaterial [green,red,green,blue,black]
-     * Texture "一二三四五"
-     * Renderer结果 彩色的 一二三四五
-     *
-     * BlockMaterial [1,2,3,4,5],[6,7,8,9,10]
-     * Texture "一二三四\n六七八九十"
-     * Renderer结果: 一二三四[]
-     *               六七八九十
-     *
      * Mesh [1,2,3,4],[6]
      * BlockMaterial [绿,蓝,红,白,绿],[青,青,绿,蓝,红]
      * Texture "一二三四五六"
      * Renderer 一二三四
      *          五
      *
-     * 总结: \n会进行强制换行,总是会按照矩阵顺序来进行渲染.如果Material比Mesh大,那么截断不需要的部分,如果Material比Mesh小,那么用默认颜色补充
+     * TODO: \n会进行强制换行,总是会按照矩阵顺序来进行渲染.如果Material比Mesh大,那么截断不需要的部分,如果Material比Mesh小,那么用默认颜色补充
      *
      * MeshRenderer 通过Material来渲染Texture. 改变Mesh,Material或者Texture时都会重新计算
      *     内部存储格式 RenderPoint和Vector2Int list保存
-     *
+     *     
+     *     
+     * UI运算 UI组件都有边框 左边框为O| 右边框为|O 可以进行组合 ||
+     * 保存一个UI边框的缓冲. 这东西初始化之后就不动了. Render刷新的时候会先调用这个覆盖.
+     * String依然使用标准渲染
      */
-
-     /*
-      * RendererSystem 渲染系统
-      * 1.把缓存清空.
-      * 1.将所有的Renderer信息都写入系统缓存,使用加号进行无脑相加
-      * 2.与Buffer比较,如果不同的话,那么产生一个DrawCall
-      */
-
     /// <summary>
     /// 标准输出点结构.所有的Renderer组件都会被处理为RenderPos的集合
     /// </summary>
@@ -182,6 +166,9 @@
 
     }
 
+    /// <summary>
+    /// 渲染系统
+    /// </summary>
     public static class RendererSystem
     {
         public static EngineColor DefaultColorFore = EngineColor.Gray;
@@ -253,7 +240,6 @@
                     renderers[i, j] = Block;
                 }
             }
-
         }
 
         internal static void Update(List<GameObject> gameObjects)

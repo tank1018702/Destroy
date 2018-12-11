@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Destroy
 {
+    /// <summary>
+    /// 标准控制台输出,用于处理DrawCall
+    /// TODO 改成多线程的
+    /// </summary>
     public static class ConsoleOutPutStandard
     {
         public static int num;

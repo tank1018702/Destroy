@@ -6,6 +6,98 @@ using System.Threading.Tasks;
 
 namespace Destroy
 {
+    public static class UIFactroy
+    {
+        public static GameObject CreateTextBox(int height,int width)
+        {
+            GameObject textBox = new GameObject("TextBox");
+            //先添加一个TextBox控件
+            textBox.AddComponent<TextBox>();
+
+            //添加一个方框
+            //GameObject boxDrawing = new GameObject("BoxDrawing");
+            //Mesh mesh = boxDrawing.AddComponent<Mesh>();
+
+            //List<Vector2Int> meshList = new List<Vector2Int>();
+            //for(int i = 0;i<width;i++)
+            //{
+            //    meshList.Add(new Vector2Int(i, -1));
+            //}
+
+            //mesh.Init(meshList);
+
+            return textBox;
+        }
+
+        public static GameObject CreateLabel(int width)
+        {
+            GameObject lable = new GameObject("Label");
+            //添加一个Label组件
+            Label labelCom = lable.AddComponent<Label>();
+            //添加一个宽度等同于width的Mesh
+            Mesh mesh = lable.AddComponent<Mesh>();
+            List<Vector2Int> meshList = new List<Vector2Int>();
+            for (int i = 0; i < width; i++)
+            {
+                meshList.Add(new Vector2Int(i, 0));
+            }
+            mesh.Init(meshList);
+            //添加一个Renderer组件
+            Renderer renderer = lable.AddComponent<Renderer>();
+            //不进行初始化,手动进行添加
+            return lable;
+        }
+    }
+    /// <summary>
+    /// 单行Lebel控件
+    /// Label对象上的label脚本.默认不通过这个创建
+    /// </summary>
+    public class Label : Script
+    {
+        private Renderer renderer;
+        public override void Start()
+        {
+            renderer = GetComponent<Renderer>();
+
+        }
+        //默认初始化
+        public void Init()
+        {
+            depth = -1;
+            foreColor = RendererSystem.DefaultColorFore;
+            backColor = RendererSystem.DefaultColorBack;
+        }
+        //自定义初始化
+        public void Init(int depth,EngineColor foreColor, EngineColor backColor)
+        {
+            this.depth = depth;
+            this.foreColor = foreColor;
+            this.backColor = backColor;
+        }
+        public EngineColor foreColor, backColor;
+        public int depth = -1;
+        //当改动Text变量的时候重新渲染renderer
+        public string Text
+        {
+            get { return renderer.Texture.pic; }
+            set
+            {
+                renderer.Init(value, depth, foreColor, backColor);
+            }
+        }
+    }
+
+
+    public class TextBox : Script
+    {
+        public List<Label> labels;
+        public override void Start()
+        {
+            labels = new List<Label>();
+        }
+
+    }
+
     /// <summary>
     /// 用于制表符加法运算的一个辅助类
     /// </summary>
