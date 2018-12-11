@@ -5,6 +5,11 @@
     public abstract class Component : Object
     {
         /// <summary>
+        /// 在该组件被添加到游戏物体时调用 (在该方法中可以使用GetComponent)
+        /// </summary>
+        internal virtual void Initialize() { }
+
+        /// <summary>
         /// 游戏物体
         /// </summary>
         public GameObject gameObject { get; internal set; }

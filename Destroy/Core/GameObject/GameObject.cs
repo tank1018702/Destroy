@@ -30,6 +30,8 @@
             component.transform = transform;
             Components.Add(component);
 
+            component.Initialize();
+
             return component;
         }
 
@@ -88,6 +90,8 @@
             instance.gameObject = this;
             instance.transform = transform;
             Components.Add(instance);
+
+            instance.Initialize();
 
             return instance;
         }
