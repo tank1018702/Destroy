@@ -164,7 +164,7 @@
     //    }
     //}
 
-    class NetworkPlayerController : NetScript
+    class NetworkPlayerController : NetworkScript
     {
         public override void Start()
         {

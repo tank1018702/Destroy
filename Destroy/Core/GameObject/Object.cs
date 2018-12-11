@@ -21,7 +21,7 @@
             get => active;
             set
             {
-                //不能禁用继承IPersistent接口的对象
+                //不能禁用继承IPersistent接口的物体
                 if (typeof(IPersistent).IsAssignableFrom(GetType()) && value == false)
                     return;
                 active = value;
@@ -40,9 +40,6 @@
         public static void Destroy(Object obj)
         {
             Type type = obj.GetType();
-            //不能销毁继承IPersistent接口的对象
-            if (typeof(IPersistent).IsAssignableFrom(type))
-                return;
 
             //获取调用该方法的类
             StackTrace stackTrace = new StackTrace(true);
@@ -51,6 +48,10 @@
             //销毁组件
             if (type.IsSubclassOf(typeof(Component)))
             {
+                //不能销毁继承IPersistent接口的组件
+                if (typeof(IPersistent).IsAssignableFrom(type))
+                    return;
+
                 Component component = (Component)obj;
                 GameObject gameObject = component.gameObject;
                 //自己销毁自己脚本

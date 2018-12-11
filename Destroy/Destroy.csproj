@@ -70,7 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Components\Camera.cs" />
-    <Compile Include="Core\Components\NetScript.cs" />
+    <Compile Include="Core\Components\NetworkScript.cs" />
     <Compile Include="Core\Components\NetworkIdentity.cs" />
     <Compile Include="Core\Components\Transform.cs" />
     <Compile Include="Core\Engine\LowLevelAPI.cs" />

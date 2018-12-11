@@ -96,6 +96,21 @@
 
         public void Broadcast()
         {
+            S2C_Move move = new S2C_Move();
+            move.Frame = frame;
+            move.Entities = new List<Entity>();
+            frame++;
+            foreach (var dict in instances.Values)
+            {
+                foreach (var entity in dict.Values)
+                {
+                    move.Entities.Add(entity);
+                }
+            }
+
+            //广播所有人
+            foreach (var client in clients.Keys)
+                Send(client, (ushort)Role.Server, (ushort)Cmd.Move, move);
         }
 
         private new void OnConnected(Socket socket)
@@ -136,7 +151,19 @@
 
         private void OnMove(Socket socket, byte[] data)
         {
-            //Serializer.NetDeserialize<>
+            C2S_Move move = Serializer.NetDeserialize<C2S_Move>(data);
+
+            if (move.Entities == null) //表示该玩家没有创建移动的游戏物体
+                return;
+            //玩家的实体
+            foreach (var entity in move.Entities)
+            {
+                //获得场景中所有实例
+                foreach (var dict in instances.Values)
+                {
+                    dict[entity.Id] = entity; //赋值
+                }
+            }
         }
 
         private void OnInstantiate(Socket socket, byte[] data)
@@ -188,23 +215,27 @@
 
     public class Client : NetworkClient
     {
-        private bool start;
+        private bool join;
         private int id;
         private int frame;
         private Dictionary<int, Instantiate> prefabs;
         private Dictionary<int, Dictionary<int, GameObject>> instances; //管理该局游戏场景中的对象
 
-        private List<GameObject> gameObject;
+        private Dictionary<int, GameObject> selfIntances; //物品Id, 游戏物体
+        private Dictionary<int, GameObject> otherInstances;
 
         public Client(string serverIp, int serverPort, Dictionary<int, Instantiate> prefabs) : base(serverIp, serverPort)
         {
-            start = false;
+            join = false;
             id = -1;
             frame = -1;
             this.prefabs = prefabs;
             instances = new Dictionary<int, Dictionary<int, GameObject>>();
             foreach (var prefab in prefabs)
                 instances.Add(prefab.Key, new Dictionary<int, GameObject>());
+            //负责管理移动
+            selfIntances = new Dictionary<int, GameObject>();
+            otherInstances = new Dictionary<int, GameObject>();
 
             base.OnDisconnected += (msg, socket) => { throw new Exception("断开连接" + msg); };
             Register((ushort)Role.Server, (ushort)Cmd.Join, JoinCallback);
@@ -215,7 +246,18 @@
 
         public void Move()
         {
+            if (!join) //等待加入游戏成功
+                return;
 
+            C2S_Move move = new C2S_Move();
+            move.Frame = frame;
+            move.Entities = new List<Entity>();
+            foreach (var instance in selfIntances)
+            {
+                Vector2Int pos = instance.Value.transform.Position;
+                move.Entities.Add(new Entity(instance.Key, pos.X, pos.Y));
+            }
+            Send((ushort)Role.Client, (ushort)Cmd.Move, move);
         }
 
         public void Instantiate_RPC(int typeId, Vector2Int position)
@@ -239,11 +281,16 @@
             NetworkIdentity identity = instance.GetComponent<NetworkIdentity>();
             if (!identity || !identity.Active) //如果没有该组件或者不活跃
                 return;
+            //只允许删除自己的游戏物体
+            if (!selfIntances.ContainsKey(identity.Id))
+                return;
 
             //从列表中删除
             instances[identity.TypeId].Remove(identity.Id);
             //从场景中删除
             Object.Destroy(instance);
+            //从自己物体中删除
+            selfIntances.Remove(identity.Id);
 
             C2S_Destroy cmd = new C2S_Destroy();
             cmd.Frame = frame;
@@ -256,7 +303,7 @@
         private void JoinCallback(byte[] data)
         {
             S2C_Join join = Serializer.NetDeserialize<S2C_Join>(data);
-            start = true;
+            this.join = true;
             frame = join.Frame;
             id = join.YourId;
             if (join.Instances == null) //表示当前没有游戏物体
@@ -268,7 +315,18 @@
 
         private void MoveCallback(byte[] data)
         {
-
+            S2C_Move move = Serializer.NetDeserialize<S2C_Move>(data);
+            frame = move.Frame;
+            if (move.Entities == null) //表示当前没有游戏物体
+                return;
+            //实现其他物体同步移动
+            foreach (var entity in move.Entities)
+            {
+                //只同步他人
+                Vector2Int pos = new Vector2Int(entity.X, entity.Y);
+                if (otherInstances.ContainsKey(entity.Id))
+                    otherInstances[entity.Id].transform.Position = pos;
+            }
         }
 
         private void DestroyCallback(byte[] data)
@@ -280,6 +338,8 @@
             instances[cmd.TypeId].Remove(cmd.Id);
             //从场景中删除
             Object.Destroy(instance);
+            //从他人物体中移除
+            otherInstances.Remove(cmd.Id);
         }
 
         private void OnInstantiated(byte[] data)
@@ -292,8 +352,15 @@
         {
             //创建场景实例
             GameObject gameObject = prefabs[instance.TypeId]();
-            //加进对象字典
+            //加进对象列表
             instances[instance.TypeId].Add(instance.Id, gameObject);
+            //加进本地物体
+            if (instance.IsLocal)
+                selfIntances.Add(instance.Id, gameObject);
+            //加进他人物体
+            else
+                otherInstances.Add(instance.Id, gameObject);
+
             //修改坐标
             gameObject.transform.Position = new Vector2Int(instance.X, instance.Y);
             //添加Id组件
@@ -301,11 +368,9 @@
             identity.TypeId = instance.TypeId;
             identity.Id = instance.Id;
             //组件赋值
-            List<NetScript> netScripts = gameObject.GetComponents<NetScript>();
-            foreach (NetScript netScript in netScripts)
-            {
+            List<NetworkScript> netScripts = gameObject.GetComponents<NetworkScript>();
+            foreach (NetworkScript netScript in netScripts)
                 netScript.IsLocal = instance.IsLocal;
-            }
         }
     }
 
@@ -411,32 +476,21 @@
         }
     }
 
-    //[ProtoContract]
-    //public struct C2S_PosSync
-    //{
-    //    [ProtoMember(1)]
-    //    public int Frame;
-    //    [ProtoMember(2)]
-    //    public Entity Position;
-    //}
+    [ProtoContract]
+    public struct C2S_Move
+    {
+        [ProtoMember(1)]
+        public int Frame;
+        [ProtoMember(2)]
+        public List<Entity> Entities; //Self Instances's Postions
+    }
 
-    //[ProtoContract]
-    //public struct S2C_PosSync
-    //{
-    //    [ProtoMember(1)]
-    //    public int Frame;
-    //    [ProtoMember(2)]
-    //    public List<Entity> Positions;
-    //}
-
-    //[ProtoContract]
-    //public struct S2C_StartSync
-    //{
-    //    [ProtoMember(1)]
-    //    public int Frame;
-    //    [ProtoMember(2)]
-    //    public int YourId;
-    //    [ProtoMember(3)]
-    //    public List<Entity> Positions;
-    //}
+    [ProtoContract]
+    public struct S2C_Move
+    {
+        [ProtoMember(1)]
+        public int Frame;
+        [ProtoMember(2)]
+        public List<Entity> Entities;
+    }
 }

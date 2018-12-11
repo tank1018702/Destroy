@@ -1,6 +1,6 @@
 ﻿namespace Destroy
 {
-    public abstract class NetScript : Script
+    public abstract class NetworkScript : Script
     {
         public bool IsLocal { get; internal set; }
     }
