@@ -22,7 +22,6 @@
             AddComponent<Mesh>();
 
             MeshCollider mc = AddComponent<MeshCollider>();
-            mc.Init();
 
             Renderer renderer = AddComponent<Renderer>();
             renderer.Init("吊");
@@ -53,7 +52,6 @@
             mesh.Init(new List<Vector2Int>() { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, -1) });
 
             MeshCollider mc = AddComponent<MeshCollider>();
-            mc.Init();
 
             Renderer renderer = AddComponent<Renderer>();
             renderer.Init("一二三四五", 10, EngineColor.Green, EngineColor.Yellow);
@@ -74,7 +72,11 @@
     {
         public override void Start()
         {
-
+            UIFactroy.CreateLabel(new Vector2Int(7,10),"jkl今天天气真不错",5);
+            TextBox textBox = UIFactroy.CreateTextBox(new Vector2Int(-5,-5),10, 10);
+            textBox.SetText("TransForm", 1);
+            textBox.SetText("TransForm124556", 3);
+            textBox.Labels[2].GetComponent<Renderer>().Material = new Material(EngineColor.Green, EngineColor.Yellow);
         }
     }
 
@@ -86,6 +88,7 @@
         {
             GameObject go = new GameObject("Camera");
             Camera camera = go.AddComponent<Camera>();
+            camera.transform.Translate(new Vector2Int( -width/2, height/2));
             camera.CharWidth = charWidth;
             camera.Height = height;
             camera.Width = width;

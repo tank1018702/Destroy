@@ -74,17 +74,8 @@
         //两个渲染点的相加. 所有覆盖操作都是相加
         public static RenderPoint operator +(RenderPoint left, RenderPoint right)
         {
-            //如果有一侧是空的,那么结果等于另一侧
-            if (left.Equals(RendererSystem.Block))
-            {
-                return right;
-            }
-            else if (right.Equals(RendererSystem.Block))
-            {
-                return left;
-            }
-
-            //如果左方是UI
+            //先检测UI,再检测空 UI的空不是空对象
+            //如果左方是UI 
             if (left.Depth < 0)
             {
                 //如果右方也是UI,那么进行制表符运算和UI标记运算
@@ -103,6 +94,18 @@
             {
                 return right;
             }
+
+            //如果有一侧是空的,那么结果等于另一侧
+            if (left.Equals(RendererSystem.Block))
+            {
+                    return right;
+            }
+            else if (right.Equals(RendererSystem.Block))
+            {
+                    return left;
+            }
+
+
 
             if(left.Depth < right.Depth)
             {

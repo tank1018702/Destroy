@@ -8,30 +8,69 @@ namespace Destroy
 {
     public static class UIFactroy
     {
-        public static GameObject CreateTextBox(int height,int width)
+        public static TextBox CreateTextBox(Vector2Int pos, int height,int width)
         {
-            GameObject textBox = new GameObject("TextBox");
-            //先添加一个TextBox控件
-            textBox.AddComponent<TextBox>();
 
+            GameObject gameObject = new GameObject("TextBox");
+            gameObject.transform.Position = pos;
+
+            //添加一个TextBox控件,用于寻找对应的Lable
+            TextBox textBox = gameObject.AddComponent<TextBox>();
+            //添加Label控件
+            for (int i = height; i >0; i--)
+            {
+                textBox.Labels.Add(CreateLabel(pos + new Vector2Int(1, i),"",width));
+            }
+            #region 创建边框
+            int boxWidth = width + 2, boxHeight = height + 2;
             //添加一个方框
-            //GameObject boxDrawing = new GameObject("BoxDrawing");
-            //Mesh mesh = boxDrawing.AddComponent<Mesh>();
+            GameObject boxDrawing = new GameObject("BoxDrawing");
+            boxDrawing.transform.Position = pos;
+            Mesh mesh = boxDrawing.AddComponent<Mesh>();
 
-            //List<Vector2Int> meshList = new List<Vector2Int>();
-            //for(int i = 0;i<width;i++)
-            //{
-            //    meshList.Add(new Vector2Int(i, -1));
-            //}
+            List<Vector2Int> meshList = new List<Vector2Int>();
+            //添加上下边框的Mesh
+            for (int i = 0; i < boxWidth; i++)
+            {
+                meshList.Add(new Vector2Int(i, 0));
+                meshList.Add(new Vector2Int(i, boxHeight -1));
+            }
+            //添加左右边框的Mesh
+            for(int i = 0;i<boxHeight;i++)
+            {
+                meshList.Add(new Vector2Int(0, i));
+                meshList.Add(new Vector2Int(boxWidth-1, i));
+            }
+            mesh.Init(meshList);
 
-            //mesh.Init(meshList);
+            Renderer renderer = boxDrawing.AddComponent<Renderer>();
+
+            //添加边框的贴图
+            StringBuilder sb = new StringBuilder();
+            sb.Append(BoxDrawingSupply.GetFirstLine(boxWidth));
+            for(int i = 0;i<boxHeight-2;i++)
+            {
+                sb.Append(' ');
+                sb.Append(BoxDrawingSupply.boxVertical);
+                sb.Append(BoxDrawingSupply.boxVertical);
+                sb.Append(' ');
+            }
+            sb.Append(BoxDrawingSupply.GetLastLine(boxWidth));
+
+            renderer.Init(sb.ToString(), -1);
+            #endregion
+            //("wtf:" + textBox.labels[1].GetComponent<Renderer>().Pos_RenderPoint[new Vector2Int(2,0)].Depth);
 
             return textBox;
         }
-
-        public static GameObject CreateLabel(int width)
+        /// <summary>
+        /// 创建一个Lable组件,不带有默认文字
+        /// </summary>
+        public static Label CreateLabel(Vector2Int pos ,int width)
         {
             GameObject lable = new GameObject("Label");
+            //初始化位置
+            lable.transform.Position = pos;
             //添加一个Label组件
             Label labelCom = lable.AddComponent<Label>();
             //添加一个宽度等同于width的Mesh
@@ -44,24 +83,29 @@ namespace Destroy
             mesh.Init(meshList);
             //添加一个Renderer组件
             Renderer renderer = lable.AddComponent<Renderer>();
+            renderer.Depth = -1;
             //不进行初始化,手动进行添加
-            return lable;
+            return labelCom;
+        }
+        /// <summary>
+        /// 创建一个Lable
+        /// </summary>
+        public static Label CreateLabel(Vector2Int pos,string text, int width)
+        {
+            Label lableCom = CreateLabel(pos, width);
+            Renderer renderer = lableCom.GetComponent<Renderer>();
+            renderer.Texture =  new Texture(text);
+            return lableCom;
         }
     }
     /// <summary>
     /// 单行Lebel控件
     /// Label对象上的label脚本.默认不通过这个创建
     /// </summary>
-    public class Label : Script
+    public class Label : Component
     {
-        private Renderer renderer;
-        public override void Start()
-        {
-            renderer = GetComponent<Renderer>();
-
-        }
         //默认初始化
-        public void Init()
+        internal override void Initialize()
         {
             depth = -1;
             foreColor = RendererSystem.DefaultColorFore;
@@ -79,22 +123,42 @@ namespace Destroy
         //当改动Text变量的时候重新渲染renderer
         public string Text
         {
-            get { return renderer.Texture.pic; }
+            get { return GetComponent<Renderer>().Texture.pic; }
             set
             {
-                renderer.Init(value, depth, foreColor, backColor);
+                GetComponent<Renderer>().Init(value, depth, foreColor, backColor);
             }
         }
     }
 
-
-    public class TextBox : Script
+    /// <summary>
+    /// 文本框组件
+    /// </summary>
+    public class TextBox : Component
     {
-        public List<Label> labels;
-        public override void Start()
+        //最后返回的应该是TextBox组件,可以通过label更改每一条的信息,
+        public List<Label> Labels = new List<Label>();
+        
+        /// <summary>
+        /// 更改对应行上面的字符,也可以通过获取Labels自己找对应的Label组件
+        /// </summary>
+        public bool SetText(string str,int line)
         {
-            labels = new List<Label>();
+            if(line > Labels.Count )
+            {
+                return false;
+            }
+            else if(line <= 0)
+            {
+                return false;
+            }
+            else
+            {
+                Labels[line - 1].Text = str;
+                return true;
+            }
         }
+
 
     }
 
@@ -294,18 +358,39 @@ namespace Destroy
         /// </summary>
         public static string GetFirstLine(int width)
         {
-            StringBuilder sb = new StringBuilder();
-            //左上角
-            sb.Append(boxDownRight);
-            //上部
-            for (int i = 1; i < width; i++)
+            if(RendererSystem.charWidth == 1)
             {
-                sb.Append(boxHorizontal);
-            }
-            //右上角
-            sb.Append(boxDownLeft);
+                StringBuilder sb = new StringBuilder();
+                //左上角
+                sb.Append(boxDownRight);
+                //上部
+                for (int i = 1; i < width; i++)
+                {
+                    sb.Append(boxHorizontal);
+                }
+                //右上角
+                sb.Append(boxDownLeft);
 
-            return sb.ToString();
+                return sb.ToString();
+            }
+            else
+            {
+                StringBuilder sb = new StringBuilder();
+                //左上角
+                sb.Append(' ');
+                sb.Append(boxDownRight);
+                //上部
+                for (int i = 0; i < width-2; i++)
+                {
+                    sb.Append(boxHorizontal);
+                    sb.Append(boxHorizontal);
+                }
+                //右上角
+                sb.Append(boxDownLeft);
+                sb.Append(' ');
+
+                return sb.ToString();
+            }
         }
 
         /// <summary>
@@ -313,18 +398,38 @@ namespace Destroy
         /// </summary>
         public static string GetLastLine(int width)
         {
-            StringBuilder sb = new StringBuilder();
-            //左上角
-            sb.Append(boxUpRight);
-            //上部
-            for (int i = 1; i < width; i++)
+            if (RendererSystem.charWidth == 1)
             {
-                sb.Append(boxHorizontal);
-            }
-            //右上角
-            sb.Append(boxUpLeft);
+                StringBuilder sb = new StringBuilder();
+                //左上角
+                sb.Append(boxUpRight);
+                //上部
+                for (int i = 1; i < width; i++)
+                {
+                    sb.Append(boxHorizontal);
+                }
+                //右上角
+                sb.Append(boxUpLeft);
 
-            return sb.ToString();
+                return sb.ToString();
+            }
+            else
+            {
+                StringBuilder sb = new StringBuilder();
+                //左上角
+                sb.Append(' ');
+                sb.Append(boxUpRight);
+                //上部
+                for (int i = 0; i < width-2; i++)
+                {
+                    sb.Append(boxHorizontal);
+                    sb.Append(boxHorizontal);
+                }
+                //右上角
+                sb.Append(boxUpLeft);
+                sb.Append(' ');
+                return sb.ToString();
+            }
         }
 
         /// <summary>

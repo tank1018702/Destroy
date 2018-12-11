@@ -51,8 +51,13 @@
         /// </summary>
         public static int CharWide(char c)
         {
+            //12/11打了个补丁,制表符宽度算1
+            if(c >=  0x2500 &&c<= 0x257F)
+            {
+                return 1;
+            }
             //只要不低于127都算chinese算了
-            if (c >= 0x4e00 && c <= 0x9fbb)
+            else if (c >= 0x4e00 && c <= 0x9fbb)
             {
                 return 2;
             }
@@ -149,6 +154,13 @@
                     //再把自己输出
                     list.Add(v.ToString());
                 }
+            }
+            if(outputLength == 1)
+            {
+                outputLength = 0;
+                output += " ";
+                list.Add(output);
+                output = "";
             }
             return list;
         }

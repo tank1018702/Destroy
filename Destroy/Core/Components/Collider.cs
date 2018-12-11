@@ -97,7 +97,8 @@ namespace Destroy
         {
            
         }
-        public void Init()
+
+        internal override void Initialize()
         {
             Mesh mesh = GetComponent<Mesh>();
             if (mesh == null)

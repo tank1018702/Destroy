@@ -113,7 +113,19 @@
         /// 为0时脚本显示优先级最高(最后被渲染), 然后向着数轴正方向递减。
         /// 这个深度保存在Renderer中
         /// </summary>
-        public int Depth;
+        private int depth;
+        public int Depth
+        {
+            get { return depth; }
+            set
+            {
+                if (Rendering(material, texture, shader))
+                {
+                    depth = value;
+                }
+            }
+        }
+
 
         private Material material;
         /// <summary>
@@ -124,7 +136,7 @@
             get => material;
             set
             {
-                if (Init(value, texture, shader))
+                if (Rendering(value, texture, shader))
                 {
                     material = value;
                 }
@@ -140,7 +152,7 @@
             get => texture;
             set
             {
-                if (Init(material, value, shader))
+                if (Rendering(material, value, shader))
                 {
                     texture = value;
                 }
@@ -156,7 +168,7 @@
             get => shader;
             set
             {
-                if (Init(material, texture, value))
+                if (Rendering(material, texture, value))
                 {
                     shader = value;
                 }
@@ -172,17 +184,15 @@
         /// 通过材质贴图着色器生成renders结果 
         /// 基本符合顶点 - 贴图 - 着色器 渲染管线原理
         /// </summary>
-        internal bool Init(Material material, Texture texture, Shader shader)
+        internal bool Rendering(Material material, Texture texture, Shader shader)
         {
-
              Mesh mesh = GetComponent<Mesh>();
-
 
             //如果是单点Mesh,那么直接输出就完事了.日后在考虑优化..
             if (mesh.isSingleMesh)
             {
                 Pos_RenderPoint = new Dictionary<Vector2Int, RenderPoint>();
-                Pos_RenderPoint.Add(new Vector2Int(0, 0), new RenderPoint(Print.SubStr(texture.pic, RendererSystem.charWidth), material.ForeColor, material.BackColor, Depth));
+                Pos_RenderPoint.Add(new Vector2Int(0, 0), new RenderPoint(Print.SubStr(texture.pic, RendererSystem.charWidth), material.ForeColor, material.BackColor, depth));
                 return true;
             }
 
@@ -211,7 +221,7 @@
                 s++;
             }
             //将信息交给Shader处理.完成剩下的工作
-            Pos_RenderPoint = shader.Shade(material, dic ,Depth);
+            Pos_RenderPoint = shader.Shade(material, dic ,depth);
             return true;
         }
 
@@ -220,10 +230,10 @@
         {
         }
 
-        public void Init()
+        internal override void Initialize()
         {
             //默认显示在最底层
-            Depth = 100;
+            depth = 100;
             //使用基于系统默认颜色的纯色Material
             material = Material.DefaultColorMaterial;
             //使用标准着色器,这个应该改成反射获取静态类之类的.
@@ -231,28 +241,38 @@
             //使用标准空格作为默认贴图信息
             texture = Texture.Block;
             //初始化渲染器
-            Init(material, texture, shader);
+            Rendering(material, texture, shader);
         }
 
         public void Init(string str)
         {
-            Depth = 100;
+            depth = 100;
             material = Material.DefaultColorMaterial;
             shader = Shader.Standard;
             texture = new Texture(str);
             //初始化渲染器
-            Init(material, texture, shader);
+            Rendering(material, texture, shader);
+        }
+
+        public void Init(string str, int depth)
+        {
+            this.depth = depth;
+            material = Material.DefaultColorMaterial;
+            shader = Shader.Standard;
+            texture = new Texture(str);
+            //初始化渲染器
+            Rendering(material, texture, shader);
         }
 
         //手动初始化
         public void Init(string str, int depth, EngineColor foreColor,EngineColor backColor)
         {
-            Depth = depth;
+            this.depth = depth;
             material = new Material(foreColor, backColor);
             //使用标准着色器
             shader = Shader.Standard;
             texture = new Texture(str);
-            Init(material, texture, shader);
+            Rendering(material, texture, shader);
         }
     }
 }
