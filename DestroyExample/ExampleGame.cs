@@ -113,7 +113,6 @@
     //    }
     //}
 
-    
     static class Factory
     {
         public static GameObject CreatCamera(int charWidth = 2, int height = 30, int width = 30)
@@ -128,13 +127,59 @@
         }
     }
 
+    //[CreatGameObject]
+    //internal class TestMsg : Script
+    //{
+    //    NetworkServer server;
+    //    NetworkClient client;
+
+    //    public override void Start()
+    //    {
+    //        if (int.Parse(Console.ReadLine()) == 1)
+    //        {
+    //            server = new NetworkServer(8848);
+    //            server.Start();
+    //            server.OnConnected += socket =>
+    //            {
+    //                byte[] data = System.Text.Encoding.UTF8.GetBytes("hello");
+    //                server.Send(socket, 0, 0, data);
+    //            };
+    //        }
+    //        else
+    //        {
+    //            client = new NetworkClient(NetworkUtils.LocalIPv4Str, 8848);
+    //            client.Start();
+    //            client.Register(0, 0, data =>
+    //            {
+    //                string str = System.Text.Encoding.UTF8.GetString(data);
+    //                Console.WriteLine(str);
+    //            });
+    //        }
+    //    }
+
+    //    public override void Update()
+    //    {
+    //        server?.Update();
+    //        client?.Update();
+    //    }
+    //}
+
+    class NetworkPlayerController : NetScript
+    {
+        public override void Start()
+        {
+            if (IsLocal)
+                AddComponent<CharacterController>();
+        }
+    }
+
     [CreatGameObject]
     internal class Test : Script
     {
         public GameObject CreatPlayer()
         {
-            GameObject player = new GameObject();
-            player.AddComponent<CharacterController>();
+            GameObject player = new GameObject("玩家");
+            player.AddComponent<NetworkPlayerController>();
             PosRenderer posRenderer = player.AddComponent<PosRenderer>();
             posRenderer.Str = "打";
             return player;
@@ -144,6 +189,19 @@
         {
             Factory.CreatCamera();
             NetworkSystem.Init(new Dictionary<int, Instantiate>() { { 1, CreatPlayer } });
+        }
+
+        public override void Update()
+        {
+            if (NetworkSystem.Client != null && Input.GetKeyDown(KeyCode.C))
+            {
+                NetworkSystem.Client.Instantiate_RPC(1, new Vector2Int(1, 0));
+            }
+            if (NetworkSystem.Client != null && Input.GetKeyDown(KeyCode.P))
+            {
+                GameObject instance = GameObject.Find("玩家");
+                NetworkSystem.Client.Destroy(instance);
+            }
         }
     }
 }
