@@ -238,7 +238,6 @@
             selfIntances = new Dictionary<int, GameObject>();
             otherInstances = new Dictionary<int, GameObject>();
 
-            base.OnDisconnected += (msg, socket) => { throw new Exception("断开连接" + msg); };
             Register((ushort)Role.Server, (ushort)Cmd.Join, JoinCallback);
             Register((ushort)Role.Server, (ushort)Cmd.Move, MoveCallback);
             Register((ushort)Role.Server, (ushort)Cmd.Destroy, DestroyCallback);

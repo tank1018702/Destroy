@@ -22,7 +22,11 @@
 
         public Thread GameThread { get; private set; }
 
+        public event Action OnInitialized;
+
         private readonly List<GameObject> gameObjects;
+
+        private Setting.Config config;
 
         public RuntimeEngine()
         {
@@ -30,6 +34,13 @@
             gameObjects = new List<GameObject>();
             Manage += gameObject => gameObjects.Add(gameObject);
             Object.GameObjects = gameObjects;
+            //进行配置初始化
+            OnInitialized += () =>
+            {
+                config = Setting.Load();
+                //进行配置
+                
+            };
         }
 
         public void Run(int tickPerSecond, bool allowMultiple = true)
@@ -44,7 +55,8 @@
             GameThread = Thread.CurrentThread;
             GameThread.Name = "GameThread";
 
-            CreateGameObjects();
+            OnInitialized?.Invoke();    //显式初始化
+            CreateGameObjects();        //使用CreatGameObject初始化
 
             Stopwatch stopwatch = new Stopwatch();
             int tickTime = 1000 / tickPerSecond < 1 ? 1 : 1000 / tickPerSecond; //每帧因该花的时间(最少应为1毫秒)
