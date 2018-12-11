@@ -11,7 +11,7 @@
      * PosRenderer 用于渲染一个点
      * GroupRenderer 用于渲染一组图形
      * 之后版本要重新优化
-     * 
+     *
      * 12/8 重写了Renderer的API
      */
 
@@ -74,7 +74,7 @@
         /// <param name="dic">处理过的贴图</param>
         /// <param name="depth">渲染的深度</param>
         /// <returns>渲染的结果</returns>
-        internal Dictionary<Vector2Int, RenderPoint> Shade(Material material,Dictionary<Vector2Int,string> dic,int depth)
+        internal Dictionary<Vector2Int, RenderPoint> Shade(Material material, Dictionary<Vector2Int, string> dic, int depth)
         {
             Dictionary<Vector2Int, RenderPoint> renders = new Dictionary<Vector2Int, RenderPoint>();
             //如果使用的是默认颜色的材质,那么渲染就结束了
@@ -90,7 +90,7 @@
             //如果是纯色,那么将纯色的颜色渲染上去.
             if (material.isFullColor)
             {
-                foreach(Vector2Int v in dic.Keys)
+                foreach (Vector2Int v in dic.Keys)
                 {
                     renders.Add(v, new RenderPoint(dic[v], material.ForeColor, material.BackColor, depth));
                 }
@@ -99,7 +99,7 @@
             //渲染失败
             return null;
         }
-             
+
     }
 
 
@@ -181,7 +181,7 @@
         internal Dictionary<Vector2Int, RenderPoint> Pos_RenderPoint = new Dictionary<Vector2Int, RenderPoint>();
 
         /// <summary>
-        /// 通过材质贴图着色器生成renders结果 
+        /// 通过材质贴图着色器生成renders结果
         /// 基本符合顶点 - 贴图 - 着色器 渲染管线原理
         /// </summary>
         internal bool Rendering(Material material, Texture texture, Shader shader)
@@ -211,7 +211,7 @@
             foreach (var v in meshPos)
             {
                 //如果有字符串信息,那么根据串信息创建不包含颜色的点
-                if(s<count)
+                if (s < count)
                     dic.Add(v, strs[s]);
                 //如果字符串信息不足,那么用空格填上
                 else
@@ -221,7 +221,7 @@
                 s++;
             }
             //将信息交给Shader处理.完成剩下的工作
-            Pos_RenderPoint = shader.Shade(material, dic ,depth);
+            Pos_RenderPoint = shader.Shade(material, dic, Depth);
             return true;
         }
 
@@ -265,7 +265,7 @@
         }
 
         //手动初始化
-        public void Init(string str, int depth, EngineColor foreColor,EngineColor backColor)
+        public void Init(string str, int depth, EngineColor foreColor, EngineColor backColor)
         {
             this.depth = depth;
             material = new Material(foreColor, backColor);
