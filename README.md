@@ -1,6 +1,6 @@
 # Destroy DEV 3.3
 
-![Favorite]("https://github.com/ProcessCA/Destroy/blob/master/Images/RedDeadRedemption.png")
+![Favorite]("https://raw.githubusercontent.com/ProcessCA/Destroy/master/Images/RedDeadRedemption.png")
 
 #### DE · Charlie & kyasever Presents
 
