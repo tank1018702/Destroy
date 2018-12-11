@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3C728BFB-5F20-48C8-940C-C3AD5A4B87B0}</ProjectGuid>
+    <ProjectGuid>{59B386BE-E1FE-4CE4-9C4D-41D0C375526E}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>DestroyExample</RootNamespace>
-    <AssemblyName>DestroyExample</AssemblyName>
+    <RootNamespace>DestroyExample2</RootNamespace>
+    <AssemblyName>DestroyExample2</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Destroy">
+      <HintPath>..\..\Destroy\bin\Debug\Destroy.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,19 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExampleGame.cs" />
-    <Compile Include="ExampleGameKyasever.cs" />
+    <Compile Include="ExampleGameCharlie.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Destroy\Destroy.csproj">
-      <Project>{29678c39-7511-4ce8-925f-08e663872cda}</Project>
-      <Name>Destroy</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

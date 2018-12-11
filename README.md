@@ -1,4 +1,4 @@
-# Destroy DEV 3.2
+# Destroy DEV 3.3
 
 #### DE · Charlie & kyasever Presents
 
@@ -21,7 +21,7 @@ Gameplay模块:
 
 3. 物理系统（已实现）
 
-4. 网络系统（即将实现）
+4. 网络系统（已实现）
 
 5. AI系统（即将实现）
 

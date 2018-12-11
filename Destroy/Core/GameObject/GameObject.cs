@@ -23,7 +23,7 @@
                     return null;
             Assembly assembly = RuntimeEngine.GetAssembly;
 
-            Component component = (Component)assembly.CreateInstance($"{type.Namespace}.{type.Name}");
+            Component component = (Component)assembly.CreateInstance(type.FullName);
             component.Name = type.Name;
             component.Active = true;
             component.gameObject = this;
