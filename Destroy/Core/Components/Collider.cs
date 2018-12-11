@@ -14,7 +14,7 @@ namespace Destroy
     /// <summary>
     /// Mesh组件 默认生成单点Mesh
     /// </summary>
-    public class Mesh:Component
+    public class Mesh : Component
     {
         //使用一个标识符标识这个是不是一个单点Mesh,从而进行优化.
         public bool isSingleMesh = true;
@@ -31,12 +31,12 @@ namespace Destroy
         {
             //使用HashSet去重复. 之后排序
             HashSet<Vector2Int> set = new HashSet<Vector2Int>();
-            foreach(var v in posList)
+            foreach (var v in posList)
             {
                 set.Add(v);
             }
             List<Vector2Int> newList = new List<Vector2Int>();
-            foreach(var v in set)
+            foreach (var v in set)
             {
                 newList.Add(v);
             }
@@ -49,9 +49,9 @@ namespace Destroy
         public bool Init(List<Vector2Int> list)
         {
             //如果只有一个点,相当于没指定
-            if(list.Count == 1)
+            if (list.Count == 1)
             {
-                if(list[0] == Vector2Int.Zero)
+                if (list[0] == Vector2Int.Zero)
                 {
                     isSingleMesh = true;
                     posList = list;
@@ -65,9 +65,9 @@ namespace Destroy
                 }
             }
             //检测是否包含原点,如果包含那么初始化成功
-            foreach(var v in list)
+            foreach (var v in list)
             {
-                if(v == Vector2Int.Zero)
+                if (v == Vector2Int.Zero)
                 {
                     //如果有零点
                     isSingleMesh = false;
@@ -95,7 +95,7 @@ namespace Destroy
         public List<Vector2Int> ColliderList { get; private set; }
         public MeshCollider()
         {
-           
+
         }
         public void Init()
         {
@@ -121,7 +121,7 @@ namespace Destroy
     {
         public List<Vector2Int> ColliderList { get; private set; }
         public StaticCollider()
-        { 
+        {
             Mesh mesh = GetComponent<Mesh>();
             if (mesh == null)
             {
@@ -185,12 +185,12 @@ namespace Destroy
         {
             FPosition += MoveSpeed * Time.DeltaTime;
             int dx = 0, dy = 0;
-            if(FPosition.X > 1)
+            if (FPosition.X > 1)
             {
                 FPosition.X -= 1;
                 dx += 1;
             }
-            else if(FPosition.X < -1)
+            else if (FPosition.X < -1)
             {
                 FPosition.X += 1;
                 dx -= 1;

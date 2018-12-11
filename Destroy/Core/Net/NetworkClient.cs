@@ -2,14 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Net;
     using System.Net.Sockets;
 
     public class NetworkClient
     {
         public delegate void CallbackEvent(byte[] data);
-
-        public bool Connected { get; private set; }
 
         private readonly string serverIp;
         private readonly int serverPort;
@@ -19,7 +18,6 @@
 
         public NetworkClient(string serverIp, int serverPort)
         {
-            Connected = false;
             this.serverIp = serverIp;
             this.serverPort = serverPort;
             events = new Dictionary<int, CallbackEvent>();
@@ -31,11 +29,6 @@
         /// 连接完成
         /// </summary>
         public event Action<Socket> OnConnected;
-
-        /// <summary>
-        /// 连接断开
-        /// </summary>
-        public event Action<string, Socket> OnDisconnected;
 
         public void Register(ushort cmd1, ushort cmd2, CallbackEvent _event)
         {
@@ -61,49 +54,26 @@
         {
             //可能导致异常
             client.Connect(new IPEndPoint(IPAddress.Parse(serverIp), serverPort));
-            Connected = true;
             OnConnected?.Invoke(client);
         }
 
         public void Update()
         {
-            if (!Connected)
-                return;
             //接受消息
             if (client.Available > 0)
             {
-                try
-                {
-                    NetworkMessage.UnpackTCPMessage(client, out ushort cmd1, out ushort cmd2, out byte[] data);
-                    int key = NetworkMessage.EnumToKey(cmd1, cmd2);
+                NetworkMessage.UnpackTCPMessage(client, out ushort cmd1, out ushort cmd2, out byte[] data);
+                int key = NetworkMessage.EnumToKey(cmd1, cmd2);
 
-                    if (events.ContainsKey(key))
-                        events[key](data);
-                }
-                catch (Exception ex)
-                {
-                    client.Close();
-                    Connected = false;
-                    OnDisconnected?.Invoke(ex.Message, client);
-                    return;
-                }
+                if (events.ContainsKey(key))
+                    events[key](data);
             }
 
             //发送消息
             while (messages.Count > 0)
             {
                 byte[] data = messages.Dequeue();
-                try
-                {
-                    client.Send(data);
-                }
-                catch (Exception ex)
-                {
-                    client.Close();
-                    Connected = false;
-                    OnDisconnected?.Invoke(ex.Message, client);
-                    return;
-                }
+                client.Send(data);
             }
         }
     }
