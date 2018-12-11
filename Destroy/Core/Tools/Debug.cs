@@ -4,21 +4,26 @@
 
     public static class Debug
     {
-        public static void Log(object msg) => Console.WriteLine(msg);
-
+        /// <summary>
+        /// 通常用于测试调试
+        /// </summary>
+        public static void Log(object msg)
+        { 
+            System.Diagnostics.Debug.WriteLine(msg);
+        }
+        /// <summary>
+        /// 通常用于引擎警告
+        /// </summary>
         public static void Warning(object msg)
         {
-            //Console.ForegroundColor = ConsoleColor.Yellow;
-            //Console.WriteLine(msg);
-            //Console.ForegroundColor = ConsoleColor.Gray;
             System.Diagnostics.Debug.WriteLine(msg);
         }
 
+        /// <summary>
+        /// 通常用于引擎严重错误
+        /// </summary>
         public static void Error(object msg)
         {
-            //Console.ForegroundColor = ConsoleColor.Red;
-            //Console.WriteLine(msg);
-            //Console.ForegroundColor = ConsoleColor.Gray;
             System.Diagnostics.Debug.WriteLine(msg);
         }
     }

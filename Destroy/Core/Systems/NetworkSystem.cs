@@ -25,8 +25,7 @@
             if (!choose)
             {
                 choose = true;
-                Print.DrawLine("1.client, 2.server", ConsoleColor.White);
-                //Get Input
+                //Print.DrawLine("1.client, 2.server", ConsoleColor.White);
                 switch (int.Parse(Console.ReadLine()))
                 {
                     case 1:
