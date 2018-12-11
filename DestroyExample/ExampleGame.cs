@@ -41,6 +41,52 @@ namespace Destroy.Example
         }
     }
 
+    //[CreatGameObject]
+    //internal class TestMsg : Script
+    //{
+    //    NetworkServer server;
+    //    NetworkClient client;
+
+    //    public override void Start()
+    //    {
+    //        if (int.Parse(Console.ReadLine()) == 1)
+    //        {
+    //            server = new NetworkServer(8848);
+    //            server.Start();
+    //            server.OnConnected += socket =>
+    //            {
+    //                byte[] data = System.Text.Encoding.UTF8.GetBytes("hello");
+    //                server.Send(socket, 0, 0, data);
+    //            };
+    //        }
+    //        else
+    //        {
+    //            client = new NetworkClient(NetworkUtils.LocalIPv4Str, 8848);
+    //            client.Start();
+    //            client.Register(0, 0, data =>
+    //            {
+    //                string str = System.Text.Encoding.UTF8.GetString(data);
+    //                Console.WriteLine(str);
+    //            });
+    //        }
+    //    }
+
+    //    public override void Update()
+    //    {
+    //        server?.Update();
+    //        client?.Update();
+    //    }
+    //}
+
+    class NetworkPlayerController : NetworkScript
+    {
+        public override void Start()
+        {
+            if (IsLocal)
+                AddComponent<CharacterController>();
+        }
+    }
+
     [CreatGameObject]
     public class Box : Script
     {
@@ -91,6 +137,19 @@ namespace Destroy.Example
             camera.Width = width;
             RendererSystem.Init(go);
             return go;
+        }
+
+        public override void Update()
+        {
+            if (NetworkSystem.Client != null && Input.GetKeyDown(KeyCode.C))
+            {
+                NetworkSystem.Client.Instantiate_RPC(1, new Vector2Int(1, 0));
+            }
+            if (NetworkSystem.Client != null && Input.GetKeyDown(KeyCode.P))
+            {
+                GameObject instance = GameObject.Find("玩家");
+                NetworkSystem.Client.Destroy(instance);
+            }
         }
     }
 
