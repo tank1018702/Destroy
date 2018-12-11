@@ -23,12 +23,14 @@
                     return null;
             Assembly assembly = RuntimeEngine.GetAssembly;
 
-            Component component = (Component)assembly.CreateInstance($"{type.Namespace}.{type.Name}");
+            Component component = (Component)assembly.CreateInstance(type.FullName);
             component.Name = type.Name;
             component.Active = true;
             component.gameObject = this;
             component.transform = transform;
             Components.Add(component);
+
+            component.Initialize();
 
             return component;
         }
@@ -88,6 +90,8 @@
             instance.gameObject = this;
             instance.transform = transform;
             Components.Add(instance);
+
+            instance.Initialize();
 
             return instance;
         }

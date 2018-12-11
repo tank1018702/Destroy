@@ -1,7 +1,7 @@
 ﻿namespace Destroy
 {
     /// <summary>
-    /// Won't be Destroyed or Disabled
+    /// Keep the Component Won't be Destroyed or Disabled
     /// </summary>
     internal interface IPersistent
     {
