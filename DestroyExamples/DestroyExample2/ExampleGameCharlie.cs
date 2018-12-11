@@ -6,6 +6,11 @@
     [CreatGameObject]
     public class Test : Script
     {
+        public override void Start()
+        {
+            Factory.CreatCamera();
+        }
+
         public override void Update()
         {
             if (NetworkSystem.Client != null && Input.GetKeyDown(KeyCode.C))
@@ -20,29 +25,26 @@
         }
     }
 
-    public class ExampleGameCharlie
+    public class NetworkPlayerController : NetworkScript
     {
-        public class NetworkPlayerController : NetworkScript
+        public override void Start()
         {
-            public override void Start()
-            {
-                if (IsLocal)
-                    AddComponent<CharacterController>();
-            }
+            if (IsLocal)
+                AddComponent<CharacterController>();
         }
+    }
 
-        public static class Factory
+    public static class Factory
+    {
+        public static GameObject CreatCamera(int charWidth = 2, int height = 30, int width = 30)
         {
-            public static GameObject CreatCamera(int charWidth = 2, int height = 30, int width = 30)
-            {
-                GameObject go = new GameObject("Camera");
-                Camera camera = go.AddComponent<Camera>();
-                camera.CharWidth = charWidth;
-                camera.Height = height;
-                camera.Width = width;
-                RendererSystem.Init(go);
-                return go;
-            }
+            GameObject go = new GameObject("Camera");
+            Camera camera = go.AddComponent<Camera>();
+            camera.CharWidth = charWidth;
+            camera.Height = height;
+            camera.Width = width;
+            RendererSystem.Init(go);
+            return go;
         }
     }
 }
