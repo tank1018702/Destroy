@@ -55,15 +55,7 @@
             Send(IPAddress.Broadcast.ToString(), targetPort, cmd1, cmd2, message);
         }
 
-        /// <summary>
-        /// 局域网多播
-        /// </summary>
-        public void Multicast<T>(int targetPort, ushort cmd1, ushort cmd2, T message)
-        {
-            // TODO   
-        }
-
-        internal void Handle()
+        public void Update()
         {
             //接收消息
             if (udp.Available > 0)
