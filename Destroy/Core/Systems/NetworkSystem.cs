@@ -7,28 +7,38 @@
 
     public static class NetworkSystem
     {
-        public static Client Client;
         private static Dictionary<int, Instantiate> prefabs;
 
-        public static void Init(Dictionary<int, Instantiate> prefabs)
+        internal static void Init(bool useNet, int clientSyncRate, int serverBroadcastRate)
         {
-            NetworkSystem.prefabs = prefabs;
+            NetworkSystem.useNet = useNet;
+            clientInterval = (float)1 / clientSyncRate;
+            serverInterval = (float)1 / serverBroadcastRate;
         }
 
-        private static bool choose = false;
+        public static void Register(Dictionary<int, Instantiate> prefabs) => NetworkSystem.prefabs = prefabs;
+
+        public static Client Client;
         private static Server server;
+        private static bool useNet;
+        private static float clientInterval;
+        private static float serverInterval;
+        private static bool choose;
         private static float serverTimer;
         private static float clientTimer;
 
         internal static void Update(List<GameObject> gameObjects)
         {
-            return;
+            if (!useNet)
+                return;
+            if (prefabs == null)
+                throw new Exception("Please Call NetworkSystem.Register if you useNet");
+
             if (!choose)
             {
-                choose = true;
-                Console.WriteLine("1.client, 2.server");
-
-                switch (int.Parse(Console.ReadLine()))
+                Console.WriteLine("1.Client, 2.Server");
+                int mode = int.Parse(Console.ReadLine());
+                switch (mode)
                 {
                     case 1:
                         Client = new Client(NetworkUtils.LocalIPv4Str, 8848, prefabs);
@@ -41,25 +51,25 @@
                     default:
                         throw new Exception();
                 }
+                choose = true;
                 Console.Clear();
             }
 
             if (server != null)
             {
                 serverTimer += Time.DeltaTime;
-                server.Update();          //服务器每帧刷新
-                if (serverTimer >= 0.05f) //每秒20次同步
+                server.Update();
+                if (serverTimer >= serverInterval)
                 {
                     serverTimer = 0;
                     server.Broadcast();
                 }
             }
-
             if (Client != null)
             {
                 clientTimer += Time.DeltaTime;
-                Client.Update();          //客户端每帧刷新
-                if (clientTimer >= 0.025f) //每秒40次同步
+                Client.Update();
+                if (clientTimer >= clientInterval)
                 {
                     clientTimer = 0;
                     Client.Move();
@@ -87,6 +97,8 @@
             instances = new Dictionary<int, Dictionary<int, Entity>>();
             foreach (var prefab in this.prefabs)
                 instances.Add(prefab.Key, new Dictionary<int, Entity>());
+
+            Console.WriteLine("服务器开启");
 
             base.OnConnected += OnConnected;
             base.OnDisconnected += OnDisconnected;

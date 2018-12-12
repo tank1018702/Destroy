@@ -6,7 +6,7 @@
     using System.Reflection;
     using System.Collections.Generic;
 
-    public static class Setting
+    internal static class Setting
     {
         public class Config
         {
@@ -15,21 +15,24 @@
             public int CameraWidth;
             public int CameraHeight;
             public int CharWidth;
-            public bool Client;
-            public bool Server;
+            public bool UseNet;
+            public int ClientSyncRate;
+            public int ServerBroadcastRate;
         }
 
         private static Config SaveStandard(string path)
         {
             Config config = new Config();
             Type type = config.GetType();
+
             config.CameraWidth = 30;
             config.CameraHeight = 30;
             config.CameraPosX = -config.CameraWidth / 2;
-            config.CameraPosY = -config.CameraHeight / 2;
+            config.CameraPosY = config.CameraHeight / 2;
             config.CharWidth = 2;
-            config.Client = false;
-            config.Server = false;
+            config.UseNet = false;
+            config.ServerBroadcastRate = 20;
+            config.ClientSyncRate = 50;
 
             List<string> lines = new List<string>();
             foreach (var field in type.GetFields())
