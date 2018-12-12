@@ -26,8 +26,6 @@
 
         private readonly List<GameObject> gameObjects;
 
-        private Setting.Config config;
-
         public RuntimeEngine()
         {
             GameThread = null;
@@ -37,7 +35,7 @@
             //进行配置初始化
             OnInitialized += () =>
             {
-                config = Setting.Load();
+                Setting.Config config = Setting.Load();
                 //初始化渲染系统与摄像机
                 GameObject camera = new GameObject("Camera");
                 camera.Tag = "MainCamera";
@@ -49,7 +47,7 @@
                 cam.Width = config.CameraWidth;
                 RendererSystem.Init(camera);
                 //初始化网络系统
-                //NetworkSystem.Init(config.Client, config.Server);
+                NetworkSystem.Init(config.UseNet, config.ClientSyncRate, config.ServerBroadcastRate);
             };
         }
 

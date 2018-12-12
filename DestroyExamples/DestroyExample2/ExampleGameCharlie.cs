@@ -76,7 +76,7 @@
 
         public override void Update()
         {
-            if (NetworkSystem.Client != null && Input.GetKeyDown(KeyCode.F))
+            if (NetworkSystem.Client != null && Input.GetKeyDown(KeyCode.F) && IsLocal)
             {
                 NetworkSystem.Client.Instantiate_RPC(2, transform.Position);
             }
