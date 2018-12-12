@@ -7,45 +7,34 @@
 
     public static class NetworkSystem
     {
-        public static Client Client;
         private static Dictionary<int, Instantiate> prefabs;
 
-        public static void Init(Dictionary<int, Instantiate> prefabs)
+        private static bool useClient;
+        private static bool useServer;
+
+        internal static void Init(bool client, bool server)
         {
-            NetworkSystem.prefabs = prefabs;
+            useClient = client;
+            useServer = server;
         }
 
-        private static bool choose = false;
+        public static void Register(Dictionary<int, Instantiate> prefabs) => NetworkSystem.prefabs = prefabs;
+
+        public static Client Client;
         private static Server server;
         private static float serverTimer;
         private static float clientTimer;
 
         internal static void Update(List<GameObject> gameObjects)
         {
-            return;
-            if (!choose)
+            if (useServer)
             {
-                choose = true;
-                Console.WriteLine("1.client, 2.server");
-
-                switch (int.Parse(Console.ReadLine()))
+                if (server == null)
                 {
-                    case 1:
-                        Client = new Client(NetworkUtils.LocalIPv4Str, 8848, prefabs);
-                        Client.Start();
-                        break;
-                    case 2:
-                        server = new Server(8848, prefabs);
-                        server.Start();
-                        break;
-                    default:
-                        throw new Exception();
+                    server = new Server(8848, prefabs);
+                    server.Start();
                 }
-                Console.Clear();
-            }
 
-            if (server != null)
-            {
                 serverTimer += Time.DeltaTime;
                 server.Update();          //服务器每帧刷新
                 if (serverTimer >= 0.05f) //每秒20次同步
@@ -54,9 +43,14 @@
                     server.Broadcast();
                 }
             }
-
-            if (Client != null)
+            if (useClient)
             {
+                if (Client == null)
+                {
+                    Client = new Client(NetworkUtils.LocalIPv4Str, 8848, prefabs);
+                    Client.Start();
+                }
+
                 clientTimer += Time.DeltaTime;
                 Client.Update();          //客户端每帧刷新
                 if (clientTimer >= 0.025f) //每秒40次同步

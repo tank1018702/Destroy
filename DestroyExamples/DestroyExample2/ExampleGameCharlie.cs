@@ -23,9 +23,8 @@
     {
         public override void Start()
         {
-            Factory.CreatCamera();
             //注册Prefab
-            NetworkSystem.Init(new Dictionary<int, Instantiate>
+            NetworkSystem.Register(new Dictionary<int, Instantiate>
             {
                 { 1, () =>
                     {
@@ -81,20 +80,6 @@
             {
                 NetworkSystem.Client.Instantiate_RPC(2, transform.Position);
             }
-        }
-    }
-
-    public static class Factory
-    {
-        public static GameObject CreatCamera(int charWidth = 2, int height = 30, int width = 30)
-        {
-            GameObject go = new GameObject("Camera");
-            Camera camera = go.AddComponent<Camera>();
-            camera.CharWidth = charWidth;
-            camera.Height = height;
-            camera.Width = width;
-            RendererSystem.Init(go);
-            return go;
         }
     }
 }
