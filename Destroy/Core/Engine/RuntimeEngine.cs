@@ -120,8 +120,14 @@
             CallScriptMethod(gameObjects, "Start", true);   //调用Start
             CallScriptMethod(gameObjects, "Update");        //调用Update
             PhysicsSystem.Update(gameObjects);              //碰撞检测
+
+            //这个就很尴尬了.. 它必须在物理系统之后,在渲染系统之前
+            Camera.main.LateUpdate();
+
             NetworkSystem.Update(gameObjects);              //传输消息
             RendererSystem.Update(gameObjects);             //渲染物体
+
+
         }
 
         internal static Action<GameObject> Manage;

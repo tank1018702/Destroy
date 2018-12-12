@@ -12,6 +12,7 @@
         public RigidController()
         {
             Speed = 10;
+            //Camera.main.transform.Position = transform.Position - new Vector2Int(10, 10);
         }
         Vector2 input = Vector2.Zero;
         Vector2 lastInput = Vector2.Zero;

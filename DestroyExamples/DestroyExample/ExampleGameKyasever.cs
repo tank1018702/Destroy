@@ -17,7 +17,7 @@
             Console.CursorVisible = false;
 
             gameObject.Name = "主角玩家";
-            transform.Translate(new Vector2Int(0, 0));
+            transform.Translate(new Vector2Int(10, 10));
 
             AddComponent<Mesh>();
 
@@ -31,7 +31,14 @@
             RigidBody rigidBody = AddComponent<RigidBody>();
             rigidBody.Mass = 1000f;
 
+            Camera.main.followTrans = this.transform;
 
+        }
+
+        public override void Update()
+        {
+            
+           Debug.Log(transform.Position);
         }
 
         public override void OnCollision(MeshCollider collision)
@@ -88,11 +95,11 @@
 
     static class Factory
     {
-        public static GameObject CreatCamera(int charWidth = 2, int height = 30, int width = 40)
+        public static GameObject CreatCamera(int charWidth = 2, int height = 30, int width = 30)
         {
             GameObject go = new GameObject("Camera");
             Camera camera = go.AddComponent<Camera>();
-            camera.transform.Translate(new Vector2Int( -width/2, height/2));
+            //camera.transform.Translate(new Vector2Int( -width/2, height/2));
             camera.CharWidth = charWidth;
             camera.Height = height;
             camera.Width = width;

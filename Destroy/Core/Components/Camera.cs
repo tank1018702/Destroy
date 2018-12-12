@@ -22,5 +22,12 @@
             Vector2Int point = target.GetComponent<Transform>().Position;
             transform.Position = new Vector2Int(point.X - Width / 2, point.Y - 1 + Height / 2);
         }
+
+        public Transform followTrans;
+        public void LateUpdate()
+        {
+            //if(followTrans != null)
+            //    Camera.main.transform.Position = followTrans.Position - new Vector2Int(10, 10);
+        }
     }
 }

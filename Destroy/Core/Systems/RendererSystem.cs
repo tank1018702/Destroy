@@ -177,7 +177,7 @@
         public static EngineColor DefaultColorFore = EngineColor.Gray;
         public static EngineColor DefaultColorBack = EngineColor.Black;
         private static GameObject camera;
-        private static Matrix world2camera; //顺时针旋转坐标系90度
+
         public static int charWidth;
 
         /// <summary>
@@ -195,10 +195,10 @@
         private static RenderPoint[,] rendererBuffers;
 
         //是否开启调试模式.
-        public static bool DebugMode = false;
+        public static bool DebugMode = true;
         //摄像机和屏幕的偏移量
         //左上角依然是原点.只是整套系统经过转换之后使用的是第四象限而已.
-        public static Vector2Int cameraStartPos = new Vector2Int(0, 0);
+        public static Vector2Int cameraStartPos = new Vector2Int(10, -2);
 
         //debug模式下使用变量保存着摄像机缓存数据
         private static int cameraHeight, cameraWidth;
@@ -222,32 +222,21 @@
 
             RendererSystem.camera = camera;
 
-            world2camera = new Matrix(2, 2); //顺时针旋转点90度
-            world2camera[0, 0] = 0;
-            world2camera[0, 1] = -1;
-            world2camera[1, 0] = 1;
-            world2camera[1, 1] = 0;
-            world2camera *= -1; //旋转点变为旋转坐标系
-
-
             charWidth = cameraComponent.CharWidth;
-            height = cameraComponent.Height + 20;
+            height = cameraComponent.Height + 10;
             cameraHeight = cameraComponent.Height;
-            width = cameraComponent.Width + 20;
+            width = cameraComponent.Width + 30;
             cameraWidth = cameraComponent.Width;
 
 
+            renderers = new RenderPoint[width, height];
+            rendererBuffers = new RenderPoint[width, height];
 
-            renderers = new RenderPoint[height, width];
-            rendererBuffers = new RenderPoint[height, width];
-
-            //设置窗口(最右边留出一列)
             Console.CursorVisible = false;
-
-            Console.WindowHeight = height;
-            Console.BufferHeight = height;
-            Console.WindowWidth = (width + 1) * charWidth;
-            Console.BufferWidth = (width + 1) * charWidth;
+            Console.WindowHeight = height + 1;
+            Console.BufferHeight = height + 1;
+            Console.WindowWidth = width * charWidth + 2;
+            Console.BufferWidth = width * charWidth + 2;
 
 
 
@@ -293,33 +282,25 @@
 
             RendererSystem.camera = camera;
 
-            world2camera = new Matrix(2, 2); //顺时针旋转点90度
-            world2camera[0, 0] = 0;
-            world2camera[0, 1] = -1;
-            world2camera[1, 0] = 1;
-            world2camera[1, 1] = 0;
-            world2camera *= -1; //旋转点变为旋转坐标系
-
             charWidth = cameraComponent.CharWidth;
             height = cameraComponent.Height;
             width = cameraComponent.Width;
-            renderers = new RenderPoint[height, width];
-            rendererBuffers = new RenderPoint[height, width];
+            renderers = new RenderPoint[width, height];
+            rendererBuffers = new RenderPoint[width, height];
 
-            //设置窗口(最右边留出一列)
             Console.CursorVisible = false;
-            Console.WindowHeight = height;
-            Console.BufferHeight = height;
-            Console.WindowWidth = (width + 1) * charWidth;
-            Console.BufferWidth = (width + 1) * charWidth;
+            Console.WindowHeight = height + 1;
+            Console.BufferHeight = height + 1;
+            Console.WindowWidth = width * charWidth + 2;
+            Console.BufferWidth = width * charWidth + 2;
 
             //初始化空渲染点的定义
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < RendererSystem.charWidth; i++)
+            for (int i = 0; i < charWidth; i++)
             {
                 sb.Append(' ');
             }
-            RendererSystem.Block = new RenderPoint(sb.ToString(), int.MaxValue);
+            Block = new RenderPoint(sb.ToString(), int.MaxValue);
 
 
             //将Buffer复制,Render清空为Block
@@ -343,21 +324,13 @@
                 UpdateWithDebugMode(gameObjects);
                 return;
             }
+
             if (!camera || !camera.Active)
-            {
-                return;
-            }
-            Camera cam = camera.GetComponent<Camera>();
-            if (!cam || !cam.Active)
             {
                 return;
             }
 
             Vector2Int cameraPos = camera.GetComponent<Transform>().Position;
-            int minX = cameraPos.X;
-            int maxX = cameraPos.X + width - 1;
-            int minY = cameraPos.Y - height + 1;
-            int maxY = cameraPos.Y;
 
             //将所有Renderer组件上的渲染信息渲染到屏幕上
             foreach (GameObject gameObject in gameObjects)
@@ -373,18 +346,20 @@
                     continue;
                 }
 
+                //渲染
+                Transform transform = renderer.GetComponent<Transform>();
                 foreach (var v in renderer.Pos_RenderPoint)
                 {
-                    Transform transform = renderer.GetComponent<Transform>();
                     //渲染位置
-                    Vector2Int vector = transform.Position + v.Key - cameraPos;
-                    vector *= world2camera;     //获得该点在摄像机坐标系中的位置
+                    Vector2Int vector = transform.Position + v.Key -cameraPos;
                     //如果这个渲染位置没有越界
-                    if (vector.X >= 0 && vector.X < width && vector.Y >= 0 && vector.Y < height)
+                    if (vector.X >= 0 && vector.X < width && height - vector.Y >= 0 && height - vector.Y < height)
                     {
-
                         //使用特定的加法运算,将点的渲染叠加到原点上面去.
-                        renderers[vector.X, vector.Y] = renderers[vector.X, vector.Y] + v.Value;
+                        //更改了一下算法.. 将Y反转
+                        renderers[vector.X ,height -vector.Y] +=  v.Value;
+
+                        //Debug.Log(vector);
                     }
                 }
             }
@@ -401,8 +376,8 @@
                         ConsoleOutPutStandard.Draw(
                             new DrawCall()
                             {
-                                X = j * charWidth,
-                                Y = i,
+                                X = i * charWidth,
+                                Y = j,
                                 ForeColor = renderer.foreColor,
                                 BackColor = renderer.backColor,
                                 Str = renderer.str
@@ -433,17 +408,8 @@
             {
                 return;
             }
-            Camera cam = camera.GetComponent<Camera>();
-            if (!cam || !cam.Active)
-            {
-                return;
-            }
 
             Vector2Int cameraPos = camera.GetComponent<Transform>().Position;
-            int minX = cameraPos.X;
-            int maxX = cameraPos.X + width - 1;
-            int minY = cameraPos.Y - height + 1;
-            int maxY = cameraPos.Y;
 
             //将所有Renderer组件上的渲染信息渲染到屏幕上
             foreach (GameObject gameObject in gameObjects)
@@ -466,13 +432,13 @@
                     foreach (var v in renderer.Pos_RenderPoint)
                     {
                         //渲染位置
-                        Vector2Int vector = transform.Position + v.Key;
-                         vector *= world2camera;     //获得该点在摄像机坐标系中的位置
-                                                    //如果这个渲染位置没有越界
-                        if (vector.X >= 0 && vector.X < width && vector.Y >= 0 && vector.Y < height)
+                        Vector2Int vector = transform.Position + v.Key - cameraPos + cameraStartPos;
+                        //如果这个渲染位置没有越界
+                        if (vector.X >= 0 && vector.X < width && height - vector.Y >= 0 && height - vector.Y < height)
                         {
                             //使用特定的加法运算,将点的渲染叠加到原点上面去.
-                            renderers[vector.Y, vector.X] = renderers[vector.Y, vector.X] + v.Value;
+                            //更改了一下算法.. 将Y反转
+                            renderers[vector.X, height - vector.Y] += v.Value;
                         }
                     }
                 }
@@ -484,13 +450,12 @@
                     {
                         //渲染位置
                         Vector2Int vector = transform.Position + v.Key - cameraPos;
-                        vector *= world2camera;     //获得该点在摄像机坐标系中的位置
-                                                    //如果这个渲染位置没有越界
-                        if (vector.X >= 0 && vector.X < cameraWidth && vector.Y >= 0 && vector.Y < cameraHeight)
+                        //如果这个渲染位置没有越界
+                        if (vector.X >= 0 && vector.X < cameraWidth && cameraHeight - vector.Y >= 0 && cameraHeight - vector.Y < cameraHeight)
                         {
-
                             //使用特定的加法运算,将点的渲染叠加到原点上面去.
-                            renderers[vector.Y + cameraStartPos.Y, vector.X + cameraStartPos.X] +=  v.Value;
+                            //更改了一下算法.. 将Y反转
+                            renderers[vector.X + cameraStartPos.X, cameraHeight - vector.Y + cameraStartPos.Y] += v.Value;
                         }
                     }
                 }
@@ -509,8 +474,8 @@
                         ConsoleOutPutStandard.Draw(
                             new DrawCall()
                             {
-                                X = j * charWidth,
-                                Y = i,
+                                X = i * charWidth,
+                                Y = j,
                                 ForeColor = renderer.foreColor,
                                 BackColor = renderer.backColor,
                                 Str = renderer.str
