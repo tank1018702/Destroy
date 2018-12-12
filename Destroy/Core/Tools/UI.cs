@@ -338,6 +338,7 @@ namespace Destroy
     /// </summary>
     public static class BoxDrawingSupply
     {
+        //┘└──┘└
         // https://www.oreilly.com/openbook/docbook/book/iso-box.html
         public static char boxDownRight = '┌';
         public static char boxDownLeft = '┐';
@@ -416,7 +417,7 @@ namespace Destroy
             else
             {
                 StringBuilder sb = new StringBuilder();
-                //左上角
+                //左下角
                 sb.Append(' ');
                 sb.Append(boxUpRight);
                 //上部
@@ -425,7 +426,7 @@ namespace Destroy
                     sb.Append(boxHorizontal);
                     sb.Append(boxHorizontal);
                 }
-                //右上角
+                //右下角
                 sb.Append(boxUpLeft);
                 sb.Append(' ');
                 return sb.ToString();

@@ -17,7 +17,7 @@
             Console.CursorVisible = false;
 
             gameObject.Name = "主角玩家";
-            transform.Translate(new Vector2Int(5, -5));
+            transform.Translate(new Vector2Int(0, 0));
 
             AddComponent<Mesh>();
 
@@ -72,11 +72,15 @@
     {
         public override void Start()
         {
-            UIFactroy.CreateLabel(new Vector2Int(7,10),"jkl今天天气真不错",5);
-            TextBox textBox = UIFactroy.CreateTextBox(new Vector2Int(-5,-5),10, 10);
+            UIFactroy.CreateLabel(new Vector2Int(7, 10), "jkl今天天气真不错", 5);
+            TextBox textBox = UIFactroy.CreateTextBox(new Vector2Int(3, -7), 10, 10);
             textBox.SetText("TransForm", 1);
             textBox.SetText("TransForm124556", 3);
             textBox.Labels[2].GetComponent<Renderer>().Material = new Material(EngineColor.Green, EngineColor.Yellow);
+
+            //DebugUIFactroy.CreateDebugObjs();
+
+
         }
     }
 
@@ -84,7 +88,7 @@
 
     static class Factory
     {
-        public static GameObject CreatCamera(int charWidth = 2, int height = 30, int width = 30)
+        public static GameObject CreatCamera(int charWidth = 2, int height = 30, int width = 40)
         {
             GameObject go = new GameObject("Camera");
             Camera camera = go.AddComponent<Camera>();

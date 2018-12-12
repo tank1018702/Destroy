@@ -110,6 +110,10 @@
     public class Renderer : Component
     {
         /// <summary>
+        /// 调试模式.这个Renderer属于调试模式的情况下,Transform的映射会发生改变
+        /// </summary>
+        internal bool inDebug = false;
+        /// <summary>
         /// 为0时脚本显示优先级最高(最后被渲染), 然后向着数轴正方向递减。
         /// 这个深度保存在Renderer中
         /// </summary>

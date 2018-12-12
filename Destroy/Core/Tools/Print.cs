@@ -6,46 +6,6 @@
 
     public static class Print
     {
-        /* 废弃Draw方法
-        public static void Draw(object msg) => Console.Write(msg);
-
-        public static void Draw(object msg, ConsoleColor foreColor)
-        {
-            Console.ForegroundColor = foreColor;
-            Console.Write(msg);
-            Console.ForegroundColor = ConsoleColor.Gray;
-        }
-
-        public static void Draw(object msg, ConsoleColor foreColor, ConsoleColor backColor)
-        {
-            Console.ForegroundColor = foreColor;
-            Console.BackgroundColor = backColor;
-            Console.Write(msg);
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.BackgroundColor = ConsoleColor.Black;
-        }
-
-        public static void DrawLine(object msg) => Console.WriteLine(msg);
-
-        public static void DrawLine(object msg, ConsoleColor foreColor)
-        {
-            Console.ForegroundColor = foreColor;
-            Console.WriteLine(msg);
-            Console.ForegroundColor = ConsoleColor.Gray;
-        }
-
-        public static void DrawLine(object msg, ConsoleColor foreColor, ConsoleColor backColor)
-        {
-            Console.ForegroundColor = foreColor;
-            Console.BackgroundColor = backColor;
-            Console.WriteLine(msg);
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.BackgroundColor = ConsoleColor.Black;
-        }
-
-
-        */
-
         /// <summary>
         /// 返回一个字符的宽度 待优化
         /// </summary>
@@ -114,6 +74,29 @@
                 }
             }
             return builder.ToString();
+        }
+
+        //将一个数字转换为两格一共4位的字符串
+        public static string NumToStrW4(int n)
+        {
+            string numStr;
+            if (n > 999)
+            {
+                numStr = " 999";
+            }
+            else if (n >= 0)
+            {
+                numStr = " " + n.ToString("D3");
+            }
+            else if (n > -999)
+            {
+                numStr = n.ToString("D3");
+            }
+            else
+            {
+                numStr = "-999";
+            }
+            return numStr;
         }
 
         /// <summary>

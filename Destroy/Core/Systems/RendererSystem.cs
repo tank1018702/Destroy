@@ -185,13 +185,101 @@
         /// </summary>
         internal static RenderPoint Block = new RenderPoint("  ",int.MaxValue);
 
+
+
         private static int height;
         private static int width;
+
+
         private static RenderPoint[,] renderers;
         private static RenderPoint[,] rendererBuffers;
 
+        //是否开启调试模式.
+        public static bool DebugMode = false;
+        //摄像机和屏幕的偏移量
+        //左上角依然是原点.只是整套系统经过转换之后使用的是第四象限而已.
+        public static Vector2Int cameraStartPos = new Vector2Int(0, 0);
+
+        //debug模式下使用变量保存着摄像机缓存数据
+        private static int cameraHeight, cameraWidth;
+
+        /// <summary>
+        /// 调试模式的初始化. 获得更大的屏幕
+        /// </summary>
+        /// <param name="camera"></param>
+        public static void InitInDebugMode(GameObject camera)
+        {
+            if (!camera || !camera.Active)
+            {
+                return;
+            }
+
+            Camera cameraComponent = camera.GetComponent<Camera>();
+            if (!cameraComponent || !cameraComponent.Active)
+            {
+                return;
+            }
+
+            RendererSystem.camera = camera;
+
+            world2camera = new Matrix(2, 2); //顺时针旋转点90度
+            world2camera[0, 0] = 0;
+            world2camera[0, 1] = -1;
+            world2camera[1, 0] = 1;
+            world2camera[1, 1] = 0;
+            world2camera *= -1; //旋转点变为旋转坐标系
+
+
+            charWidth = cameraComponent.CharWidth;
+            height = cameraComponent.Height + 20;
+            cameraHeight = cameraComponent.Height;
+            width = cameraComponent.Width + 20;
+            cameraWidth = cameraComponent.Width;
+
+
+
+            renderers = new RenderPoint[height, width];
+            rendererBuffers = new RenderPoint[height, width];
+
+            //设置窗口(最右边留出一列)
+            Console.CursorVisible = false;
+
+            Console.WindowHeight = height;
+            Console.BufferHeight = height;
+            Console.WindowWidth = (width + 1) * charWidth;
+            Console.BufferWidth = (width + 1) * charWidth;
+
+
+
+            //初始化空渲染点的定义
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < RendererSystem.charWidth; i++)
+            {
+                sb.Append(' ');
+            }
+            RendererSystem.Block = new RenderPoint(sb.ToString(), int.MaxValue);
+
+
+            //将Buffer复制,Render清空为Block
+            for (int i = 0; i < renderers.GetLength(0); i++)
+            {
+                for (int j = 0; j < renderers.GetLength(1); j++)
+                {
+                    rendererBuffers[i, j] = Block;
+                    renderers[i, j] = Block;
+                }
+            }
+        }
+
         public static void Init(GameObject camera)
         {
+            //如果是调试模式,那么重新定向到调试模式渲染系统初始化
+            if (DebugMode)
+            {
+                InitInDebugMode(camera);
+                return;
+            }
+
             if (!camera || !camera.Active)
             {
                 return;
@@ -243,10 +331,18 @@
                     renderers[i, j] = Block;
                 }
             }
+
+ 
         }
 
         internal static void Update(List<GameObject> gameObjects)
         {
+            //调试模式的话进行重定向
+            if(DebugMode)
+            {
+                UpdateWithDebugMode(gameObjects);
+                return;
+            }
             if (!camera || !camera.Active)
             {
                 return;
@@ -291,6 +387,114 @@
                         renderers[vector.X, vector.Y] = renderers[vector.X, vector.Y] + v.Value;
                     }
                 }
+            }
+
+            for (int i = 0; i < renderers.GetLength(0); i++)
+            {
+                for (int j = 0; j < renderers.GetLength(1); j++)
+                {
+                    RenderPoint renderer = renderers[i, j];
+                    RenderPoint bufferRenderer = rendererBuffers[i, j];
+                    //Diff 如果二者不相等,那么调用DrawCall
+                    if (!renderer.Equals(bufferRenderer))
+                    {
+                        ConsoleOutPutStandard.Draw(
+                            new DrawCall()
+                            {
+                                X = j * charWidth,
+                                Y = i,
+                                ForeColor = renderer.foreColor,
+                                BackColor = renderer.backColor,
+                                Str = renderer.str
+                            }
+                        );
+                    }
+                }
+            }
+
+            //将Buffer复制,Render清空为Block
+            for (int i = 0; i < renderers.GetLength(0); i++)
+            {
+                for (int j = 0; j < renderers.GetLength(1); j++)
+                {
+                    rendererBuffers[i, j] = renderers[i, j];
+                    renderers[i, j] = Block;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 调试模式的初始化. 会调用静态AI作为参数
+        /// </summary>
+        /// <param name="gameObjects"></param>
+        internal static void UpdateWithDebugMode(List<GameObject> gameObjects)
+        {
+            if (!camera || !camera.Active)
+            {
+                return;
+            }
+            Camera cam = camera.GetComponent<Camera>();
+            if (!cam || !cam.Active)
+            {
+                return;
+            }
+
+            Vector2Int cameraPos = camera.GetComponent<Transform>().Position;
+            int minX = cameraPos.X;
+            int maxX = cameraPos.X + width - 1;
+            int minY = cameraPos.Y - height + 1;
+            int maxY = cameraPos.Y;
+
+            //将所有Renderer组件上的渲染信息渲染到屏幕上
+            foreach (GameObject gameObject in gameObjects)
+            {
+                if (!gameObject.Active)
+                {
+                    continue;
+                }
+
+                Renderer renderer = gameObject.GetComponent<Renderer>();
+                if (!renderer || !renderer.Active)
+                {
+                    continue;
+                }
+
+                //如果这个属于调试模式renderer.那么将会直接将Transform渲染到屏幕坐标上面. 和摄像机的位置无关.
+                if(renderer.inDebug)
+                {
+                    Transform transform = renderer.GetComponent<Transform>();
+                    foreach (var v in renderer.Pos_RenderPoint)
+                    {
+                        //渲染位置
+                        Vector2Int vector = transform.Position + v.Key;
+                         vector *= world2camera;     //获得该点在摄像机坐标系中的位置
+                                                    //如果这个渲染位置没有越界
+                        if (vector.X >= 0 && vector.X < width && vector.Y >= 0 && vector.Y < height)
+                        {
+                            //使用特定的加法运算,将点的渲染叠加到原点上面去.
+                            renderers[vector.Y, vector.X] = renderers[vector.Y, vector.X] + v.Value;
+                        }
+                    }
+                }
+                //游戏物体的渲染
+                else
+                {
+                    Transform transform = renderer.GetComponent<Transform>();
+                    foreach (var v in renderer.Pos_RenderPoint)
+                    {
+                        //渲染位置
+                        Vector2Int vector = transform.Position + v.Key - cameraPos;
+                        vector *= world2camera;     //获得该点在摄像机坐标系中的位置
+                                                    //如果这个渲染位置没有越界
+                        if (vector.X >= 0 && vector.X < cameraWidth && vector.Y >= 0 && vector.Y < cameraHeight)
+                        {
+
+                            //使用特定的加法运算,将点的渲染叠加到原点上面去.
+                            renderers[vector.Y + cameraStartPos.Y, vector.X + cameraStartPos.X] +=  v.Value;
+                        }
+                    }
+                }
+
             }
 
             for (int i = 0; i < renderers.GetLength(0); i++)
