@@ -195,7 +195,7 @@
         private static RenderPoint[,] rendererBuffers;
 
         //是否开启调试模式.
-        public static bool DebugMode = true;
+        public static bool DebugMode = false;
         //摄像机和屏幕的偏移量
         //左上角依然是原点.只是整套系统经过转换之后使用的是第四象限而已.
         public static Vector2Int cameraStartPos = new Vector2Int(10, -2);
@@ -461,6 +461,9 @@
                 }
 
             }
+
+
+            Console.SetCursorPosition(10,1);
 
             for (int i = 0; i < renderers.GetLength(0); i++)
             {

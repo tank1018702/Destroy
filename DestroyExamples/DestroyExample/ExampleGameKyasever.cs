@@ -37,8 +37,9 @@
 
         public override void Update()
         {
-            
-           Debug.Log(transform.Position);
+                Camera.main.transform.Position = transform.Position - new Vector2Int(10, 10);
+
+            Debug.Log(transform.Position);
         }
 
         public override void OnCollision(MeshCollider collision)

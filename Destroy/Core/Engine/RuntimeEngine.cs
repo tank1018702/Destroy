@@ -118,11 +118,9 @@
             //GameObject在List中的位置将会影响游戏物体在生命周期中的更新顺序
             InvokeSystem.Update();
             CallScriptMethod(gameObjects, "Start", true);   //调用Start
-            CallScriptMethod(gameObjects, "Update");        //调用Update
-            PhysicsSystem.Update(gameObjects);              //碰撞检测
 
-            //这个就很尴尬了.. 它必须在物理系统之后,在渲染系统之前
-            Camera.main.LateUpdate();
+            PhysicsSystem.Update(gameObjects);              //碰撞检测
+            CallScriptMethod(gameObjects, "Update");        //调用Update
 
             NetworkSystem.Update(gameObjects);              //传输消息
             RendererSystem.Update(gameObjects);             //渲染物体

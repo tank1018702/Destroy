@@ -16,6 +16,7 @@
             CharWidth = 1;
             main = this;
         }
+        
 
         public void Center(GameObject target)
         {
