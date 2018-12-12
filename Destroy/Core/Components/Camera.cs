@@ -1,6 +1,5 @@
 ﻿namespace Destroy
 {
-    //TODO Camera初始化问题. 这里暂时加了个单例
     public class Camera : Component
     {
         public int Width;
@@ -16,19 +15,11 @@
             CharWidth = 1;
             main = this;
         }
-        
 
         public void Center(GameObject target)
         {
             Vector2Int point = target.GetComponent<Transform>().Position;
             transform.Position = new Vector2Int(point.X - Width / 2, point.Y - 1 + Height / 2);
-        }
-
-        public Transform followTrans;
-        public void LateUpdate()
-        {
-            //if(followTrans != null)
-            //    Camera.main.transform.Position = followTrans.Position - new Vector2Int(10, 10);
         }
     }
 }

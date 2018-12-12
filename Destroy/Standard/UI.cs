@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Destroy
+﻿namespace Destroy
 {
+    using System.Text;
+    using System.Collections.Generic;
+
     public static class UIFactroy
     {
         public static TextBox CreateTextBox(Vector2Int pos, int height,int width)
@@ -63,6 +60,7 @@ namespace Destroy
 
             return textBox;
         }
+
         /// <summary>
         /// 创建一个Lable组件,不带有默认文字
         /// </summary>
@@ -87,6 +85,7 @@ namespace Destroy
             //不进行初始化,手动进行添加
             return labelCom;
         }
+
         /// <summary>
         /// 创建一个Lable
         /// </summary>
@@ -98,6 +97,7 @@ namespace Destroy
             return lableCom;
         }
     }
+
     /// <summary>
     /// 单行Lebel控件
     /// Label对象上的label脚本.默认不通过这个创建
@@ -111,6 +111,7 @@ namespace Destroy
             foreColor = RendererSystem.DefaultColorFore;
             backColor = RendererSystem.DefaultColorBack;
         }
+
         //自定义初始化
         public void Init(int depth,EngineColor foreColor, EngineColor backColor)
         {
@@ -118,8 +119,11 @@ namespace Destroy
             this.foreColor = foreColor;
             this.backColor = backColor;
         }
+
         public EngineColor foreColor, backColor;
+
         public int depth = -1;
+
         //当改动Text变量的时候重新渲染renderer
         public string Text
         {
@@ -158,8 +162,6 @@ namespace Destroy
                 return true;
             }
         }
-
-
     }
 
     /// <summary>
@@ -304,7 +306,6 @@ namespace Destroy
         {
             return new BoxDrawingCharacter(true, true, false, false);
         }
-
 
         public static BoxDrawingCharacter BoxVerticalRight()
         {
@@ -462,6 +463,5 @@ namespace Destroy
             return sb.ToString();
 
         }
-
     }
 }

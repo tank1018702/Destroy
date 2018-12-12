@@ -1,4 +1,4 @@
-﻿namespace Destroy
+﻿namespace Destroy.Net
 {
     using System.Collections.Generic;
     using System.Net;
@@ -61,7 +61,7 @@
             if (udp.Available > 0)
             {
                 IPEndPoint iPEndPoint = null;
-                byte[] data = udp.Receive(ref iPEndPoint); //Try Catch
+                byte[] data = udp.Receive(ref iPEndPoint);
 
                 NetworkMessage.UnpackUDPMessage(data, out ushort cmd1, out ushort cmd2, out byte[] msgData);
                 int key = NetworkMessage.EnumToKey(cmd1, cmd2);
@@ -74,7 +74,7 @@
             while (messages.Count > 0)
             {
                 Message message = messages.Dequeue();
-                message.Send(udp); //Try Catch
+                message.Send(udp);
             }
         }
     }

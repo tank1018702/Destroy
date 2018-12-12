@@ -1,9 +1,10 @@
-﻿namespace Destroy
+﻿namespace Destroy.Net
 {
     using System;
     using System.Net.Sockets;
     using System.Collections.Generic;
     using ProtoBuf;
+    using Destroy;
 
     public static class NetworkSystem
     {
@@ -164,7 +165,7 @@
 
         private void OnMove(Socket socket, byte[] data)
         {
-            C2S_Move move = Serializer.NetDeserialize<C2S_Move>(data);
+            C2S_Move move = NetworkSerializer.Deserialize<C2S_Move>(data);
 
             if (move.Entities == null) //表示该玩家没有创建移动的游戏物体
                 return;
@@ -181,7 +182,7 @@
 
         private void OnInstantiate(Socket socket, byte[] data)
         {
-            C2S_Instantiate clientCmd = Serializer.NetDeserialize<C2S_Instantiate>(data);
+            C2S_Instantiate clientCmd = NetworkSerializer.Deserialize<C2S_Instantiate>(data);
 
             //新增对象数据
             instances[clientCmd.TypeId].Add(instanceId, new Entity(clients[socket], clientCmd.X, clientCmd.Y));
@@ -207,7 +208,7 @@
 
         private void OnDestroy(Socket socket, byte[] data)
         {
-            C2S_Destroy clientCmd = Serializer.NetDeserialize<C2S_Destroy>(data);
+            C2S_Destroy clientCmd = NetworkSerializer.Deserialize<C2S_Destroy>(data);
 
             //移除对象数据
             instances[clientCmd.TypeId].Remove(clientCmd.Id);
@@ -300,7 +301,7 @@
             //从列表中删除
             instances[identity.TypeId].Remove(identity.Id);
             //从场景中删除
-            Object.Destroy(instance);
+            global::Destroy.Object.Destroy(instance);
             //从自己物体中删除
             selfIntances.Remove(identity.Id);
 
@@ -314,7 +315,7 @@
 
         private void JoinCallback(byte[] data)
         {
-            S2C_Join join = Serializer.NetDeserialize<S2C_Join>(data);
+            S2C_Join join = NetworkSerializer.Deserialize<S2C_Join>(data);
             this.join = true;
             frame = join.Frame;
             id = join.YourId;
@@ -327,7 +328,7 @@
 
         private void MoveCallback(byte[] data)
         {
-            S2C_Move move = Serializer.NetDeserialize<S2C_Move>(data);
+            S2C_Move move = NetworkSerializer.Deserialize<S2C_Move>(data);
             frame = move.Frame;
             if (move.Entities == null) //表示当前没有游戏物体
                 return;
@@ -343,20 +344,20 @@
 
         private void DestroyCallback(byte[] data)
         {
-            S2C_Destroy cmd = Serializer.NetDeserialize<S2C_Destroy>(data);
+            S2C_Destroy cmd = NetworkSerializer.Deserialize<S2C_Destroy>(data);
             //获取场景实例
             GameObject instance = instances[cmd.TypeId][cmd.Id];
             //从列表中删除
             instances[cmd.TypeId].Remove(cmd.Id);
             //从场景中删除
-            Object.Destroy(instance);
+            global::Destroy.Object.Destroy(instance);
             //从他人物体中移除
             otherInstances.Remove(cmd.Id);
         }
 
         private void OnInstantiated(byte[] data)
         {
-            S2C_Instantiate cmd = Serializer.NetDeserialize<S2C_Instantiate>(data);
+            S2C_Instantiate cmd = NetworkSerializer.Deserialize<S2C_Instantiate>(data);
             CreatInstance(cmd.Instance);
         }
 

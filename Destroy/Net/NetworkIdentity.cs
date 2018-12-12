@@ -1,4 +1,4 @@
-﻿namespace Destroy
+﻿namespace Destroy.Net
 {
     public class NetworkIdentity : Component
     {

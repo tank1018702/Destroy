@@ -42,6 +42,7 @@
             int y = Math.Abs(a.Y - b.Y);
             return x + y;
         }
+
         /// <summary>
         /// 比较原则,左上角的小于右下角的,按照从上到下,从左到右排序
         /// </summary>

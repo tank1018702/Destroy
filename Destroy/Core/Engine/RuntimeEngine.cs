@@ -1,5 +1,6 @@
 ﻿namespace Destroy
 {
+    using Destroy.Net;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -45,6 +46,7 @@
                 cam.CharWidth = config.CharWidth;
                 cam.Height = config.CameraHeight;
                 cam.Width = config.CameraWidth;
+                RendererSystem.DebugMode = config.DebugMode;
                 RendererSystem.Init(camera);
                 //初始化网络系统
                 NetworkSystem.Init(config.UseNet, config.ClientSyncRate, config.ServerBroadcastRate);
@@ -63,8 +65,9 @@
             GameThread = Thread.CurrentThread;
             GameThread.Name = "GameThread";
 
-            OnInitialized();            //显式初始化
-            CreateGameObjects();        //使用CreatGameObject初始化
+            OnInitialized();                    //显式初始化
+            CreateGameObjects();                //使用CreatGameObject初始化
+            PhysicsSystem.Init(gameObjects);    //初始化物理系统(必须保证第一次初始化之后调用)
 
             Stopwatch stopwatch = new Stopwatch();
             int tickTime = 1000 / tickPerSecond < 1 ? 1 : 1000 / tickPerSecond; //每帧因该花的时间(最少应为1毫秒)
@@ -126,14 +129,10 @@
             //GameObject在List中的位置将会影响游戏物体在生命周期中的更新顺序
             InvokeSystem.Update();
             CallScriptMethod(gameObjects, "Start", true);   //调用Start
-
             PhysicsSystem.Update(gameObjects);              //碰撞检测
             CallScriptMethod(gameObjects, "Update");        //调用Update
-
             NetworkSystem.Update(gameObjects);              //传输消息
             RendererSystem.Update(gameObjects);             //渲染物体
-
-
         }
 
         internal static Action<GameObject> Manage;

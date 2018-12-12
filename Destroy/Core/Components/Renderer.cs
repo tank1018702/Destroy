@@ -1,8 +1,6 @@
 ﻿namespace Destroy
 {
-    using System;
     using System.Collections.Generic;
-    using System.Text;
 
     /*
      * 12/7 by Kyasever
@@ -22,7 +20,9 @@
     public struct Material
     {
         public EngineColor ForeColor;
+
         public EngineColor BackColor;
+
         /// <summary>
         /// 使用默认背景色的纯色材质
         /// </summary>
@@ -43,13 +43,16 @@
             this.BackColor = BackColor;
         }
     }
+
     /// <summary>
     /// 贴图类,贴图是一个可以包括换行符的字符串
     /// </summary>
     public class Texture
     {
         public string pic;
+
         public static Texture Block = new Texture(RendererSystem.Block.str);
+
         public Texture(string pic)
         {
             this.pic = pic;
@@ -62,6 +65,7 @@
     public class Shader
     {
         public static Shader Standard = new Shader();
+
         private Shader()
         {
 
@@ -99,9 +103,7 @@
             //渲染失败
             return null;
         }
-
     }
-
 
     /// <summary>
     /// 准备重写Renderer,只有一种Renderer pos和vector的对应列表.
@@ -113,11 +115,13 @@
         /// 调试模式.这个Renderer属于调试模式的情况下,Transform的映射会发生改变
         /// </summary>
         internal bool inDebug = false;
+    
         /// <summary>
         /// 为0时脚本显示优先级最高(最后被渲染), 然后向着数轴正方向递减。
         /// 这个深度保存在Renderer中
         /// </summary>
         private int depth;
+
         public int Depth
         {
             get { return depth; }
@@ -130,8 +134,8 @@
             }
         }
 
-
         private Material material;
+        
         /// <summary>
         /// 使用的材质
         /// </summary>
@@ -148,6 +152,7 @@
         }
 
         private Texture texture;
+        
         /// <summary>
         /// 使用的贴图
         /// </summary>
@@ -164,6 +169,7 @@
         }
 
         private Shader shader;
+        
         /// <summary>
         /// 使用的着色器
         /// </summary>
@@ -228,7 +234,6 @@
             Pos_RenderPoint = shader.Shade(material, dic, Depth);
             return true;
         }
-
 
         public Renderer()
         {

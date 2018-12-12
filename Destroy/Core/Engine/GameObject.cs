@@ -49,7 +49,7 @@
         /// <summary>
         /// 标签
         /// </summary>
-        public string Tag;
+        public string Tag { get; set; }
 
         /// <summary>
         /// 游戏物体

@@ -21,7 +21,7 @@
             get => active;
             set
             {
-                //不能禁用继承IPersistent接口的物体
+                //不能禁用继承IPersistent接口的组件
                 if (typeof(IPersistent).IsAssignableFrom(GetType()) && value == false)
                     return;
                 active = value;

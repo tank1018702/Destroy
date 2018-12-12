@@ -26,6 +26,7 @@
                 return 1;
             }
         }
+
         /// <summary>
         /// 返回一个字符串的长度
         /// </summary>

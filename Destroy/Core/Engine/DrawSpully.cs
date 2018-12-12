@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-//using Mono.Terminal;
-//using NStack;
 
 namespace Destroy
 {
@@ -16,10 +11,15 @@ namespace Destroy
     public struct DrawCall
     { 
         public int X;
+
         public int Y;
+
         public EngineColor ForeColor;
+
         public EngineColor BackColor;
+
         public string Str;
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -38,7 +38,6 @@ namespace Destroy
             return sb.ToString();
         }
     }
-
 
     /// <summary>
     /// 使用方法同ConsoleColor
@@ -178,8 +177,5 @@ namespace Destroy
             }
             return closestConsoleColor;
         }
-
-
-
     }
 }
