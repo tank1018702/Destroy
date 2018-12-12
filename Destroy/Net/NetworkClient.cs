@@ -1,8 +1,7 @@
-﻿namespace Destroy
+﻿namespace Destroy.Net
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Net;
     using System.Net.Sockets;
 

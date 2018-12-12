@@ -1,4 +1,4 @@
-# Destroy DEV 3.4
+# Destroy Alpha 1.0
 
 #### DE · Charlie & kyasever Presents
 
@@ -34,8 +34,6 @@ Gameplay模块:
 2. 标准网络代码与局域网房间系统
 
 3. AI寻路系统
-
-4. Winform调试器
 
 ### 文档 & 示例项目:
 

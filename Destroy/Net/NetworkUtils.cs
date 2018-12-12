@@ -1,4 +1,4 @@
-﻿namespace Destroy
+﻿namespace Destroy.Net
 {
     using System.Net;
     using System.Net.Sockets;

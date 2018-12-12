@@ -2,21 +2,8 @@
 {
     using System.Collections.Generic;
     using Destroy;
+    using Destroy.Net;
     using Destroy.Testing;
-
-    public class Bullet : NetworkScript
-    {
-        float timer = 0;
-        public override void Update()
-        {
-            timer += Time.DeltaTime;
-            if (timer >= 0.1f && IsLocal)
-            {
-                timer = 0;
-                transform.Translate(new Vector2Int(1, 0));
-            }
-        }
-    }
 
     [CreatGameObject]
     public class Test : Script
@@ -62,6 +49,20 @@
             {
                 GameObject instance = GameObject.Find("秒杀");
                 NetworkSystem.Client.Destroy(instance);
+            }
+        }
+    }
+
+    public class Bullet : NetworkScript
+    {
+        float timer = 0;
+        public override void Update()
+        {
+            timer += Time.DeltaTime;
+            if (timer >= 0.1f && IsLocal)
+            {
+                timer = 0;
+                transform.Translate(new Vector2Int(1, 0));
             }
         }
     }

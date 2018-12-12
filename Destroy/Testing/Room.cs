@@ -1,5 +1,6 @@
 ﻿namespace Destroy.Testing
 {
+    using Destroy.Net;
     using ProtoBuf;
     using System.Collections.Generic;
 

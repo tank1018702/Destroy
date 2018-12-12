@@ -30,9 +30,6 @@
 
             RigidBody rigidBody = AddComponent<RigidBody>();
             rigidBody.Mass = 1000f;
-
-            Camera.main.followTrans = this.transform;
-
         }
 
         public override void Update()

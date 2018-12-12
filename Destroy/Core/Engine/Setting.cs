@@ -18,6 +18,7 @@
             public bool UseNet;
             public int ClientSyncRate;
             public int ServerBroadcastRate;
+            public bool DebugMode;
         }
 
         private static Config SaveStandard(string path)
@@ -27,12 +28,13 @@
 
             config.CameraWidth = 30;
             config.CameraHeight = 30;
-            config.CameraPosX = -config.CameraWidth / 2;
-            config.CameraPosY = config.CameraHeight / 2;
+            config.CameraPosX = 0;
+            config.CameraPosY = 0;
             config.CharWidth = 2;
             config.UseNet = false;
             config.ServerBroadcastRate = 20;
             config.ClientSyncRate = 50;
+            config.DebugMode = false;
 
             List<string> lines = new List<string>();
             foreach (var field in type.GetFields())
@@ -58,21 +60,24 @@
             try
             {
                 string[] lines = File.ReadAllLines(path, Encoding.UTF8);
-                foreach (var line in lines)
+
+                var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public);
+                for (int i = 0; i < fields.Length; i++)
                 {
+                    FieldInfo field = fields[i];
+                    string line = lines[i];
+
                     if (!line.Contains(":")) //必须包含:符号
                         continue;
                     string[] keyValue = line.Split(':'); //通过:拆成Key-Value
                     //去除首位空格
                     string key = keyValue[0].Trim(' ');
                     string value = keyValue[1].Trim(' ');
-                    //赋值
-                    FieldInfo fieldInfo = type.GetField(key, BindingFlags.Instance | BindingFlags.Public);
 
                     //转换value的类型
                     object obj = null;
                     //支持4中类型
-                    switch (fieldInfo.FieldType.Name)
+                    switch (field.FieldType.Name)
                     {
                         case "String":
                             obj = value;
@@ -88,7 +93,7 @@
                             break;
                     }
 
-                    fieldInfo.SetValue(config, obj);
+                    field.SetValue(config, obj);
                 }
             }
             catch (Exception)

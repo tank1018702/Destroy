@@ -6,22 +6,21 @@ namespace Destroy
 {
     using System.Collections.Generic;
 
-
     internal static class PhysicsSystem
     {
-
         public static Dictionary<Vector2Int, Collider> staticColliders = new Dictionary<Vector2Int, Collider>();
+
         /// <summary>
         /// 初始化,将静态碰撞体加入静态对象中
         /// </summary>
         public static void Init(List<GameObject> gameObjects)
         {
-            foreach(var v in gameObjects)
+            foreach (var v in gameObjects)
             {
                 StaticCollider staticCollider = v.GetComponent<StaticCollider>();
                 if (staticCollider != null)
                 {
-                    foreach(Vector2Int dis in staticCollider.ColliderList)
+                    foreach (Vector2Int dis in staticCollider.ColliderList)
                     {
                         Vector2Int vi = staticCollider.transform.Position + dis;
                         if (!staticColliders.ContainsKey(vi))
@@ -31,28 +30,19 @@ namespace Destroy
             }
         }
 
-        private static bool HasInit = false;
-
         //Update流程 写入静态碰撞体 - 写入动态碰撞体 - 检出rigidbody - 移动rigidbody - 循环检测rigidbody和collider的碰撞
         public static void Update(List<GameObject> gameObjects)
         {
-            if(!HasInit)
-            {
-                PhysicsSystem.Init(gameObjects);
-                PhysicsSystem.HasInit = true;
-                return;
-            }
-
             Dictionary<Vector2Int, Collider> colliders = new Dictionary<Vector2Int, Collider>();
             List<RigidBody> rigids = new List<RigidBody>();
 
             foreach (var gameObject in gameObjects)
             {
                 //将动态碰撞体加入colliders字典
-                MeshCollider mc  = gameObject.GetComponent<MeshCollider>();
-                if (mc!=null)
+                MeshCollider mc = gameObject.GetComponent<MeshCollider>();
+                if (mc != null)
                 {
-                    foreach(Vector2Int dis in mc.ColliderList)
+                    foreach (Vector2Int dis in mc.ColliderList)
                     {
                         Vector2Int vi = gameObject.transform.Position + dis;
                         if (!colliders.ContainsKey(vi))
@@ -67,14 +57,14 @@ namespace Destroy
                 }
             }
 
-            foreach(var rigid in rigids)
+            foreach (var rigid in rigids)
             {
                 //当前刚体要移动的目标点
                 Vector2Int dis = rigid.Move();
                 Vector2Int to = rigid.transform.Position + dis;
                 //当产生了位移之后,开始检测移动系统
                 if (dis != Vector2Int.Zero)
-                { 
+                {
                     //撞墙了,强制这个rigid停止移动
                     if (staticColliders.ContainsKey(to))
                     {

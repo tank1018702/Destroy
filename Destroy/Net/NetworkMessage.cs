@@ -1,4 +1,4 @@
-﻿namespace Destroy
+﻿namespace Destroy.Net
 {
     using System;
     using System.Collections.Generic;
@@ -48,7 +48,7 @@
             byte[] data1 = BitConverter.GetBytes(cmd1);
             byte[] data2 = BitConverter.GetBytes(cmd2);
             //使用Protobuf-net
-            byte[] data = Serializer.NetSerialize(message);
+            byte[] data = NetworkSerializer.Serialize(message);
             byte[] bodyLen = BitConverter.GetBytes((ushort)(data1.Length + data2.Length + data.Length));
 
             //packet head
@@ -94,7 +94,7 @@
 
             byte[] data1 = BitConverter.GetBytes(cmd1);
             byte[] data2 = BitConverter.GetBytes(cmd2);
-            byte[] data = Serializer.NetSerialize(message); //使用Protobuf-net
+            byte[] data = NetworkSerializer.Serialize(message); //使用Protobuf-net
 
             //packet
             datas.AddRange(data1);      // 2bytes

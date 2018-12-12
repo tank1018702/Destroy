@@ -9,6 +9,7 @@
         { 
             System.Diagnostics.Debug.WriteLine(msg);
         }
+
         /// <summary>
         /// 通常用于引擎警告
         /// </summary>

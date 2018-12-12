@@ -98,16 +98,16 @@
             //如果有一侧是空的,那么结果等于另一侧
             if (left.Equals(RendererSystem.Block))
             {
-                    return right;
+                return right;
             }
             else if (right.Equals(RendererSystem.Block))
             {
-                    return left;
+                return left;
             }
 
 
 
-            if(left.Depth < right.Depth)
+            if (left.Depth < right.Depth)
             {
                 //如果优先级高的东西的背景色是默认颜色,那么背景色取另一侧的
                 if (left.backColor == RendererSystem.DefaultColorBack)
@@ -129,15 +129,15 @@
 
         }
 
-
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
+
         /// <summary>
         /// 使用默认颜色的字符串初始化
         /// </summary>
-        public RenderPoint(string str,int depth)
+        public RenderPoint(string str, int depth)
         {
             this.str = str;
             backColor = RendererSystem.DefaultColorBack;
@@ -148,7 +148,7 @@
         /// <summary>
         /// 使用前景颜色的字符串初始化
         /// </summary>
-        public RenderPoint(string str, EngineColor foreColor,int depth)
+        public RenderPoint(string str, EngineColor foreColor, int depth)
         {
             this.str = str;
             this.foreColor = foreColor;
@@ -166,7 +166,6 @@
             this.backColor = backColor;
             Depth = depth;
         }
-
     }
 
     /// <summary>
@@ -183,13 +182,10 @@
         /// <summary>
         /// 默认的Block就是两格宽的
         /// </summary>
-        internal static RenderPoint Block = new RenderPoint("  ",int.MaxValue);
-
-
+        internal static RenderPoint Block = new RenderPoint("  ", int.MaxValue);
 
         private static int height;
         private static int width;
-
 
         private static RenderPoint[,] renderers;
         private static RenderPoint[,] rendererBuffers;
@@ -312,14 +308,12 @@
                     renderers[i, j] = Block;
                 }
             }
-
- 
         }
 
         internal static void Update(List<GameObject> gameObjects)
         {
             //调试模式的话进行重定向
-            if(DebugMode)
+            if (DebugMode)
             {
                 UpdateWithDebugMode(gameObjects);
                 return;
@@ -351,13 +345,13 @@
                 foreach (var v in renderer.Pos_RenderPoint)
                 {
                     //渲染位置
-                    Vector2Int vector = transform.Position + v.Key -cameraPos;
+                    Vector2Int vector = transform.Position + v.Key - cameraPos;
                     //如果这个渲染位置没有越界
                     if (vector.X >= 0 && vector.X < width && height - vector.Y >= 0 && height - vector.Y < height)
                     {
                         //使用特定的加法运算,将点的渲染叠加到原点上面去.
                         //更改了一下算法.. 将Y反转
-                        renderers[vector.X ,height -vector.Y] +=  v.Value;
+                        renderers[vector.X, height - vector.Y] += v.Value;
 
                         //Debug.Log(vector);
                     }
@@ -426,7 +420,7 @@
                 }
 
                 //如果这个属于调试模式renderer.那么将会直接将Transform渲染到屏幕坐标上面. 和摄像机的位置无关.
-                if(renderer.inDebug)
+                if (renderer.inDebug)
                 {
                     Transform transform = renderer.GetComponent<Transform>();
                     foreach (var v in renderer.Pos_RenderPoint)
@@ -463,7 +457,7 @@
             }
 
 
-            Console.SetCursorPosition(10,1);
+            Console.SetCursorPosition(10, 1);
 
             for (int i = 0; i < renderers.GetLength(0); i++)
             {

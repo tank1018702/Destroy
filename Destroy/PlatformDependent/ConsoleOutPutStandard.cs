@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Destroy
+﻿namespace Destroy
 {
+    using System;
+
     /// <summary>
     /// 标准控制台输出,用于处理DrawCall
     /// TODO 改成多线程的
