@@ -1,6 +1,4 @@
-# Destroy DEV 3.3
-
-![image]("https://raw.githubusercontent.com/ProcessCA/Destroy/master/Images/RedDeadRedemption.png")
+# Destroy DEV 3.4
 
 #### DE · Charlie & kyasever Presents
 
@@ -8,12 +6,12 @@
 Destroy（DestroyEngine）是一个即将跨平台的控制台游戏引擎。
 
 ### 特点:
-单线程，组件式设计，提供游戏物体的生命周期，包含自己的DSL（DestroyScritp），标准模板库。
+单线程，组件式设计，提供游戏物体的生命周期，包含自己的DSL（DestroyScript），标准模板库。
 
 ### 目标:
 Destroy的目标是：随着引擎与工具的更新，使你从几十行代码搭建一个游戏的原型到几行代码搭建一个游戏原型。
 
-### 现阶段(不建议用于生产):
+### 现阶段(即将进入Alpha阶段):
 
 Gameplay模块:
 

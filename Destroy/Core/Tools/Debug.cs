@@ -1,7 +1,5 @@
 ﻿namespace Destroy
 {
-    using System;
-
     public static class Debug
     {
         /// <summary>
