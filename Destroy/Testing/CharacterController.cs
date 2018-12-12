@@ -39,6 +39,7 @@
         }
     }
 
+    [Obsolete("Dont support use this, you should craft a special Controller for your own game.")]
     public class CharacterController : Script
     {
         public int Speed;

@@ -90,7 +90,6 @@
     <Compile Include="Core\Net\NetworkClient.cs" />
     <Compile Include="Core\Systems\InvokeSystem.cs" />
     <Compile Include="Core\Net\NetworkServer.cs" />
-    <Compile Include="Testing\Player.cs" />
     <Compile Include="Testing\Room.cs" />
     <Compile Include="Core\Systems\NetworkSystem.cs" />
     <Compile Include="Core\Systems\RendererSystem.cs" />
