@@ -35,7 +35,7 @@
 
         public void Register(ushort cmd1, ushort cmd2, CallbackEvent _event)
         {
-            int key = NetworkMessage.EnumToKey(cmd1, cmd2);
+            int key = NetworkSerializer.EnumToKey(cmd1, cmd2);
             if (events.ContainsKey(key))
                 return;
             events.Add(key, _event);
@@ -43,7 +43,7 @@
 
         public void Send<T>(string ip, int port, ushort cmd1, ushort cmd2, T message)
         {
-            byte[] data = NetworkMessage.PackUDPMessage(cmd1, cmd2, message);
+            byte[] data = NetworkSerializer.PackUDPMessage(cmd1, cmd2, message);
             messages.Enqueue(new Message(new IPEndPoint(IPAddress.Parse(ip), port), data));
         }
 
@@ -63,8 +63,8 @@
                 IPEndPoint iPEndPoint = null;
                 byte[] data = udp.Receive(ref iPEndPoint);
 
-                NetworkMessage.UnpackUDPMessage(data, out ushort cmd1, out ushort cmd2, out byte[] msgData);
-                int key = NetworkMessage.EnumToKey(cmd1, cmd2);
+                NetworkSerializer.UnpackUDPMessage(data, out ushort cmd1, out ushort cmd2, out byte[] msgData);
+                int key = NetworkSerializer.EnumToKey(cmd1, cmd2);
 
                 if (events.ContainsKey(key))
                     events[key](msgData);
