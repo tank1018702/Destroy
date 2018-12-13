@@ -26,3 +26,8 @@ Destroy Dev 3.4:
 1. 修复网络Bug
 2. 创建网络房间
 3. 创建Destroy.Net
+
+2018.12.13
+kyasever
+Destroy Alpha 1.1:
+重写了物理系统,通过递归调用现在实现了多点碰撞和连锁运动
