@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace Destroy
 {
-    public static class DebugUIFactroy
+    public static class EditorFactroy
     {
-        public static void CreateDebugObjs()
+        /// <summary>
+        /// 初始化Editor,创建Editor对应的UI对象
+        /// </summary>
+        public static void EditorInit()
         {
-            DebugUIBox debugUIBox = CreateDebugUIBox(RendererSystem.cameraStartPos + new Vector2Int(-1, 0)+ new Vector2Int(0, -Camera.main.Height), 
+            CoordsBox debugUIBox = CreateDebugUIBox(RendererSystem.cameraStartPos + new Vector2Int(-1, 0)+ new Vector2Int(0, -Camera.main.Height), 
                 Camera.main.Height + 2, Camera.main.Width + 2);
 
             Label label = UIFactroy.CreateLabel(new Vector2Int(15, 0),"DESTROY ENGINE  Debug Mode", 13);
@@ -20,13 +23,13 @@ namespace Destroy
             debugUIBox.OnSetCamera(Camera.main.transform.Position);
         }
 
-        public static DebugUIBox CreateDebugUIBox(Vector2Int pos, int height, int width)
+        public static CoordsBox CreateDebugUIBox(Vector2Int pos, int height, int width)
         {
             GameObject gameObject = new GameObject("UIBox");
             gameObject.transform.Position = pos;
 
             //添加一个TextBox控件,用于寻找对应的Lable
-            DebugUIBox debugUIBox = gameObject.AddComponent<DebugUIBox>();
+            CoordsBox debugUIBox = gameObject.AddComponent<CoordsBox>();
 
             #region 创建边框
             int boxWidth = width, boxHeight = height;
@@ -130,7 +133,7 @@ namespace Destroy
             return gameObject;
         }
     }
-    public class DebugUIBox : Component
+    public class CoordsBox : Component
     {
         public List<GameObject> nums = new List<GameObject>();
         public void OnSetCamera(Vector2Int pos)
@@ -142,9 +145,9 @@ namespace Destroy
                     Destroy(v);
                 }
             }
-            DebugUIFactroy.CreateLeftNum(transform.Position + new Vector2Int(0, Camera.main.Height), pos.Y);
+            EditorFactroy.CreateLeftNum(transform.Position + new Vector2Int(0, Camera.main.Height), pos.Y);
 
-            DebugUIFactroy.CreateDownNum(transform.Position + new Vector2Int(1, 0), pos.X);
+            EditorFactroy.CreateDownNum(transform.Position + new Vector2Int(1, 0), pos.X);
         }
     }
 }

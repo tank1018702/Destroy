@@ -11,6 +11,8 @@
      * 之后版本要重新优化
      *
      * 12/8 重写了Renderer的API
+     * Visual Studio
+     * .Net FrameWork
      */
 
 

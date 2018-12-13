@@ -13,9 +13,6 @@
     {
         public override void Start()
         {
-            Factory.CreatCamera();
-            Console.CursorVisible = false;
-
             gameObject.Name = "主角玩家";
             transform.Translate(new Vector2Int(10, 10));
 
@@ -29,14 +26,12 @@
             AddComponent<RigidController>();
 
             RigidBody rigidBody = AddComponent<RigidBody>();
-            rigidBody.Mass = 1000f;
+            rigidBody.Mass = 3f;
         }
 
         public override void Update()
         {
-                Camera.main.transform.Position = transform.Position - new Vector2Int(10, 10);
-
-            Debug.Log(transform.Position);
+            //Camera.main.transform.Position = transform.Position - new Vector2Int(10, 10);
         }
 
         public override void OnCollision(MeshCollider collision)
@@ -51,7 +46,7 @@
         public override void Start()
         {
             gameObject.Name = "箱子";
-            transform.Translate(new Vector2Int(10, -10));
+            transform.Translate(new Vector2Int(15, 15));
 
             Mesh mesh = AddComponent<Mesh>();
             mesh.Init(new List<Vector2Int>() { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(2, 0), new Vector2Int(0, -1) });
@@ -65,10 +60,29 @@
             rigidBody.Mass = 1f;
         }
 
-        public override void OnCollision(MeshCollider collision)
+    }
+
+    [CreatGameObject]
+    public class Box2 : Script
+    {
+        public override void Start()
         {
-            Debug.Warning(collision.gameObject.Name);
+            gameObject.Name = "箱子2";
+            transform.Translate(new Vector2Int(20, 20));
+
+            Mesh mesh = AddComponent<Mesh>();
+            mesh.Init(new List<Vector2Int>() { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(0, 1), new Vector2Int(1, -1) });
+
+            MeshCollider mc = AddComponent<MeshCollider>();
+            //StaticCollider sc = AddComponent<StaticCollider>();
+
+            Renderer renderer = AddComponent<Renderer>();
+            renderer.Init("一二三四五", 10, EngineColor.Green, EngineColor.Yellow);
+
+            RigidBody rigidBody = AddComponent<RigidBody>();
+            rigidBody.Mass = 1f;
         }
+
     }
 
 
@@ -83,27 +97,7 @@
             textBox.SetText("TransForm124556", 3);
             textBox.Labels[2].GetComponent<Renderer>().Material = new Material(EngineColor.Green, EngineColor.Yellow);
 
-            //DebugUIFactroy.CreateDebugObjs();
-
 
         }
     }
-
-
-
-    static class Factory
-    {
-        public static GameObject CreatCamera(int charWidth = 2, int height = 30, int width = 30)
-        {
-            GameObject go = new GameObject("Camera");
-            Camera camera = go.AddComponent<Camera>();
-            //camera.transform.Translate(new Vector2Int( -width/2, height/2));
-            camera.CharWidth = charWidth;
-            camera.Height = height;
-            camera.Width = width;
-            RendererSystem.Init(go);
-            return go;
-        }
-    }
-
 }

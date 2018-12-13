@@ -53,6 +53,10 @@
 
         public StaticCollider()
         {
+        }
+
+        internal override void Initialize()
+        {
             Mesh mesh = GetComponent<Mesh>();
             if (mesh == null)
             {
@@ -79,6 +83,7 @@
         public Vector2 FPosition;
 
         public Vector2 MoveSpeed;
+
 
         public RigidBody()
         {
