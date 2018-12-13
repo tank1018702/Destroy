@@ -86,7 +86,7 @@
     <Compile Include="PlatformDependent\LowLevelAPI.cs" />
     <Compile Include="Core\Engine\Setting.cs" />
     <Compile Include="Core\Engine\IPersistent.cs" />
-    <Compile Include="Standard\DebugUI.cs" />
+    <Compile Include="Standard\Editor\Editor.cs" />
     <Compile Include="Standard\UI.cs" />
     <Compile Include="Testing\Scene.cs" />
     <Compile Include="Core\Engine\Object.cs" />

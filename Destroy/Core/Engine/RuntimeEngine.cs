@@ -67,7 +67,6 @@
 
             OnInitialized();                    //显式初始化
             CreateGameObjects();                //使用CreatGameObject初始化
-            PhysicsSystem.Init(gameObjects);    //初始化物理系统(必须保证第一次初始化之后调用)
 
             Stopwatch stopwatch = new Stopwatch();
             int tickTime = 1000 / tickPerSecond < 1 ? 1 : 1000 / tickPerSecond; //每帧因该花的时间(最少应为1毫秒)
