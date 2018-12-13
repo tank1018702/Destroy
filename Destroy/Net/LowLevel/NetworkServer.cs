@@ -67,7 +67,7 @@
 
         public void Register(ushort cmd1, ushort cmd2, CallbackEvent _event)
         {
-            int key = NetworkMessage.EnumToKey(cmd1, cmd2);
+            int key = NetworkSerializer.EnumToKey(cmd1, cmd2);
             if (events.ContainsKey(key))
                 return;
             events.Add(key, _event);
@@ -75,13 +75,13 @@
 
         public void Send(Socket client, ushort cmd1, ushort cmd2, byte[] data)
         {
-            byte[] packData = NetworkMessage.PackSimpleTCPMessage(cmd1, cmd2, data);
+            byte[] packData = NetworkSerializer.PackSimpleTCPMessage(cmd1, cmd2, data);
             messages.Enqueue(new Message(client, packData));
         }
 
         public void Send<T>(Socket client, ushort cmd1, ushort cmd2, T message)
         {
-            byte[] data = NetworkMessage.PackTCPMessage(cmd1, cmd2, message);
+            byte[] data = NetworkSerializer.PackTCPMessage(cmd1, cmd2, message);
             messages.Enqueue(new Message(client, data));
         }
 
@@ -122,8 +122,8 @@
                 {
                     try
                     {
-                        NetworkMessage.UnpackTCPMessage(socket, out ushort cmd1, out ushort cmd2, out byte[] data);
-                        int key = NetworkMessage.EnumToKey(cmd1, cmd2);
+                        NetworkSerializer.UnpackTCPMessage(socket, out ushort cmd1, out ushort cmd2, out byte[] data);
+                        int key = NetworkSerializer.EnumToKey(cmd1, cmd2);
 
                         if (events.ContainsKey(key))
                             events[key](socket, data);
